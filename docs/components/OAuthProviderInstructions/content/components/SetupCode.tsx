@@ -21,6 +21,7 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
           data-copy=""
           data-language="tsx"
           icon={TSIcon}
+          className="px-4"
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import NextAuth from "next-auth"
@@ -40,6 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
@@ -57,13 +59,14 @@ export const { GET, POST } = handlers
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
-import { SvelteKitAuth } from "@auth/sveltekit"
-import ${providerName} from "@auth/sveltekit/providers/${providerId}"
+import { QwikAuth$ } from "@auth/qwik"
+import ${providerName} from "@auth/qwik/providers/${providerId}"
 
-export const { handle, signIn, signOut } = SvelteKitAuth({
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$({
   providers: [${providerName}],
 }) `),
           }}
@@ -78,6 +81,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
@@ -98,6 +102,7 @@ export const { handle, signIn } = SvelteKitAuth({
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`export { handle } from "./auth"`),
@@ -113,6 +118,7 @@ export const { handle, signIn } = SvelteKitAuth({
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`
@@ -134,6 +140,7 @@ export const load: LayoutServerLoad = async (event) => {
           data-theme="default"
           data-copy=""
           data-language="tsx"
+          className="px-4"
           icon={TSIcon}
           dangerouslySetInnerHTML={{
             __html: highlight(`

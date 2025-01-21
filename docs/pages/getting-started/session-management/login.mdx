@@ -10,7 +10,7 @@ To signin your users, make sure you have at least one [authentication method](/g
   <Code.Next>
 
 ```tsx filename="./components/auth/signin-button.tsx"
-import { signIn } from "@/auth.ts"
+import { signIn } from "@/auth"
 
 export function SignIn() {
   return (
@@ -131,6 +131,44 @@ Just like in other frameworks, you can also pass a provider to the `signIn` func
 
 The Express package runs server-side and therefore it doesn't make sense to create a "SignIn button component". However, to signin or signout with Express, send a request to the appropriate [REST API Endpoints](/reference/core/types#authaction) from your client (i.e. `/auth/signin`, `/auth/signout`, etc.).
 
+To sign in users with Express, you can create a route that handles the sign-in logic. Here is an example:
+
+```ts filename="src/routes/auth.ts"
+import express, { Request, Response } from "express"
+import { signIn } from "../auth"
+const router = express.Router()
+
+router.post("/auth/signin", async (req: Request, res: Response) => {
+  try {
+    await signIn(req, res)
+    res.redirect("/dashboard")
+  } catch (error) {
+    res.status(500).send("Sign in failed")
+  }
+})
+
+export { router }
+```
+
+To sign out users with Express, you can create a route that handles the sign-out logic. Here is an example:
+
+```ts filename="src/routes/auth.ts"
+import express, { Request, Response } from "express"
+import { signOut } from "../auth"
+const router = express.Router()
+
+router.post("/auth/signout", async (req: Request, res: Response) => {
+  try {
+    await signOut(req, res)
+    res.redirect("/")
+  } catch (error) {
+    res.status(500).send("Sign out failed")
+  }
+})
+
+export { router }
+```
+
   </Code.Express>
 </Code>
 
@@ -228,6 +266,24 @@ export default component$(() => {
 ```
 
 </Code.Svelte>
+<Code.Express>
+```ts filename="src/routes/auth.ts"
+import express, { Request, Response } from "express";
+import { signOut } from "../auth"; 
+const router = express.Router()
+
+router.post("/auth/signout", async (req: Request, res: Response) => {
+try {
+await signOut(req, res)
+res.redirect("/")
+} catch (error) {
+res.status(500).send("Sign out failed")
+}
+})
+
+export { router }
+```
+</Code.Express>
 </Code>
 
 ### Signout
@@ -351,6 +407,44 @@ Client-side is a bit simpler as we just need to import a button `on:click` handl
 <Code.Express>
 
 The Express package runs server-side and therefore it doesn't make sense to create a "SignIn button component". However, to signin or signout with Express, send a request to the appropriate [REST API Endpoints](/reference/core/types#authaction) from your client (i.e. `/auth/signin`, `/auth/signout`, etc.).
+
+To sign in users with Express, you can create a route that handles the sign-in logic. Here is an example:
+
+```ts filename="src/routes/auth.ts"
+import express, { Request, Response } from "express"
+import { signIn } from "../auth"
+const router = express.Router()
+
+router.post("/auth/signin", async (req: Request, res: Response) => {
+  try {
+    await signIn(req, res)
+    res.redirect("/dashboard")
+  } catch (error) {
+    res.status(500).send("Sign in failed")
+  }
+})
+
+export { router }
+```
+
+To sign out users with Express, you can create a route that handles the sign-out logic. Here is an example:
+
+```ts filename="src/routes/auth.ts"
+import express, { Request, Response } from "express"
+import { signOut } from "../auth"
+const router = express.Router()
+
+router.post("/auth/signout", async (req: Request, res: Response) => {
+  try {
+    await signOut(req, res)
+    res.redirect("/")
+  } catch (error) {
+    res.status(500).send("Sign out failed")
+  }
+})
+
+export { router }
+```
 
 </Code.Express>
 </Code>

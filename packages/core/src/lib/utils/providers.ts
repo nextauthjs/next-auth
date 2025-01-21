@@ -39,10 +39,20 @@ export default function parseProviders(params: {
     })
 
     if (provider.type === "oauth" || provider.type === "oidc") {
-      merged.redirectProxyUrl ??= config.redirectProxyUrl
+      merged.redirectProxyUrl ??=
+        userOptions?.redirectProxyUrl ?? config.redirectProxyUrl
+
       const normalized = normalizeOAuth(merged) as InternalProvider<
         "oauth" | "oidc"
       >
+      // We currently don't support redirect proxies for response_mode=form_post
+      if (
+        normalized.authorization?.url.searchParams.get("response_mode") ===
+        "form_post"
+      ) {
+        delete normalized.redirectProxyUrl
+      }
+
       // @ts-expect-error Symbols don't get merged by the `merge` function
       // so we need to do it manually.
       normalized[customFetch] ??= userOptions?.[customFetch]
@@ -52,10 +62,15 @@ export default function parseProviders(params: {
     return merged as InternalProvider
   })
 
-  return {
-    providers,
-    provider: providers.find(({ id }) => id === providerId),
+  const provider = providers.find(({ id }) => id === providerId)
+  if (providerId && !provider) {
+    const availableProviders = providers.map((p) => p.id).join(", ")
+    throw new Error(
+      `Provider with id "${providerId}" not found. Available providers: [${availableProviders}].`
+    )
   }
+
+  return { providers, provider }
 }
 
 // TODO: Also add discovery here, if some endpoints/config are missing.

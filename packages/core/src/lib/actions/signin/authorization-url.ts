@@ -68,6 +68,17 @@ export async function getAuthorizationUrl(
 
   const cookies: Cookie[] = []
 
+  if (
+    // Otherwise "POST /redirect_uri" wouldn't include the cookies
+    provider.authorization?.url.searchParams.get("response_mode") ===
+    "form_post"
+  ) {
+    options.cookies.state.options.sameSite = "none"
+    options.cookies.state.options.secure = true
+    options.cookies.nonce.options.sameSite = "none"
+    options.cookies.nonce.options.secure = true
+  }
+
   const state = await checks.state.create(options, data)
   if (state) {
     authParams.set("state", state.value)

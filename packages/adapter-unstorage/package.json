@@ -1,6 +1,6 @@
 {
   "name": "@auth/unstorage-adapter",
-  "version": "2.7.1",
+  "version": "2.7.4",
   "description": "Unstorage adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",

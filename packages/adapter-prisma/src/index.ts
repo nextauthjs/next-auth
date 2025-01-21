@@ -15,7 +15,8 @@
  *
  * @module @auth/prisma-adapter
  */
-import type { PrismaClient, Prisma } from "@prisma/client"
+import { type PrismaClient } from "@prisma/client"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 import type {
   Adapter,
   AdapterAccount,
@@ -35,7 +36,7 @@ export function PrismaAdapter(
     async getUserByAccount(provider_providerAccountId) {
       const account = await p.account.findUnique({
         where: { provider_providerAccountId },
-        select: { user: true },
+        include: { user: true },
       })
       return (account?.user as AdapterUser) ?? null
     },
@@ -73,8 +74,8 @@ export function PrismaAdapter(
       const verificationToken = await p.verificationToken.create(
         stripUndefined(data)
       )
-      // @ts-expect-errors // MongoDB needs an ID, but we don't
-      if (verificationToken.id) delete verificationToken.id
+      if ("id" in verificationToken && verificationToken.id)
+        delete verificationToken.id
       return verificationToken
     },
     async useVerificationToken(identifier_token) {
@@ -82,13 +83,16 @@ export function PrismaAdapter(
         const verificationToken = await p.verificationToken.delete({
           where: { identifier_token },
         })
-        // @ts-expect-errors // MongoDB needs an ID, but we don't
-        if (verificationToken.id) delete verificationToken.id
+        if ("id" in verificationToken && verificationToken.id)
+          delete verificationToken.id
         return verificationToken
-      } catch (error) {
+      } catch (error: unknown) {
         // If token already used/deleted, just return null
         // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
-        if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025")
+        if (
+          error instanceof PrismaClientKnownRequestError &&
+          error.code === "P2025"
+        )
           return null
         throw error
       }

@@ -118,6 +118,9 @@ export async function handleOAuth(
         },
       })
       break
+    case "none":
+      clientAuth = o.None()
+      break
     default:
       throw new Error("unsupported client authentication method")
   }
@@ -206,9 +209,7 @@ export async function handleOAuth(
         break
       }
       default:
-        throw new TypeError(
-          `Unrecognized provider conformation (${provider.id}).`
-        )
+        break
     }
   }
   const processedCodeResponse = await o.processAuthorizationCodeResponse(
@@ -226,6 +227,14 @@ export async function handleOAuth(
   if (requireIdToken) {
     const idTokenClaims = o.getValidatedIdTokenClaims(processedCodeResponse)!
     profile = idTokenClaims
+
+    // Apple sends some of the user information in a `user` parameter as a stringified JSON.
+    // It also only does so the first time the user consents to share their information.
+    if (provider[conformInternal] && provider.id === "apple") {
+      try {
+        profile.user = JSON.parse(params?.user)
+      } catch {}
+    }
 
     if (provider.idToken === false) {
       const userinfoResponse = await o.userInfoRequest(
@@ -255,7 +264,11 @@ export async function handleOAuth(
         as,
         client,
         processedCodeResponse.access_token,
-        { [o.customFetch]: provider[customFetch] }
+        {
+          [o.customFetch]: provider[customFetch],
+          // TODO: move away from allowing insecure HTTP requests
+          [o.allowInsecureRequests]: true,
+        }
       )
       profile = await userinfoResponse.json()
     } else {
@@ -292,6 +305,9 @@ export async function getUserAndAccount(
     const userFromProfile = await provider.profile(OAuthProfile, tokens)
     const user = {
       ...userFromProfile,
+      // The user's id is intentionally not set based on the profile id, as
+      // the user should remain independent of the provider and the profile id
+      // is saved on the Account already, as `providerAccountId`.
       id: crypto.randomUUID(),
       email: userFromProfile.email?.toLowerCase(),
     } satisfies User

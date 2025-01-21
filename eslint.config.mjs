@@ -40,6 +40,7 @@ export default tsEslint.config(
     languageOptions: {
       parser: tsEslint.parser,
       parserOptions: {
+        projectService: true,
         project: ["./packages/utils/tsconfig.eslint.json"],
       },
       globals: {
@@ -55,6 +56,7 @@ export default tsEslint.config(
     rules: {
       "prefer-const": ["error", { destructuring: "all" }],
       "no-empty": ["error", { allowEmptyCatch: true }],
+      "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/ban-ts-comment": "warn",
       "@typescript-eslint/no-empty-object-type": [
@@ -164,7 +166,7 @@ export default tsEslint.config(
       "static",
       "coverage",
       "dist",
-      "packages/core/src/providers/oauth-types.ts",
+      "packages/core/src/providers/provider-types.ts",
       "packages/core/src/lib/pages/styles.ts",
       "packages/frameworks-sveltekit/package",
       "packages/frameworks-sveltekit/vite.config.{js,ts}.timestamp-*",
