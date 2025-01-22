@@ -6,7 +6,7 @@
  * </a>
  * </div>
  *
- * @module providers/discord
+ * @module providers/figma
  */
 import { OAuth2Config, OAuthUserConfig } from "./index.js"
 
@@ -39,8 +39,8 @@ interface FigmaProfile {
  * const response = await Auth(request, {
  *   providers: [
  *     Figma({
- *       clientId: process.env.BITBUCKET_CLIENT_ID,
- *       clientSecret: process.env.BITBUCKET_CLIENT_SECRET
+ *       clientId: process.env.AUTH_FIGMA_ID,
+ *       clientSecret: process.env.AUTH_FIGMA_SECRET
  *     })
  *   ],
  * })
