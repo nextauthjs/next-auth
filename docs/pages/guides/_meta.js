@@ -1,5 +1,4 @@
 export default {
-  debugging: "Debugging",
   testing: "Testing",
   pages: "Pages",
   "environment-variables": "Environment Variables",

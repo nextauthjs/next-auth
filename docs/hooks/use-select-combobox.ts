@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react"
 
-interface SelectComboboxValue {
+export interface SelectComboboxValue {
   id: string
   name: string
 }
@@ -21,6 +21,12 @@ export const useSelectCombobox = ({
 
   const handleSelect = (value: SelectComboboxValue) => {
     let hasMatchItem = false
+    if (value.id === selectedItem.id) {
+      setSelectedItem({ id: "", name: "" })
+      setFilteredItems(items)
+      setHasMatchItem(false)
+      return
+    }
     setFilteredItems(
       items.filter((item) => {
         if (item.id === value.id) {

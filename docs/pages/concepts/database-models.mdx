@@ -54,45 +54,51 @@ erDiagram
 
 ### User
 
-The User model is for information such as the user's name and email address. Email address is optional, but if one is specified for a `User`, then it must be unique.
+This model holds general information such as the user's name, email address, profile picture and more. Email address is optional, but if one is specified for a `User`, then it must be unique.
 
 <Callout>
-  User creation in the database is automatic and happens when the user is logged
-  in for the first time with an authentication provider (either OAuth, magic
-  links or plain credentials).
+  User creation is automatic. When the user is signing in for the first time
+  with an authentication provider (either OAuth, magic links or plain
+  credentials), the user is created based on the data available. This can be
+  fully customized.
 </Callout>
 
-**OAuth sign in**
+**OAuth sign-in**
 
-If the first sign-in is via the [OAuth Provider](/getting-started/authentication/oauth), the default data
-saved is `id`, `name`, `email` and `image`. You can add more profile data by returning extra
-fields in your [OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider)'s [`profile()`](/reference/core/providers#profile) callback.
+If the first sign-in is via an [OAuth Provider](#oauth), the default data
+saved is `id`, `name`, `email` and `image`. Anything returned from your [OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider)'s [`profile()`](/reference/core/providers#profile) callback
+will be a part of the user object. Make sure to modify your database model accordingly.
 
-**Magic links sign in**
+The created user will have an `emailVerified: null` field. This is because Auth.js does not trust by default that an OAuth provider has verified the email address.
 
-If the first sign-in is via the [Email Provider](/getting-started/authentication/email), then the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
+To verify the user's email address, you can use an [Email Provider](#email).
+
+**Magic links sign-in**
+
+If the first sign-in is via an [Email Provider](#email), the saved user will have `id`, `email`, `emailVerified`, where `emailVerified` is the timestamp of when the user was created.
+
+{/* TODO: A common request is to save more data during sign-up via email. We should add more information here. */}
 
 ### Account
 
-The Account model is for information about accounts associated with a `User`. A single `User` can have multiple `Account`(s), but each `Account` can only have one `User`.
+The Account model holds information about a single or multiple account(s) associated with a `User`. Each `User` can be associated with several `Account`(s), but every `Account` can only have one `User`.
 
 <Callout>
-  Account creation in the database is automatic and happens when the user is
-  logged in for the first time with an authentication provider (either OAuth,
-  magic links or plain credentials) or the
+  Account creation is automatic. It happens when the user is signing in for the
+  first time with an authentication provider (either OAuth, magic links or plain
+  credentials) or the
   [`Adapter.linkAccount`](/reference/core/adapters#linkaccount) method is
   invoked.
 </Callout>
 
-The default data saved is `access_token`, `expires_at`, `refresh_token`, `id_token`, `token_type`,
+When registering with OAuth, the default data saved is `access_token`, `expires_at`, `refresh_token`, `id_token`, `token_type`,
 `scope` and `session_state`. You can save other fields or remove the ones you don't need by
 returning them in the [OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider)'s [`account()`](/reference/core/providers#account) callback.
 
-Linking `Accounts`(s) to `User`(s) happen automatically, only when they have the same e-mail address, and the user is currently signed in. Check the [FAQ](/concepts#security) for more information on why this is a requirement.
+`Accounts`(s) get linked to a `User` automatically, but only when they have the same e-mail address, and if the user is currently signed in. Check the [FAQ](/concepts#security) for more information on why this is a requirement,
+and how to link accounts manually, if you trust your OAuth provider.
 
-You can manually unlink accounts if your adapter implements the
-`unlinkAccount` method. Make sure to take all the necessary security steps to
-avoid data loss.
+You can manually unlink accounts by invoking the `unlinkAccount` adapter method.
 
 ### Session
 

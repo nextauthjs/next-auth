@@ -1,34 +1,27 @@
-export interface Provider {
-  id: string
-  name: string
-}
+import type { SelectComboboxValue } from "@/hooks/use-select-combobox.js"
 
-export interface PreviewProvidersProps {
-  className?: string
-  providers: Provider[]
-  onSelected: (provider: Provider) => void
-}
-
-export function PreviewProviders({
-  className,
-  providers,
-  onSelected,
-}: PreviewProvidersProps) {
+export function PreviewProviders(props: {
+  providers: SelectComboboxValue[]
+  onSelected: (provider: SelectComboboxValue) => void
+  selected: string
+}) {
   return (
-    <section className={className}>
-      {providers.map((provider) => (
-        <div
-          className="flex h-32 w-32 min-w-24 flex-col items-center justify-between rounded-lg border border-solid border-neutral-200 p-4 shadow-sm transition-colors duration-300 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-950"
+    <section className="hidden md:block">
+      {props.providers.map((provider) => (
+        // TODO: Make this a link
+        <button
+          className={`${props.selected === provider.id ? "bg-orange-200 dark:bg-orange-600" : ""} m-0.5 inline-flex items-center gap-1 rounded-md border-neutral-200 p-2 transition-colors duration-300 hover:bg-neutral-200 dark:hover:bg-neutral-600`}
           key={provider.id}
-          role="button"
-          onClick={() => onSelected(provider)}
+          onClick={() => props.onSelected(provider)}
         >
           <img
+            className="light:bg-white inline h-4 w-4 drop-shadow-sm"
             src={`/img/providers/${provider.id}.svg`}
-            className="mt-2 w-11"
           />
-          <div className="text-center text-sm">{provider.name}</div>
-        </div>
+          <span className="text-ellipsis whitespace-nowrap text-sm">
+            {provider.name}
+          </span>
+        </button>
       ))}
     </section>
   )
