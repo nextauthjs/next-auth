@@ -453,6 +453,16 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(graphql@16.8.1)
 
+  packages/adapter-kinto:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      kinto:
+        specifier: ^15.0.0
+        version: 15.0.0
+
   packages/adapter-kysely:
     dependencies:
       '@auth/core':
@@ -6428,6 +6438,11 @@ packages:
   btoa-lite@1.0.0:
     resolution: {integrity: sha512-gvW7InbIyF8AicrqWoptdW08pUxuhq8BEgowNajy9RhiE86fmGAGl+bLKo6oB8QP0CkqHLowfN0oJdKC/J6LbA==}
 
+  btoa@1.2.1:
+    resolution: {integrity: sha512-SB4/MIGlsiVkMcHmT+pSmIPoNDoHg+7cMzmt3Uxt628MTz2487DKSqK/fuhFBrkuqrYv5UCEnACpF4dTFNKc/g==}
+    engines: {node: '>= 0.4.0'}
+    hasBin: true
+
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
 
@@ -9185,6 +9200,10 @@ packages:
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
+
+  kinto@15.0.0:
+    resolution: {integrity: sha512-EHrgg5rfRHwoG+2aHUWJva8K1YP5kwM7OqbVpS5UyifzBgMkiR0lEcjmy5UG0okRmguUV1+Tdc/Z44CTyk/Nhg==}
+    engines: {node: '>=16'}
 
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
@@ -21255,6 +21274,8 @@ snapshots:
 
   btoa-lite@1.0.0: {}
 
+  btoa@1.2.1: {}
+
   buffer-crc32@0.2.13: {}
 
   buffer-equal-constant-time@1.0.1: {}
@@ -24597,6 +24618,11 @@ snapshots:
   khroma@2.1.0: {}
 
   kind-of@6.0.3: {}
+
+  kinto@15.0.0:
+    dependencies:
+      btoa: 1.2.1
+      uuid: 9.0.1
 
   kleur@4.1.5: {}
 
