@@ -1,0 +1,90 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/logto.svg" width="64" height="64" />
+
+# Logto Provider
+
+## Resources
+
+- [Logto documentation](https://docs.logto.io/quick-starts/next-auth)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+    ```bash
+    https://example.com/api/auth/callback/logto
+    ```
+
+  </Code.Next>
+  <Code.Svelte>
+
+    ```bash
+    https://example.com/auth/callback/logto
+    ```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_LOGTO_ID
+AUTH_LOGTO_SECRET
+AUTH_LOGTO_ISSUER
+```
+
+### Configuration
+
+Follow these steps:
+
+Go to the [Logto Console](https://console.logto.io), Applications -> Your application
+
+Add the required environment variables to your `.env.local` file.
+
+```
+AUTH_LOGTO_ID="<APP ID>" # Endpoints & Credentials -> App ID
+AUTH_LOGTO_SECRET="<APP SECRET>" # Endpoints & Credentials -> App Secrets
+AUTH_LOGTO_ISSUER="<LOGTO ENDPOINT>" # Endpoints & Credentials -> Logto endpoint
+```
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Logto from "next-auth/providers/logto"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Logto],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Logto from "@auth/sveltekit/providers/logto"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Logto],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Logto from "@auth/express/providers/logto"
+
+app.use("/auth/*", ExpressAuth({ providers: [Logto] }))
+```
+
+  </Code.Express>
+</Code>
