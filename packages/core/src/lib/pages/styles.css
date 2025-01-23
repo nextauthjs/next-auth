@@ -50,6 +50,9 @@
   img[src$="mailchimp.svg"],
   img[src$="medium.svg"],
   img[src$="okta.svg"],
+  img[src$="patreon.svg"],
+  img[src$="ping-id.svg"],
+  img[src$="roblox.svg"],
   img[src$="threads.svg"],
   img[src$="wikimedia.svg"] {
     filter: invert(1);
@@ -84,6 +87,9 @@
     img[src$="mailchimp.svg"],
     img[src$="medium.svg"],
     img[src$="okta.svg"],
+    img[src$="patreon.svg"],
+    img[src$="ping-id.svg"],
+    img[src$="roblox.svg"],
     img[src$="threads.svg"],
     img[src$="wikimedia.svg"] {
       filter: invert(1);
