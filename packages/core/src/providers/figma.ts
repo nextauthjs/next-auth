@@ -49,9 +49,7 @@ interface FigmaProfile {
  * ### Resources
  *
  * - [Using OAuth 2 on Figma](https://www.figma.com/developers/api#oauth2)
- * - [User Type](https://www.figma.com/developers/api#users-types)
  * - [Scopes](https://www.figma.com/developers/api#authentication-scopes)
- * - [Migrate](https://www.figma.com/developers/api#oauth_migration_guide)
  *
  * #### Notes
  *
@@ -59,7 +57,7 @@ interface FigmaProfile {
  *
  * :::tip
  *
- * The Bitbucket provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/bitbucket.ts).
+ * The Figma provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/figma.ts).
  * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
  *
  * :::
@@ -90,25 +88,7 @@ export default function Figma(
         state,
       },
     },
-    token: {
-      url: "https://api.figma.com/v1/oauth/token",
-      async request({ params, provider }: any) {
-        return await fetch(provider.token.url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Basic ${Buffer.from(
-              `${options.clientId}:${options.clientSecret}`
-            ).toString("base64")}`,
-          },
-          body: new URLSearchParams({
-            code: params.code,
-            grant_type: "authorization_code",
-            redirect_uri: options.redirectProxyUrl!,
-          }).toString(),
-        }).then((response) => response.json())
-      },
-    },
+    token: "https://api.figma.com/v1/oauth/token",
     userinfo: "https://api.figma.com/v1/me",
     profile(profile) {
       return {
