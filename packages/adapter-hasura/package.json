@@ -1,6 +1,6 @@
 {
   "name": "@auth/hasura-adapter",
-  "version": "1.5.2",
+  "version": "1.7.4",
   "description": "Hasura adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -42,7 +42,8 @@
   },
   "scripts": {
     "test": "./test/test.sh",
-    "build": "graphql-codegen-esm --config codegen.ts && tsc"
+    "build": "graphql-codegen-esm --config codegen.ts && tsc",
+    "clean": "rm -rf *.js *.d.ts* lib"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

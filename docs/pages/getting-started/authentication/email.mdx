@@ -32,14 +32,14 @@ This login mechanism starts by the user providing their email address at the log
     defaultValue="resend"
     className="w-full flex flex-col"
   >
-    <RichTabs.List className="flex gap-4 flex-wrap">
+    <RichTabs.List className="grid grid-cols-[repeat(auto-fit,140px)] justify-center gap-4">
       <RichTabs.Trigger
         value="forwardemail"
         orientation="vertical"
         className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
       >
         <img className="size-16 dark:bg-[currentColor]" src={`/img/providers/forwardemail.svg`} />
-        <div className="text-sm text-center">Forward Email</div>
+        <div className="text-sm text-center line-clamp-1">Forward Email</div>
       </RichTabs.Trigger>
       <RichTabs.Trigger
         value="resend"
@@ -72,6 +72,14 @@ This login mechanism starts by the user providing their email address at the log
       >
         <img className="size-16" src={`/img/providers/postmark.svg`} />
         <div className="text-sm text-center">Postmark</div>
+      </RichTabs.Trigger>
+            <RichTabs.Trigger
+        value="loops"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/loops.svg`} />
+        <div className="text-sm text-center">Loops</div>
       </RichTabs.Trigger>
       <RichTabs.Trigger
         value="mailgun"
@@ -672,7 +680,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
-import { env } from "$env/dynamic/prviate"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
@@ -758,7 +766,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import SvelteKitAuth from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
-import { env } from "$env/dynamic/prviate"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
@@ -1041,6 +1049,145 @@ For more information on this provider go to the [Postmark docs page](/getting-st
 
 </RichTabs.Content>
 <RichTabs.Content
+orientation="vertical"
+value="loops"
+className="h-full !border-0 !w-full"
+tabIndex={-1}>
+
+### Loops Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Create your Transactional Email Template on Loops
+
+Loops have provided a super handy [guide](https://loops.so/docs/transactional/guide) to help you get started with creating your transactional email template.
+This provider only passes one data varaiable into the template, `url` which is the magic link to sign in. This is case sensitive, so make sure you use `url` in your template. <br/>
+On the last page of Template creation, you'll need to copy the `TRANSACTIONAL ID`. If you skipped this step, don't worry, you can get this at any from the Template edit page.
+
+### Create an API Key on Loops
+
+You'll need to create an API key to authenticate with Loops. This key should be kept secret and not shared with anyone.
+You can Generate a key by going to the [API Settings Page](https://app.loops.so/settings?page=api) and clicking Generate.
+You should name the key something that makes sense to you, like "Auth.js".
+
+### Setup Environment Variables
+
+To implement Loops, you need to set up the following environment variables. You should have these from the previous steps.
+
+```bash filename=".env"
+AUTH_LOOPS_KEY=abc123
+AUTH_LOOPS_TRANSACTIONAL_ID=def456
+```
+
+### Setup Provider
+
+Let's enable `Loops` as a sign-in option for our Auth.js configuration. You'll have to import the `Loops` provider from the package and pass it to the providers array we set up earlier in the Auth.js config file:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Loops from "next-auth/providers/loops"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Loops({
+      apiKey: process.env.AUTH_LOOPS_KEY,
+      transactionalId: process.env.AUTH_LOOPS_TRANSACTIONAL_ID,
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import Loops from "@auth/sveltekit/providers/loops"
+import {
+  AUTH_LOOPS_KEY,
+  AUTH_LOOPS_TRANSACTIONAL_ID,
+} from "$env/static/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Loops({
+      apiKey: AUTH_LOOPS_KEY,
+      transactionalId: AUTH_LOOPS_TRANSACTIONAL_ID,
+    }),
+  ],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("loops", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Sign in with Loops</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.Svelte>
+
+```ts filename="src/routes/+page.svelte"
+
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="loops"/>
+  </nav>
+</div>
+
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, click on the signin button we just added, and you should see Auth.js built-in sign in page with the option to sign in with your email.
+A user can enter their email, click "Sign in with Loops", and receive their beautifully formatted signin email.
+Clicking on the link in the email will redirect the user to your application, landing already authenticated!
+
+</Steps>
+</RichTabs.Content>
+<RichTabs.Content
   orientation="vertical"
   value="mailgun"
   className="h-full !border-0 !w-full"
@@ -1194,5 +1341,5 @@ Start your application, once the user enters their Email and clicks on the signi
 For more information on this provider go to the [Mailgun docs page](/getting-started/providers/mailgun).
 
 </RichTabs.Content>
-  </RichTabs>
+</RichTabs>
 </div>

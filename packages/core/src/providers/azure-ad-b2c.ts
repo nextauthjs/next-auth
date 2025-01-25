@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#0072c6", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Azure AD B2C</b> integration.</span>
  * <a href="https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/azure.svg" height="48" width="48"/>
@@ -27,6 +27,7 @@ export interface AzureADB2CProfile {
   postalCode: string
   emails: string[]
   tfp: string
+  preferred_username: string
 }
 
 /**
@@ -103,13 +104,8 @@ export interface AzureADB2CProfile {
  * :::
  */
 export default function AzureADB2C(
-  options: OIDCUserConfig<AzureADB2CProfile> & {
-    primaryUserFlow?: string
-    tenantId?: string
-  }
+  options: OIDCUserConfig<AzureADB2CProfile>
 ): OIDCConfig<AzureADB2CProfile> {
-  const { tenantId, primaryUserFlow } = options
-  options.issuer ??= `https://${tenantId}.b2clogin.com/${tenantId}.onmicrosoft.com/${primaryUserFlow}/v2.0`
   return {
     id: "azure-ad-b2c",
     name: "Azure AD B2C",
@@ -117,7 +113,7 @@ export default function AzureADB2C(
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
+        name: profile.name ?? profile.preferred_username,
         email: profile?.emails?.[0],
         image: null,
       }

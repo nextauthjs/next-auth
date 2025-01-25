@@ -19,6 +19,7 @@
   "adapters": {
     "prisma": "Prisma",
     "drizzle": "Drizzle ORM",
+    "neon": "Neon",
     "supabase": "Supabase",
     "firebase": "Firebase",
     "typeorm": "TypeORM",
@@ -59,10 +60,11 @@
     "azure-devops": "Azure DevOps",
     "battlenet": "Battle.net",
     "beyondidentity": "Beyond Identity",
+    "bitbucket": "Bitbucket",
     "box": "Box",
     "boxyhq-saml": "BoxyHQ SAML",
     "bungie": "Bungie",
-    "clickup": "ClickUp",
+    "click-up": "ClickUp",
     "cognito": "Cognito",
     "coinbase": "Coinbase",
     "descope": "Descope",
@@ -123,5 +125,29 @@
     "resend": "Resend",
     "sendgrid": "Sendgrid",
     "nodemailer": "Nodemailer"
-  }
+  },
+  "requiresIssuer": [
+    "asgardeo",
+    "auth0",
+    "authentik",
+    "azure-ad-b2c",
+    "battlenet",
+    "beyondidentity",
+    "boxyhq-saml",
+    "cognito",
+    "descope",
+    "duende-identityserver-6",
+    "fusionauth",
+    "identity-server4",
+    "keycloak",
+    "kinde",
+    "mastodon",
+    "mattermost",
+    "nextcloud",
+    "okta",
+    "ory-hydra",
+    "osso",
+    "passage",
+    "ping-id"
+  ]
 }

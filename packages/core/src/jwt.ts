@@ -42,8 +42,9 @@ import { defaultCookies, SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"
-import { parse } from "cookie"
+import * as cookie from "./lib/vendored/cookie.js"
 
+const { parse: parseCookie } = cookie
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 const now = () => (Date.now() / 1000) | 0
@@ -71,7 +72,7 @@ export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
     .encrypt(encryptionSecret)
 }
 
-/** Decodes a Auth.js issued JWT. */
+/** Decodes an Auth.js issued JWT. */
 export async function decode<Payload = JWT>(
   params: JWTDecodeParams
 ): Promise<Payload | null> {
@@ -161,7 +162,7 @@ export async function getToken(
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
-    parse(headers.get("cookie") ?? ""),
+    parseCookie(headers.get("cookie") ?? ""),
     logger
   )
 

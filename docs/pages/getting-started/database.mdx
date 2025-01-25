@@ -11,7 +11,7 @@ import manifest from "@/data/manifest.json"
   use a Database Adapter.
 </Callout>
 
-**Database Adapters** are the bridge we use to connect Auth.js to your database. For instance, [when implementing magic links](/getting-started/authentication/email), the Email provider will require you to setup a database adapter to be able to store the [verification tokens](/concepts/database-models#verificationtoken-model) present on the links.
+**Database Adapters** are the bridge we use to connect Auth.js to your database. For instance, [when implementing magic links](/getting-started/authentication/email), the Email provider will require you to setup a database adapter to be able to store the [verification tokens](/concepts/database-models#verificationtoken) present on the links.
 
 ## Official Adapters
 
@@ -43,7 +43,7 @@ monorepo](https://github.com/nextauthjs/next-auth/tree/main/packages). If you're
 
 ## Models
 
-This is a generic ER Diagram of what the full database schema should look like. Your database adapter of choice will include a template schema with more details for applying this schema to the underlying database. For more details, check out our [database models](/concepts/database-models) documentation. Please note, that the entire schema is not required for every use-case, for more details check out out our [database adapters guide](/guides/creating-a-database-adapter).
+This is a generic ER Diagram of what the full database schema should look like. Your database adapter of choice will include a template schema with more details for applying this schema to the underlying database. For more details, check out our [database models](/concepts/database-models) documentation. Please note, that the entire schema is not required for every use-case, for more details check out our [database adapters guide](/guides/creating-a-database-adapter).
 
 ```mermaid
 %%{init: {'theme':'neutral'}}%%

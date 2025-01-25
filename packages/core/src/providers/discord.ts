@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Discord</b> integration.</span>
  * <a href="https://discord.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/discord.svg" height="48" width="48"/>
@@ -146,8 +146,10 @@ export default function Discord<P extends DiscordProfile>(
     id: "discord",
     name: "Discord",
     type: "oauth",
-    authorization:
-      "https://discord.com/api/oauth2/authorize?scope=identify+email",
+    authorization: {
+      url: "https://discord.com/api/oauth2/authorize",
+      params: { scope: "identify email" },
+    },
     token: "https://discord.com/api/oauth2/token",
     userinfo: "https://discord.com/api/users/@me",
     profile(profile) {
