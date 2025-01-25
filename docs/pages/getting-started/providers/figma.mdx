@@ -84,9 +84,9 @@ AUTH_FIGMA_SECRET
 
 ```ts filename="@/auth.ts"
 import NextAuth from "next-auth"
-import Bitbucket from "next-auth/providers/bitbucket"
+import Figma from "next-auth/providers/figma"
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [Bitbucket],
+  providers: [Figma],
 })
 ```
 
@@ -95,10 +95,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
-import Bitbucket from "@auth/qwik/providers/bitbucket"
+import Figma from "@auth/qwik/providers/figma"
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   () => ({
-    providers: [Bitbucket],
+    providers: [Figma],
   })
 )
 ```
@@ -108,9 +108,9 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import Bitbucket from "@auth/sveltekit/providers/bitbucket"
+import Figma from "@auth/sveltekit/providers/figma"
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [Bitbucket],
+  providers: [Figma],
 })
 ```
 
@@ -119,8 +119,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import Bitbucket from "@auth/express/providers/bitbucket"
-app.use("/auth/*", ExpressAuth({ providers: [Bitbucket] }))
+import Figma from "@auth/express/providers/figma"
+app.use("/auth/*", ExpressAuth({ providers: [Figma] }))
 ```
 
   </Code.Express>
