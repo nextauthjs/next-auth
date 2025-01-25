@@ -75,26 +75,11 @@ export interface LogtoProfile {
  * })
  * ```
  *
- * ### Configuring Logto
- *
- * Follow these steps:
- *
- * Go to the [Logto Console](https://console.logto.io)
- *
- * Applications -> Your application -> Settings -> Redirect URIs -> Add your callback url here <{{APP_URL}}/api/auth/callback/logto>
- *
- * Then, create a `.env.local` file in the project root add the following entries:
- *
- * Get the following from the Logto's Console:
- * ```
- * AUTH_LOGTO_ID="<APP ID>" # Endpoints & Credentials -> App ID
- * AUTH_LOGTO_SECRET="<APP SECRET>" # Endpoints & Credentials -> App Secrets
- * AUTH_LOGTO_ISSUER="<LOGTO ENDPOINT>" # Endpoints & Credentials -> Logto endpoint
- * ```
  *
  * ### Resources
  *
- * - [Logto Docs](https://docs.logto.io/quick-starts/next-auth)
+ * - [Logto Auth.js quickstart](https://docs.logto.io/quick-starts/next-auth)
+ * - [Integrate Logto in your application](https://docs.logto.io/integrate-logto/integrate-logto-into-your-application)
  *
  * ### Notes
  *
@@ -124,14 +109,11 @@ export default function Logto(
         scope: "offline_access openid email profile",
       },
     },
-    token: `${options.issuer}/oidc/token`,
-    userinfo: `${options.issuer}/oidc/me`,
-    wellKnown: `${options.issuer}/oidc/.well-known/openid-configuration`,
     issuer: options.issuer,
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name,
+        name: profile.name ?? profile.username,
         email: profile.email,
         image: profile.picture,
       }
