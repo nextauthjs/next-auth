@@ -75,8 +75,6 @@ interface FigmaProfile {
 export default function Figma(
   options: OAuthUserConfig<FigmaProfile>
 ): OAuth2Config<FigmaProfile> {
-  const bytes = crypto.getRandomValues(new Uint8Array(16))
-  const state = Buffer.from(bytes).toString("base64")
   return {
     id: "figma",
     name: "Figma",
@@ -85,9 +83,9 @@ export default function Figma(
       url: "https://www.figma.com/oauth",
       params: {
         scope: "files:read",
-        state,
       },
     },
+    checks: ["state"],
     token: "https://api.figma.com/v1/oauth/token",
     userinfo: "https://api.figma.com/v1/me",
     profile(profile) {
