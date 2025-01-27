@@ -6,7 +6,7 @@
  * issued and used by Auth.js.
  *
  * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
- * It uses the `AUTH_SECRET` environment variable or the passed `secret` propery to derive a suitable encryption key.
+ * It uses the `AUTH_SECRET` environment variable or the passed `secret` property to derive a suitable encryption key.
  *
  * :::info Note
  * Auth.js JWTs are meant to be used by the same app that issued them.
@@ -38,12 +38,13 @@
 
 import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, base64url, calculateJwkThumbprint, jwtDecrypt } from "jose"
-import { SessionStore } from "./lib/utils/cookie.js"
+import { defaultCookies, SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import { MissingSecret } from "./errors.js"
-import { parse } from "cookie"
+import * as cookie from "./lib/vendored/cookie.js"
 
+const { parse: parseCookie } = cookie
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60 // 30 days
 
 const now = () => (Date.now() / 1000) | 0
@@ -71,7 +72,7 @@ export async function encode<Payload = JWT>(params: JWTEncodeParams<Payload>) {
     .encrypt(encryptionSecret)
 }
 
-/** Decodes a Auth.js issued JWT. */
+/** Decodes an Auth.js issued JWT. */
 export async function decode<Payload = JWT>(
   params: JWTDecodeParams
 ): Promise<Payload | null> {
@@ -107,8 +108,13 @@ export async function decode<Payload = JWT>(
   return payload as Payload
 }
 
+type GetTokenParamsBase = {
+  secret?: JWTDecodeParams["secret"]
+  salt?: JWTDecodeParams["salt"]
+}
+
 export interface GetTokenParams<R extends boolean = false>
-  extends Pick<JWTDecodeParams, "salt" | "secret"> {
+  extends GetTokenParamsBase {
   /** The request containing the JWT either in the cookies or in the `Authorization` header. */
   req: Request | { headers: Headers | Record<string, string> }
   /**
@@ -140,9 +146,7 @@ export async function getToken(
 ): Promise<string | JWT | null> {
   const {
     secureCookie,
-    cookieName = secureCookie
-      ? "__Secure-authjs.session-token"
-      : "authjs.session-token",
+    cookieName = defaultCookies(secureCookie ?? false).sessionToken.name,
     decode: _decode = decode,
     salt = cookieName,
     secret,
@@ -152,15 +156,13 @@ export async function getToken(
   } = params
 
   if (!req) throw new Error("Must pass `req` to JWT getToken()")
-  if (!secret)
-    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   const headers =
     req.headers instanceof Headers ? req.headers : new Headers(req.headers)
 
   const sessionStore = new SessionStore(
     { name: cookieName, options: { secure: secureCookie } },
-    parse(headers.get("cookie") ?? ""),
+    parseCookie(headers.get("cookie") ?? ""),
     logger
   )
 
@@ -176,6 +178,9 @@ export async function getToken(
   if (!token) return null
 
   if (raw) return token
+
+  if (!secret)
+    throw new MissingSecret("Must pass `secret` if not set to JWT getToken()")
 
   try {
     return await _decode({ token, secret, salt })

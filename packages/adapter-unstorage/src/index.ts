@@ -199,7 +199,7 @@ export function UnstorageAdapter(
     credentialId: string,
     authenticator: AdapterAuthenticator
   ): Promise<AdapterAuthenticator> => {
-    let newCredsToSet = [credentialId]
+    const newCredsToSet = [credentialId]
 
     const getItemReturn = await getItem<string[]>(
       `${authenticatorUserKeyPrefix}${authenticator.userId}`

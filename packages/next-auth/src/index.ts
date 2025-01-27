@@ -67,13 +67,13 @@
  * @module next-auth
  */
 
-import { Auth } from "@auth/core"
+import { Auth, customFetch } from "@auth/core"
 import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
 import { signIn, signOut, update } from "./lib/actions.js"
 
 import type { Awaitable, Session } from "@auth/core/types"
-import type { BuiltInProviderType } from "@auth/core/providers"
+import type { ProviderId } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -83,9 +83,12 @@ import type {
   AppRouteHandlerFn,
   AppRouteHandlerFnContext,
 } from "./lib/types.js"
-import type { NextRequest } from "next/server.js"
+// @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
+import type { NextRequest } from "next/server"
 import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
+
+export { customFetch }
 
 export type {
   Session,
@@ -286,10 +289,7 @@ export interface NextAuthResult {
    * ```
    *
    */
-  signIn: <
-    P extends BuiltInProviderType | (string & {}),
-    R extends boolean = true,
-  >(
+  signIn: <P extends ProviderId, R extends boolean = true>(
     /** Provider to sign in to */
     provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
     options?:

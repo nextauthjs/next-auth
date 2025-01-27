@@ -19,9 +19,8 @@ docker run -d --rm \
 
 echo "Waiting 5s for db to start..." && sleep 5
 
-# Push schema and seed
-drizzle-kit generate:pg --config=./test/pg-multi-project-schema/drizzle.config.ts
-tsx ./test/pg-multi-project-schema/migrator.ts
+drizzle-kit generate --config=./test/pg-multi-project-schema/drizzle.config.ts
+drizzle-kit migrate --config=./test/pg-multi-project-schema/drizzle.config.ts
 
 if vitest run -c ../utils/vitest.config.ts ./test/pg-multi-project-schema/index.test.ts; then
   docker stop ${PG_CONTAINER_NAME}
