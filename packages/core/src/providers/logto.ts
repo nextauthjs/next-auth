@@ -109,7 +109,6 @@ export default function Logto(
         scope: "offline_access openid email profile",
       },
     },
-    issuer: options.issuer,
     profile(profile) {
       return {
         id: profile.sub,
