@@ -1,8 +1,8 @@
 // TODO: Make this file smaller
 
 import {
-  AuthError,
   AccessDenied,
+  AuthError,
   CallbackRouteError,
   CredentialsSignin,
   InvalidProvider,
@@ -11,9 +11,9 @@ import {
 import { handleLoginOrRegister } from "./handle-login.js"
 import { handleOAuth } from "./oauth/callback.js"
 import { state } from "./oauth/checks.js"
-import { createHash, randomString } from "../../utils/web.js"
+import { createHash, randomString, toRequest } from "../../utils/web.js"
 
-import type { AdapterSession } from "../../../adapters.js"
+import type { AdapterSession, VerificationToken } from "../../../adapters.js"
 import type {
   Account,
   Authenticator,
@@ -203,8 +203,9 @@ export async function callback(
 
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "email") {
-      const paramToken = query?.token as string | undefined
-      const paramIdentifier = query?.email as string | undefined
+      const paramToken = body?.token || (query?.token as string | undefined)
+      const paramIdentifier =
+        body?.email || (query?.email as string | undefined)
 
       if (!paramToken) {
         const e = new TypeError(
@@ -218,7 +219,6 @@ export async function callback(
       const secret = provider.secret ?? options.secret
       // @ts-expect-error -- Verified in `assertConfig`.
       const invite = await adapter.useVerificationToken({
-        // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
         identifier: paramIdentifier, // TODO: Drop this requirement for lookup in official adapters too
         token: await createHash(`${paramToken}${secret}`),
       })
@@ -324,7 +324,17 @@ export async function callback(
       return { redirect: callbackUrl, cookies }
     } else if (provider.type === "sms") {
       const paramToken = body?.token || (query?.token as string | undefined)
-      const paramIdentifier = query?.phoneNumber as string | undefined
+      const paramIdentifier =
+        body?.phone_number || (query?.phone_number as string | undefined)
+
+      if (!paramIdentifier) {
+        const e = new TypeError(
+          "Missing phone_number. The sign-in URL was manually opened without phone_number or the link was not sent correctly in the sms.",
+          { cause: { hasToken: !!paramToken } }
+        )
+        e.name = "Configuration"
+        throw e
+      }
 
       if (!paramToken) {
         const e = new TypeError(
@@ -336,12 +346,29 @@ export async function callback(
       }
 
       const secret = provider.secret ?? options.secret
-      // @ts-expect-error -- Verified in `assertConfig`.
-      const invite = await adapter.useVerificationToken({
-        // @ts-expect-error User-land adapters might decide to omit the identifier during lookup
-        identifier: paramIdentifier, // TODO: Drop this requirement for lookup in official adapters too
-        token: await createHash(`${paramToken}${secret}`),
-      })
+      let invite: VerificationToken | null
+      if (provider?.checkVerificationRequest) {
+        invite = await provider.checkVerificationRequest({
+          identifier: paramIdentifier,
+          url: `${url}/callback/${provider.id}`,
+          expires: new Date(Date.now() + (provider.maxAge ?? 300) * 1000),
+          provider,
+          secret,
+          token: paramToken,
+          theme: options.theme,
+          request: toRequest(request),
+          adapter,
+        })
+      } else {
+        // @ts-expect-error -- Verified in `assertConfig`.
+        invite = await adapter.useVerificationToken({
+          identifier: paramIdentifier, // TODO: Drop this requirement for lookup in official adapters too
+          token: await createHash(`${paramToken}${secret}`),
+        })
+      }
+      if (!invite) {
+        throw new Verification({ hasInvite: false, expired: false })
+      }
 
       const hasInvite = !!invite
       const expired = hasInvite && invite.expires.valueOf() < Date.now()

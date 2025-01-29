@@ -1,8 +1,11 @@
 import { createHash, randomString, toRequest } from "../../utils/web.js"
 import { AccessDenied } from "../../../errors.js"
 
-import type { InternalOptions, RequestInternal } from "../../../types.js"
-import type { Account } from "../../../types.js"
+import type {
+  Account,
+  InternalOptions,
+  RequestInternal,
+} from "../../../types.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -17,6 +20,12 @@ export async function sendToken(
   const { provider, callbacks, adapter } = options
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const email = normalizer(body?.email)
+
+  const captchaVerified =
+    (await provider?.verifyCaptchaToken?.(body?.captcha_token)) ?? true
+  if (!captchaVerified) {
+    throw new AccessDenied("Captcha verification failed.")
+  }
 
   const defaultUser = { id: crypto.randomUUID(), email, emailVerified: null }
   const user = (await adapter!.getUserByEmail(email)) ?? defaultUser
@@ -87,6 +96,7 @@ export async function sendToken(
     redirect: `${baseUrl}/verify-request?${new URLSearchParams({
       provider: provider.id,
       type: provider.type,
+      email: email,
     })}`,
   }
 }

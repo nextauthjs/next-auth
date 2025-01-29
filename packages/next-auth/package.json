@@ -5,7 +5,7 @@
   "homepage": "https://nextjs.authjs.dev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iosifnicolae22/next-auth.git"
+    "url": "git+https://github.com/nextauthjs/next-auth.git"
   },
   "author": "Balázs Orbán <info@balazsorban.com>",
   "contributors": [

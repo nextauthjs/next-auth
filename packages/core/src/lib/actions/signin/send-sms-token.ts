@@ -1,13 +1,12 @@
-import {
-  createHash,
-  randomNumber,
-  randomString,
-  toRequest,
-} from "../../utils/web.js"
+import { createHash, randomNumber, toRequest } from "../../utils/web.js"
 import { AccessDenied } from "../../../errors.js"
 
-import type { InternalOptions, RequestInternal } from "../../../types.js"
-import type { Account } from "../../../types.js"
+import type {
+  Account,
+  InternalOptions,
+  RequestInternal,
+} from "../../../types.js"
+import { AdapterUser } from "../../../adapters.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
@@ -22,6 +21,12 @@ export async function sendSmsToken(
   const { provider, callbacks, adapter } = options
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const phone_number = normalizer(body?.phone_number)
+
+  const captchaVerified =
+    (await provider?.verifyCaptchaToken?.(body?.captcha_token)) ?? true
+  if (!captchaVerified) {
+    throw new AccessDenied("Captcha verification failed.")
+  }
 
   const defaultUser = { id: crypto.randomUUID(), phone_number }
   const user =
@@ -56,7 +61,13 @@ export async function sendSmsToken(
 
   const { callbackUrl, theme } = options
   const token =
-    (await provider.generateVerificationToken?.()) ?? randomNumber(6)
+    (await provider.generateVerificationToken?.({
+      identifier: phone_number,
+      user: user as AdapterUser,
+      provider,
+      theme,
+      request: toRequest(request),
+    })) ?? randomNumber(6)
 
   const QUARTER_HOUR_IN_SECONDS = 3600
   const expires = new Date(

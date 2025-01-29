@@ -1,5 +1,6 @@
 import { CommonProviderOptions } from "./index.js"
 import { Awaitable, Theme } from "../types.js"
+import { Adapter, AdapterUser, VerificationToken } from "../adapters.js"
 
 export type SmsProviderSendVerificationRequestParams = {
   identifier: string
@@ -11,6 +12,26 @@ export type SmsProviderSendVerificationRequestParams = {
   request: Request
 }
 
+export type SmsProviderGenerateVerificationTokenParams = {
+  identifier: string
+  user: AdapterUser | null
+  provider: SMSConfig
+  theme: Theme
+  request: Request
+}
+
+export type SmsProviderCheckVerificationTokenParams = {
+  identifier: string
+  url: string
+  expires: Date
+  provider: SMSConfig
+  secret: string | string[]
+  token: string
+  theme: Theme
+  request: Request
+  adapter?: Required<Adapter>
+}
+
 export interface SMSConfig extends CommonProviderOptions {
   id: string
   type: "sms"
@@ -20,8 +41,14 @@ export interface SMSConfig extends CommonProviderOptions {
   ) => Awaitable<void>
   /** Used to hash the verification token. */
   secret?: string
-  generateVerificationToken?: () => Awaitable<string>
+  generateVerificationToken?: (
+    params: SmsProviderGenerateVerificationTokenParams
+  ) => Awaitable<string>
+  checkVerificationRequest?: (
+    params: SmsProviderCheckVerificationTokenParams
+  ) => Awaitable<VerificationToken | null>
   normalizeIdentifier?: (identifier: string) => string
+  verifyCaptchaToken?: (captcha_token: string) => Awaitable<boolean>
   options?: SMSUserConfig
 }
 

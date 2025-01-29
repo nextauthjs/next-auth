@@ -13,17 +13,6 @@
 "use client"
 
 import * as React from "react"
-import {
-  apiBaseUrl,
-  ClientSessionError,
-  fetchData,
-  now,
-  parseUrl,
-  useOnline,
-} from "./lib/client.js"
-
-import type { ProviderId } from "@auth/core/providers"
-import type { LoggerInstance, Session } from "@auth/core/types"
 import type {
   AuthClientConfig,
   ClientSafeProvider,
@@ -35,6 +24,17 @@ import type {
   SignOutResponse,
   UseSessionOptions,
 } from "./lib/client.js"
+import {
+  apiBaseUrl,
+  ClientSessionError,
+  fetchData,
+  now,
+  parseUrl,
+  useOnline,
+} from "./lib/client.js"
+
+import type { ProviderId } from "@auth/core/providers"
+import type { LoggerInstance, Session } from "@auth/core/types"
 
 // TODO: Remove/move to core?
 export type {
@@ -272,7 +272,8 @@ export async function signIn<Redirect extends boolean = true>(
 
   const signInUrl = `${baseUrl}/${
     providerType === "credentials" ||
-    (providerType === "sms" && signInParams.token)
+    (providerType === "sms" && signInParams.token) ||
+    (providerType === "email" && signInParams.token)
       ? "callback"
       : "signin"
   }/${provider}`

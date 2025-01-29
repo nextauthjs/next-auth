@@ -1,12 +1,12 @@
 import type { CommonProviderOptions } from "./index.js"
 import type { Awaitable, Theme } from "../types.js"
-export type { EmailProviderId } from "./provider-types.js"
-
+import type { NodemailerConfig, NodemailerUserConfig } from "./nodemailer.js"
 // TODO: Kepts for backwards compatibility
 // Remove this import and encourage users
 // to import it from @auth/core/providers/nodemailer directly
 import Nodemailer from "./nodemailer.js"
-import type { NodemailerConfig, NodemailerUserConfig } from "./nodemailer.js"
+
+export type { EmailProviderId } from "./provider-types.js"
 
 /**
  * @deprecated
@@ -53,6 +53,7 @@ export interface EmailConfig extends CommonProviderOptions {
   /** Used with SMTP-based email providers. */
   server?: NodemailerConfig["server"]
   generateVerificationToken?: () => Awaitable<string>
+  verifyCaptchaToken?: (captcha_token: string) => Awaitable<boolean>
   normalizeIdentifier?: (identifier: string) => string
   options?: EmailUserConfig
 }
