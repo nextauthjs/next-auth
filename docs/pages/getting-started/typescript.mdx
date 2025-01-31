@@ -154,6 +154,40 @@ export const { handle } = SvelteKitAuth({
 ```
 
 </Code.Svelte>
+<Code.Express>
+```ts filename="auth.ts"
+import { ExpressAuthConfig } from "@auth/express";
+// Extend the default Session type to include custom properties
+declare module "@auth/core/types" {
+  interface Session {
+    user: {
+      id: string; // Add a custom `id` property to the session user object
+    };
+  }
+}
+
+export const authConfig: ExpressAuthConfig = {
+  callbacks: {
+    /**
+     * The `session` callback is used to customize the session object
+     * returned to the client. Here, we add a custom `id` property to
+     * the session user object, which is populated from the JWT token.
+     *
+     * @param session - The current session object.
+     * @param token - The JWT token containing user information.
+     * @returns The modified session object with the custom `id` property.
+     */
+    async session({ session, token }) {
+      if (token.sub) {
+        // Add the `id` property to the session user object
+        session.user.id = token.sub; // `token.sub` contains the user ID
+      }
+      return session;
+    },
+  },
+};
+```
+</Code.Express>
 </Code>
 
 Module augmentation is not limited to specific interfaces. You can augment any `interface` we've defined, here are some of the more common interfaces that you might want to override based on your use case.
