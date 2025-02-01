@@ -9,7 +9,8 @@ exemptLabels:
   - bug
   - triage
   - accepted
-staleLabel: stale
+staleLabel: stale 
+only: issues
 markComment: >
   It looks like this issue did not receive any activity for 60 days.
   It will be closed in 7 days if no further activity occurs. If you think your issue
