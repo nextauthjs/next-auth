@@ -18,6 +18,12 @@
   --color-button-active-background: #f9f9f9;
   --color-button-active-border: #aaa;
   --color-separator: #ccc;
+  --provider-bg: #fff;
+  --provider-bg-hover: color-mix(
+    in srgb,
+    var(--provider-brand-color) 30%,
+    #fff
+  );
 }
 
 .__next-auth-theme-dark {
@@ -30,6 +36,30 @@
   --color-button-active-background: #060606;
   --color-button-active-border: #666;
   --color-separator: #444;
+  --provider-bg: #161b22;
+  --provider-bg-hover: color-mix(
+    in srgb,
+    var(--provider-brand-color) 30%,
+    #000
+  );
+  img[src$="42-school.svg"],
+  img[src$="apple.svg"],
+  img[src$="boxyhq-saml.svg"],
+  img[src$="eveonline.svg"],
+  img[src$="github.svg"],
+  img[src$="mailchimp.svg"],
+  img[src$="medium.svg"],
+  img[src$="okta.svg"],
+  img[src$="patreon.svg"],
+  img[src$="ping-id.svg"],
+  img[src$="roblox.svg"],
+  img[src$="threads.svg"],
+  img[src$="wikimedia.svg"] {
+    filter: invert(1);
+  }
+  #submitButton {
+    background-color: var(--provider-bg, var(--color-info));
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,25 +73,29 @@
     --color-button-active-background: #060606;
     --color-button-active-border: #666;
     --color-separator: #444;
-  }
-
-  button,
-  a.button {
-    color: var(--provider-dark-color, var(--color-primary)) !important;
-    background-color: var(
-      --provider-dark-bg,
-      var(--color-background)
-    ) !important;
-
-    &:hover {
-      background-color: var(
-        --provider-dark-bg-hover,
-        var(--color-background-hover)
-      ) !important;
+    --provider-bg: #161b22;
+    --provider-bg-hover: color-mix(
+      in srgb,
+      var(--provider-brand-color) 30%,
+      #000
+    );
+    img[src$="42-school.svg"],
+    img[src$="apple.svg"],
+    img[src$="boxyhq-saml.svg"],
+    img[src$="eveonline.svg"],
+    img[src$="github.svg"],
+    img[src$="mailchimp.svg"],
+    img[src$="medium.svg"],
+    img[src$="okta.svg"],
+    img[src$="patreon.svg"],
+    img[src$="ping-id.svg"],
+    img[src$="roblox.svg"],
+    img[src$="threads.svg"],
+    img[src$="wikimedia.svg"] {
+      filter: invert(1);
     }
-
-    span {
-      color: var(--provider-dark-bg) !important;
+    #submitButton {
+      background-color: var(--provider-bg, var(--color-info));
     }
   }
 }
@@ -183,7 +217,7 @@ a.button {
   }
 
   span {
-    color: #fff;
+    color: var(--provider-bg);
   }
 }
 

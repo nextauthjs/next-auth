@@ -67,7 +67,7 @@ describe("toWebRequest", () => {
       const request = toWebRequest(req)
 
       expectations = async () => {
-        expectMatchingJsonRequestBody(req, request)
+        await expectMatchingJsonRequestBody(req, request)
       }
 
       res.send("OK")
@@ -91,7 +91,7 @@ describe("toWebRequest", () => {
       const request = toWebRequest(req)
 
       expectations = async () => {
-        expectMatchingUrlEncodedRequestBody(req, request)
+        await expectMatchingUrlEncodedRequestBody(req, request)
       }
 
       res.send("OK")

@@ -25,6 +25,7 @@
   "homepage": "https://authjs.dev",
   "dependencies": {
     "@ariakit/react": "^0.4.13",
+    "@docsearch/react": "3",
     "@inkeep/widgets": "^0.2.289",
     "@next/third-parties": "^14.2.15",
     "@radix-ui/react-accordion": "^1.2.1",
@@ -34,14 +35,12 @@
     "algoliasearch": "^4.24.0",
     "classnames": "^2.5.1",
     "framer-motion": "^11.11.8",
-    "next": "14.2.15",
+    "next": "14.2.21",
     "next-sitemap": "^4.2.3",
     "nextra": "3.0.15",
     "nextra-theme-docs": "3.0.15",
     "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-instantsearch": "^7.13.3",
-    "react-instantsearch-nextjs": "^0.2.5"
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@types/node": "20.12.7",

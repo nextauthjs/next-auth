@@ -7,6 +7,24 @@ details > *:not(summary) {
   @apply p-4;
 }
 
+html[class~="dark"]
+  :is(
+    img[src$="42-school.svg"],
+    img[src$="apple.svg"],
+    img[src$="boxyhq-saml.svg"],
+    img[src$="eveonline.svg"],
+    img[src$="github.svg"],
+    img[src$="hasura.svg"],
+    img[src$="mailchimp.svg"],
+    img[src$="medium.svg"],
+    img[src$="okta.svg"],
+    img[src$="prisma.svg"],
+    img[src$="threads.svg"],
+    img[src$="wikimedia.svg"]
+  ) {
+  filter: invert(1);
+}
+
 :is(html[class~="dark"]) ::selection {
   @apply bg-purple-500/40;
 }
@@ -260,4 +278,10 @@ html > head:has(meta[content*="reference/core/providers"]) + body .provider {
   padding: 1rem;
   font-size: 1rem;
   color: #000 !important;
+}
+
+.nextra-sidebar-container {
+  .DocSearch-Button {
+    @apply hidden;
+  }
 }

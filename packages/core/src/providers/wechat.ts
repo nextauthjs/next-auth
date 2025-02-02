@@ -81,7 +81,7 @@ export default function WeChat(
   }
 ): OAuthConfig<WeChatProfile> {
   const { clientId, clientSecret, platformType = "OfficialAccount" } = options
-  console.log(options)
+
   return {
     id: "wechat",
     name: "WeChat",
