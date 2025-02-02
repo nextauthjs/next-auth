@@ -158,7 +158,7 @@ export const { handle } = SvelteKitAuth({
 ```ts filename="auth.ts"
 import { ExpressAuthConfig } from "@auth/express";
 // Extend the default Session type to include custom properties
-declare module "@auth/core/types" {
+declare module "@auth/express" {
   interface Session {
     user: {
       id: string; // Add a custom `id` property to the session user object
