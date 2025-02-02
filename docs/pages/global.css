@@ -279,3 +279,9 @@ html > head:has(meta[content*="reference/core/providers"]) + body .provider {
   font-size: 1rem;
   color: #000 !important;
 }
+
+.nextra-sidebar-container {
+  .DocSearch-Button {
+    @apply hidden;
+  }
+}
