@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>osu!</b> integration.</span>
  * <a href="https://osu.ppy.sh/home">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/osu.svg" height="48" />
@@ -14,7 +14,7 @@ export interface OsuUserCompact {
   avatar_url: string
   country_code: string
   default_group: string
-  id: string
+  id: number
   is_active: boolean
   is_bot: boolean
   is_deleted: boolean
@@ -70,13 +70,15 @@ export interface OsuProfile extends OsuUserCompact, Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Osu from "@auth/core/providers/osu"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Osu({ clientId: OSU_CLIENT_ID, clientSecret: OSU_CLIENT_SECRET })],
+ *   providers: [
+ *     Osu({ clientId: OSU_CLIENT_ID, clientSecret: OSU_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *
@@ -125,7 +127,7 @@ export default function Osu<P extends OsuProfile>(
     userinfo: "https://osu.ppy.sh/api/v2/me",
     profile(profile) {
       return {
-        id: profile.id,
+        id: profile.id.toString(),
         email: null,
         name: profile.username,
         image: profile.avatar_url,

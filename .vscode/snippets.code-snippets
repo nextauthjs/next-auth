@@ -3,12 +3,12 @@
     "description": "Markdown link to OAuth 2 specification",
     "scope": "typescript",
     "prefix": "oauth2",
-    "body": ["[OAuth 2](https://datatracker.ietf.org/doc/html/rfc6749)"]
+    "body": ["[OAuth 2](https://datatracker.ietf.org/doc/html/rfc6749)"],
   },
   "oidc-spec": {
     "description": "Markdown link to OpenID Connect specification",
     "scope": "typescript",
     "prefix": "oidc",
-    "body": ["[OIDC](https://openid.net/specs/openid-connect-core-1_0.html)"]
-  }
+    "body": ["[OIDC](https://openid.net/specs/openid-connect-core-1_0.html)"],
+  },
 }

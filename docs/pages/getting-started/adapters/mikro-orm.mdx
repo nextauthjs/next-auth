@@ -6,7 +6,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [MikroORM Docs](https://mikro-orm.io/docs/installation)
+- [MikroORM documentation](https://mikro-orm.io/docs/installation)
 
 ## Setup
 
@@ -43,6 +43,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { MikroOrmAdapter } from "@auth/mikro-orm-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: MikroOrmAdapter({
+      // MikroORM options object - https://mikro-orm.io/docs/next/configuration#driver
+      dbName: import.meta.env.DATABASE_CONNECTION_STRING,
+      type: "sqlite",
+      debug: true,
+    }),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
@@ -108,7 +128,7 @@ import {
 } from "@mikro-orm/core"
 import { defaultEntities } from "@auth/mikro-orm-adapter"
 
-const { Account, Session } = defaultEntities
+const type { Account, Session } = defaultEntities
 
 @Entity()
 export class User implements defaultEntities.User {

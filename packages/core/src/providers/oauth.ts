@@ -1,7 +1,8 @@
-import type { Client } from "oauth4webapi"
+import type { Client, PrivateKey } from "oauth4webapi"
 import type { CommonProviderOptions } from "../providers/index.js"
 import type { Awaitable, Profile, TokenSet, User } from "../types.js"
 import type { AuthConfig } from "../index.js"
+import type { conformInternal, customFetch } from "../lib/symbols.js"
 
 // TODO: fix types
 type AuthorizationParameters = any
@@ -10,7 +11,7 @@ type IssuerMetadata = any
 type OAuthCallbackChecks = any
 type OpenIDCallbackChecks = any
 
-export type { OAuthProviderType } from "./oauth-types.js"
+export type { OAuthProviderId } from "./provider-types.js"
 
 export type OAuthChecks = OpenIDCallbackChecks | OAuthCallbackChecks
 
@@ -45,6 +46,7 @@ interface AdvancedEndpointHandler<P extends UrlParams, C, R> {
   request?: EndpointRequest<C, R, P>
   /** @internal */
   conform?: (response: Response) => Awaitable<Response | undefined>
+  clientPrivateKey?: CryptoKey | PrivateKey
 }
 
 /**
@@ -203,7 +205,7 @@ export interface OAuth2Config<Profile>
    * Pass overrides to the underlying OAuth library.
    * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
    */
-  client?: Partial<Client>
+  client?: Partial<Client & { token_endpoint_auth_method: string }>
   style?: OAuthProviderButtonStyles
   /**
    * Normally, when you sign in with an OAuth provider and another account
@@ -220,6 +222,8 @@ export interface OAuth2Config<Profile>
    */
   allowDangerousEmailAccountLinking?: boolean
   redirectProxyUrl?: AuthConfig["redirectProxyUrl"]
+  /** @see {customFetch} */
+  [customFetch]?: typeof fetch
   /**
    * The options provided by the user.
    * We will perform a deep-merge of these values
@@ -227,6 +231,8 @@ export interface OAuth2Config<Profile>
    *
    * @internal
    */
+  /** @see {conformInternal} */
+  [conformInternal]?: true
   options?: OAuthUserConfig<Profile>
 }
 
@@ -239,6 +245,11 @@ export interface OIDCConfig<Profile>
   extends Omit<OAuth2Config<Profile>, "type" | "checks"> {
   type: "oidc"
   checks?: Array<NonNullable<OAuth2Config<Profile>["checks"]>[number] | "nonce">
+  /**
+   * If set to `false`, the `userinfo_endpoint` will be fetched for the user data.
+   * @note An `id_token` is still required to be returned during the authorization flow.
+   */
+  idToken?: boolean
 }
 
 export type OAuthConfig<Profile> = OIDCConfig<Profile> | OAuth2Config<Profile>
@@ -258,7 +269,11 @@ export type OAuthConfigInternal<Profile> = Omit<
   token?: {
     url: URL
     request?: TokenEndpointHandler["request"]
-    /** @internal */
+    clientPrivateKey?: CryptoKey | PrivateKey
+    /**
+     * @internal
+     * @deprecated
+     */
     conform?: TokenEndpointHandler["conform"]
   }
   userinfo?: { url: URL; request?: UserinfoEndpointHandler["request"] }
@@ -281,6 +296,7 @@ export type OAuthConfigInternal<Profile> = Omit<
 
 export type OIDCConfigInternal<Profile> = OAuthConfigInternal<Profile> & {
   checks: OIDCConfig<Profile>["checks"]
+  idToken: OIDCConfig<Profile>["idToken"]
 }
 
 export type OAuthUserConfig<Profile> = Omit<

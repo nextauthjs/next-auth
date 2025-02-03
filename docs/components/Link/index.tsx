@@ -1,4 +1,3 @@
-import React from "react"
 import { ChildrenProps } from "../../utils/types"
 
 export function Link({
@@ -7,7 +6,7 @@ export function Link({
 }: ChildrenProps & { href: string; className?: string; target?: string }) {
   return (
     <a
-      className="no-underline text-sky-600 font-medium dark:text-sky-500"
+      className="font-medium text-sky-600 no-underline dark:text-sky-500"
       {...rest}
     >
       {children}

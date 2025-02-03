@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Battle.net</b> integration.</span>
  * <a href="https://Battle.net/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/battlenet.svg" height="48" width="48"/>
@@ -33,13 +33,19 @@ export type BattleNetIssuer =
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import BattleNet from "@auth/core/providers/battlenet"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [BattleNet({ clientId: BATTLENET_CLIENT_ID, clientSecret: BATTLENET_CLIENT_SECRET. issuer: BATTLENET_ISSUER })],
+ *   providers: [
+ *     BattleNet({
+ *       clientId: BATTLENET_CLIENT_ID,
+ *       clientSecret: BATTLENET_CLIENT_SECRET,
+ *       issuer: BATTLENET_ISSUER,
+ *     }),
+ *   ],
  * })
  * ```
  * issuer must be one of these values, based on the available regions:

@@ -51,11 +51,8 @@
  * @module types
  */
 
-import type { CookieSerializeOptions } from "cookie"
-import type {
-  OAuth2TokenEndpointResponse,
-  OpenIDTokenEndpointResponse,
-} from "oauth4webapi"
+import type { SerializeOptions } from "./lib/vendored/cookie.js"
+import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
 import type { JWTOptions } from "./jwt.js"
@@ -102,9 +99,7 @@ export interface Theme {
  * Some of them are available with different casing,
  * but they refer to the same value.
  */
-export type TokenSet = Partial<
-  OAuth2TokenEndpointResponse | OpenIDTokenEndpointResponse
-> & {
+export type TokenSet = Partial<TokenEndpointResponse> & {
   /**
    * Date of when the `access_token` expires in seconds.
    * This value is calculated from the `expires_in` value.
@@ -118,8 +113,8 @@ export type TokenSet = Partial<
  * Usually contains information about the provider being used
  * and also extends `TokenSet`, which is different tokens returned by OAuth Providers.
  */
-export interface Account extends Partial<OpenIDTokenEndpointResponse> {
-  /** Provider's id for this account. Eg.: "google" */
+export interface Account extends Partial<TokenEndpointResponse> {
+  /** Provider's id for this account. E.g. "google". See the full list at https://authjs.dev/reference/core/providers */
   provider: string
   /**
    * This value depends on the type of the provider being used to create the account.
@@ -137,11 +132,11 @@ export interface Account extends Partial<OpenIDTokenEndpointResponse> {
    */
   userId?: string
   /**
-   * Calculated value based on {@link OAuth2TokenEndpointResponse.expires_in}.
+   * Calculated value based on {@link TokenEndpointResponse.expires_in}.
    *
-   * It is the absolute timestamp (in seconds) when the {@link OAuth2TokenEndpointResponse.access_token} expires.
+   * It is the absolute timestamp (in seconds) when the {@link TokenEndpointResponse.access_token} expires.
    *
-   * This value can be used for implementing token rotation together with {@link OAuth2TokenEndpointResponse.refresh_token}.
+   * This value can be used for implementing token rotation together with {@link TokenEndpointResponse.refresh_token}.
    *
    * @see https://authjs.dev/guides/refresh-token-rotation#database-strategy
    * @see https://www.rfc-editor.org/rfc/rfc6749#section-5.1
@@ -188,7 +183,7 @@ export interface Profile {
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
 export interface CookieOption {
   name: string
-  options: CookieSerializeOptions
+  options: SerializeOptions
 }
 
 /** [Documentation](https://authjs.dev/reference/core#cookies) */
@@ -253,17 +248,19 @@ export interface DefaultSession {
 /** The active session of the logged in user. */
 export interface Session extends DefaultSession {}
 
-/**
- * The shape of the returned object in the OAuth providers' `profile` callback,
- * available in the `jwt` and `session` callbacks,
- * or the second parameter of the `session` callback, when using a database.
- */
-export interface User {
+export interface DefaultUser {
   id?: string
   name?: string | null
   email?: string | null
   image?: string | null
 }
+
+/**
+ * The shape of the returned object in the OAuth providers' `profile` callback,
+ * available in the `jwt` and `session` callbacks,
+ * or the second parameter of the `session` callback, when using a database.
+ */
+export interface User extends DefaultUser {}
 
 // Below are types that are only supposed be used by next-auth internally
 

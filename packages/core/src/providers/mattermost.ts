@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Mattermost</b> integration.</span>
  * <a href="https://mattermost.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/mattermost.svg" height="48" width="48"/>
@@ -77,13 +77,19 @@ export interface MattermostProfile {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Mattermost from "@auth/core/providers/mattermost"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Mattermost({ clientId: MATTERMOST_CLIENT_ID, clientSecret: MATTERMOST_CLIENT_SECRET, issuer: MATTERMOST_ISSUER // The base url of your Mattermost instance. e.g `https://my-cool-server.cloud.mattermost.com` })],
+ *   providers: [
+ *     Mattermost({
+ *       clientId: MATTERMOST_CLIENT_ID,
+ *       clientSecret: MATTERMOST_CLIENT_SECRET,
+ *       issuer: MATTERMOST_ISSUER, // The base url of your Mattermost instance. e.g `https://my-cool-server.cloud.mattermost.com`
+ *     }),
+ *   ],
  * })
  * ```
  *

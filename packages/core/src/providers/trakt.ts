@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Trakt</b> integration.</span>
  * <a href="https://www.trakt.tv/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/trakt.svg" height="48" />
@@ -36,13 +36,15 @@ export interface TraktUser extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Trakt from "@auth/core/providers/trakt"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Trakt({ clientId: TRAKT_CLIENT_ID, clientSecret: TRAKT_CLIENT_SECRET })],
+ *   providers: [
+ *     Trakt({ clientId: TRAKT_CLIENT_ID, clientSecret: TRAKT_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

@@ -21,10 +21,24 @@ describe.each([
     config.projectId = "authjs-test"
     config.databaseURL = "http://localhost:8080"
 
-    const db = initFirestore(config)
     const preferSnakeCase = config.namingStrategy === "snake_case"
+
+    config.collections = {
+      accounts: preferSnakeCase ? "authjs_accounts" : "authjsAccounts",
+      verificationTokens: preferSnakeCase
+        ? "verification_tokens"
+        : "verificationTokens",
+    }
+    const db = initFirestore(config)
     const mapper = mapFieldsFactory(preferSnakeCase)
-    const C = collectionsFactory(db, preferSnakeCase)
+    const C = collectionsFactory(db, preferSnakeCase, {
+      users: "users",
+      accounts: preferSnakeCase ? "authjs_accounts" : "authjsAccounts",
+      sessions: "sessions",
+      verificationTokens: preferSnakeCase
+        ? "verification_tokens"
+        : "verificationTokens",
+    })
 
     for (const [name, collection] of Object.entries(C)) {
       test(`collection "${name}" should be empty`, async () => {

@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Zitadel</b> integration.</span>
  * <a href="https://zitadel.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zitadel.svg" height="48"/>
@@ -50,13 +50,18 @@ export interface ZitadelProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import ZITADEL from "@auth/core/providers/zitadel"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [ZITADEL({ clientId: ZITADEL_CLIENT_ID, clientSecret: ZITADEL_CLIENT_SECRET })],
+ *   providers: [
+ *     ZITADEL({
+ *       clientId: ZITADEL_CLIENT_ID,
+ *       clientSecret: ZITADEL_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -84,7 +89,7 @@ export interface ZitadelProfile extends Record<string, any> {
  * :::tip
  *
  * ZITADEL also returns a email_verified boolean property in the profile. You can use this property to restrict access to people with verified accounts.
- * ```ts title=pages/api/auth/[...nextauth].js
+ * ```ts
  * const options = {
  *   ...
  *   callbacks: {

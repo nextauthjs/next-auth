@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>FourSquare</b> integration.</span>
  * <a href="https://foursquare.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/foursquare.svg" height="48" width="48"/>
@@ -21,19 +21,24 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import FourSquare from "@auth/core/providers/foursquare"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [FourSquare({ clientId: FOURSQUARE_CLIENT_ID, clientSecret: FOURSQUARE_CLIENT_SECRET })],
+ *   providers: [
+ *     FourSquare({
+ *       clientId: FOURSQUARE_CLIENT_ID,
+ *       clientSecret: FOURSQUARE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
  * ### Resources
  *
- *  - [FourSquare OAuth documentation](https://developer.foursquare.com/docs/places-api/authentication/#web-applications)
+ *  - [FourSquare OAuth documentation](https://docs.foursquare.com/developer/reference/authentication)
  *
  * ### Notes
  *
@@ -73,8 +78,10 @@ export default function Foursquare(
     token: "https://foursquare.com/oauth2/access_token",
     userinfo: {
       url: `https://api.foursquare.com/v2/users/self?v=${apiVersion}`,
-      request({ tokens, provider }) {
-        const url = new URL(provider.userinfo?.url!)
+      async request({ tokens, provider }) {
+        if (!provider.userinfo) return
+
+        const url = new URL(provider.userinfo.url)
         url.searchParams.append("oauth_token", tokens.access_token!)
         return fetch(url).then((res) => res.json())
       },

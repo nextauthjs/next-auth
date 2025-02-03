@@ -1,30 +1,36 @@
 import { base } from "$app/paths"
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 
-import type {
-  BuiltInProviderType,
-  RedirectableProviderType,
-} from "@auth/core/providers"
+import type { LoggerInstance } from "@auth/core/types"
 import type { WebAuthnOptionsResponseBody } from "@auth/core/types"
-import type { SignInOptions, SignInAuthorizationParams } from "./client.js"
-import type { LiteralUnion } from "./types.js"
+import type { ProviderId } from "@auth/core/providers"
+import type {
+  SignInAuthorizationParams,
+  SignInOptions,
+  SignInResponse,
+} from "./client.js"
+
+const logger: LoggerInstance = {
+  debug: console.debug,
+  error: console.error,
+  warn: console.warn,
+}
 
 /**
  * Fetch webauthn options from server and prompt user for authentication or registration.
  * Returns either the completed WebAuthn response or an error request.
- *
- * @param providerId provider ID
- * @param options SignInOptions
- * @returns WebAuthn response or error
  */
-async function webAuthnOptions(providerId: string, options?: SignInOptions) {
-  const baseUrl = `${base}/auth`
+async function webAuthnOptions(
+  providerID: ProviderId,
+  options?: Omit<SignInOptions, "redirect">
+) {
+  const baseUrl = base ?? ""
 
   // @ts-expect-error
   const params = new URLSearchParams(options)
 
   const optionsResp = await fetch(
-    `${baseUrl}/webauthn-options/${providerId}?${params}`
+    `${baseUrl}/webauthn-options/${providerID}?${params}`
   )
   if (!optionsResp.ok) {
     return { error: optionsResp }
@@ -41,78 +47,84 @@ async function webAuthnOptions(providerId: string, options?: SignInOptions) {
 }
 
 /**
- * Client-side method to initiate a webauthn signin flow
- * or send the user to the signin page listing all possible providers.
- * Automatically adds the CSRF token to the request.
- *
- * [Documentation](https://authjs.dev/reference/sveltekit/client#signin)
+ * Initiate a WebAuthn signin flow.
+ * @see https://authjs.dev/getting-started/authentication/webauthn
  */
-export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined,
->(
-  providerId?: LiteralUnion<
-    P extends RedirectableProviderType
-      ? P | BuiltInProviderType
-      : BuiltInProviderType
-  >,
-  options?: SignInOptions,
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<true>,
   authorizationParams?: SignInAuthorizationParams
-) {
-  const { callbackUrl = window.location.href, redirect = true } = options ?? {}
+): Promise<void>
+export async function signIn(
+  provider?: ProviderId,
+  options?: SignInOptions<false>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse>
+export async function signIn<Redirect extends boolean = true>(
+  provider?: ProviderId,
+  options?: SignInOptions<Redirect>,
+  authorizationParams?: SignInAuthorizationParams
+): Promise<SignInResponse | void> {
+  const { callbackUrl, ...rest } = options ?? {}
+  const {
+    redirectTo = callbackUrl ?? window.location.href,
+    redirect = true,
+    ...signInParams
+  } = rest
 
-  // TODO: Support custom providers
-  const isCredentials = providerId === "credentials"
-  const isEmail = providerId === "email"
-  const isWebAuthn = providerId === "webauthn"
-  const isSupportingReturn = isCredentials || isEmail || isWebAuthn
+  const baseUrl = base ?? ""
 
-  const basePath = base ?? ""
-  const signInUrl = `${basePath}/auth/${
-    isCredentials || isWebAuthn ? "callback" : "signin"
-  }/${providerId}`
-
-  const _signInUrl = `${signInUrl}?${new URLSearchParams(authorizationParams)}`
-
-  // Execute WebAuthn client flow if needed
-  const webAuthnBody: Record<string, unknown> = {}
-  if (isWebAuthn) {
-    const { data, error, action } = await webAuthnOptions(providerId, options)
-    if (error) {
-      // logger.error(new Error(await error.text()))
-      return
-    }
-    webAuthnBody.data = JSON.stringify(data)
-    webAuthnBody.action = action
+  if (!provider || provider !== "webauthn") {
+    // TODO: Add docs link with explanation
+    throw new TypeError(
+      [
+        `Provider id "${provider}" does not refer to a WebAuthn provider.`,
+        'Please use `import { signIn } from "@auth/sveltekit/client"` instead.',
+      ].join("\n")
+    )
   }
 
-  // TODO: Remove this since Sveltekit offers the CSRF protection via origin check
-  const csrfTokenResponse = await fetch(`${basePath}/auth/csrf`)
-  const { csrfToken } = await csrfTokenResponse.json()
+  const webAuthnBody: Record<string, unknown> = {}
+  const webAuthnResponse = await webAuthnOptions(provider, signInParams)
+  if (webAuthnResponse.error) {
+    logger.error(new Error(await webAuthnResponse.error.text()))
+    return
+  }
+  webAuthnBody.data = JSON.stringify(webAuthnResponse.data)
+  webAuthnBody.action = webAuthnResponse.action
 
-  const res = await fetch(_signInUrl, {
+  const signInUrl = `${baseUrl}/callback/${provider}?${new URLSearchParams(authorizationParams)}`
+  const res = await fetch(signInUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
-    // @ts-ignore
     body: new URLSearchParams({
-      ...options,
-      csrfToken,
-      callbackUrl,
+      ...signInParams,
       ...webAuthnBody,
+      callbackUrl: redirectTo,
     }),
   })
 
-  const data = await res.clone().json()
+  const data = await res.json()
 
-  if (redirect || !isSupportingReturn) {
-    // TODO: Do not redirect for Credentials and Email providers by default in next major
-    window.location.href = data.url ?? callbackUrl
+  if (redirect) {
+    const url = data.url ?? callbackUrl
+    window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
-    if (data.url.includes("#")) window.location.reload()
+    if (url.includes("#")) window.location.reload()
     return
   }
 
-  return res
+  const error = new URL(data.url).searchParams.get("error")
+  const code = new URL(data.url).searchParams.get("code")
+
+  return {
+    error,
+    code,
+    status: res.status,
+    ok: res.ok,
+    url: error ? null : data.url,
+  } as any
 }

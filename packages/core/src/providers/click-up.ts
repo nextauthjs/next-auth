@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>ClickUp</b> integration.</span>
  * <a href="https://clickup.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/click-up.svg" height="48" width="48"/>
@@ -38,7 +38,12 @@ export interface ClickUpProfile {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [ClickUp({ clientId: CLICKUP_CLIENT_ID, clientSecret: CLICKUP_CLIENT_SECRET })],
+ *   providers: [
+ *     ClickUp({
+ *       clientId: CLICKUP_CLIENT_ID,
+ *       clientSecret: CLICKUP_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

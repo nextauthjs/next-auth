@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#24292f", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>GitHub</b> integration.</span>
  * <a href="https://github.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/github.svg" height="48" width="48"/>
@@ -85,7 +85,9 @@ export interface GitHubProfile {
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET })],
+ *   providers: [
+ *     GitHub({ clientId: GITHUB_CLIENT_ID, clientSecret: GITHUB_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

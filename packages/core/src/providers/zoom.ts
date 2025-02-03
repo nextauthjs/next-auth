@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Zoom</b> integration.</span>
  * <a href="https://zoom.us/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/zoom.svg" height="48" />
@@ -54,13 +54,15 @@ export interface ZoomProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Zoom from "@auth/core/providers/zoom"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Zoom({ clientId: ZOOM_CLIENT_ID, clientSecret: ZOOM_CLIENT_SECRET })],
+ *   providers: [
+ *     Zoom({ clientId: ZOOM_CLIENT_ID, clientSecret: ZOOM_CLIENT_SECRET }),
+ *   ],
  * })
  * ```
  *

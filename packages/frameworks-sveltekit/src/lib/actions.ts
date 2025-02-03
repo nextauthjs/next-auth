@@ -3,7 +3,8 @@ import type { RequestEvent } from "@sveltejs/kit"
 import { parse } from "set-cookie-parser"
 import { env } from "$env/dynamic/private"
 
-import { Auth, createActionURL, raw, skipCSRFCheck } from "@auth/core"
+import { Auth, createActionURL, raw } from "@auth/core"
+import type { ProviderType } from "@auth/core/providers"
 import type { SvelteKitAuthConfig } from "./types"
 import { setEnvDefaults } from "./env"
 
@@ -27,45 +28,44 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
-  const base = createActionURL(
-    "signin",
-    protocol,
-    headers,
-    env,
-    config.basePath
-  )
+  const signInURL = createActionURL("signin", protocol, headers, env, config)
 
   if (!provider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
-    if (shouldRedirect) redirect(302, url)
-    return url
+    signInURL.searchParams.append("callbackUrl", callbackUrl)
+    if (shouldRedirect) redirect(302, signInURL.toString())
+    return signInURL.toString()
   }
 
-  let url = `${base}/${provider}?${new URLSearchParams(authorizationParams)}`
-  let foundProvider: SignInParams[0] | undefined = undefined
+  let url = `${signInURL}/${provider}?${new URLSearchParams(authorizationParams)}`
+  let foundProvider: { id?: SignInParams[0]; type?: ProviderType } = {}
 
-  for (const _provider of config.providers) {
-    const { id } = typeof _provider === "function" ? _provider() : _provider
+  for (const providerConfig of config.providers) {
+    const { options, ...defaults } =
+      typeof providerConfig === "function" ? providerConfig() : providerConfig
+    const id = (options?.id as string | undefined) ?? defaults.id
     if (id === provider) {
-      foundProvider = id
+      foundProvider = {
+        id,
+        type: (options?.type as ProviderType | undefined) ?? defaults.type,
+      }
       break
     }
   }
 
-  if (!foundProvider) {
-    const url = `${base}?${new URLSearchParams({ callbackUrl })}`
+  if (!foundProvider.id) {
+    const url = `${signInURL}?${new URLSearchParams({ callbackUrl })}`
     if (shouldRedirect) redirect(302, url)
     return url
   }
 
-  if (foundProvider === "credentials") {
+  if (foundProvider.type === "credentials") {
     url = url.replace("signin", "callback")
   }
 
   headers.set("Content-Type", "application/x-www-form-urlencoded")
   const body = new URLSearchParams({ ...rest, callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? []) {
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -92,18 +92,12 @@ export async function signOut(
   const headers = new Headers(request.headers)
   headers.set("Content-Type", "application/x-www-form-urlencoded")
 
-  const url = createActionURL(
-    "signout",
-    protocol,
-    headers,
-    env,
-    config.basePath
-  )
+  const url = createActionURL("signout", protocol, headers, env, config)
   const callbackUrl = options?.redirectTo ?? headers.get("Referer") ?? "/"
   const body = new URLSearchParams({ callbackUrl })
   const req = new Request(url, { method: "POST", headers, body })
 
-  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+  const res = await Auth(req, { ...config, raw })
 
   for (const c of res?.cookies ?? [])
     event.cookies.set(c.name, c.value, { path: "/", ...c.options })
@@ -131,7 +125,7 @@ export async function auth(
     protocol,
     req.headers,
     env,
-    config.basePath
+    config
   )
   const request = new Request(sessionUrl, {
     headers: { cookie: req.headers.get("cookie") ?? "" },

@@ -8,7 +8,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 ## Resources
 
-- [Prisma Docs](https://www.prisma.io/docs)
+- [Prisma documentation](https://www.prisma.io/docs)
 
 ## Setup
 
@@ -21,11 +21,25 @@ npm install prisma --save-dev
 
 ### Environment Variables
 
+Prisma needs to set up the environment variable to establish a connection with your database and retrieve data. Prisma requires the `DATABASE_URL` environment variable to create the connection. For more information, read the [docs](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql).
+
 ```sh
-DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
 ```
 
 ### Configuration
+
+To improve performance using `Prisma ORM`, we can set up the Prisma instance to ensure only one instance is created throughout the project and then import it from any file as needed. This approach avoids recreating instances of PrismaClient every time it is used. Finally, we can import the Prisma instance from the `auth.ts` file configuration.
+
+```ts filename="prisma.ts"
+import { PrismaClient } from "@prisma/client"
+
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+
+export const prisma = globalForPrisma.prisma || new PrismaClient()
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+```
 
 <Callout type="warning">
   We recommend using version `@prisma/client@5.12.0` or above if using
@@ -39,9 +53,7 @@ DATABASE_URL=postgres://postgres:adminadmin@0.0.0.0:5432/db
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -50,14 +62,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "@/prisma"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: PrismaAdapter(prisma),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: PrismaAdapter(prisma),
@@ -71,9 +97,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 ```ts filename="./src/routes/auth.route.ts"
 import { ExpressAuth } from "@auth/express"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/prisma"
 
 const app = express()
 
@@ -103,53 +127,11 @@ The original database edge-runtime workaround, to split your `auth.ts` configura
 At the moment, Prisma is still working on being fully compatible with edge runtimes like Vercel's. See the issue being tracked [here](https://github.com/prisma/prisma/issues/20560), and Prisma's announcement about early edge support in the `5.9.1` [changelog](https://github.com/prisma/prisma/releases/tag/5.9.0). There are two options to deal with this issue:
 
 - Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
-- Switch to the `jwt` session strategy
+- Follow our [Edge Compatibility](/guides/edge-compatibility) page as the workaround. This uses the `jwt` session strategy and separates the `auth.ts` configuration into two files.
 
 Using Prisma with the `jwt` session strategy and `@prisma/client@5.9.1` or above doesn't require any additional modifications, other than ensuring you don't do any database queries in your middleware.
 
 Since `@prisma/client@5.9.1`, Prisma no longer throws about being incompatible with the edge runtime at instantiation, but at query time. Therefore, it is possible to import it in files being used in your middleware as long as you do not execute any queries in your middleware.
-
-<Accordions>
-<Accordion title="Using '@prisma/client' before 'v5.9.1' requires some additional workarounds">
-
-You will need to separate your Auth.js configuration into two files and use the [lazy initialization](/reference/next-auth#lazy-initialization) feature to instantiate a second copy of Auth.js in the middleware without the adapter.
-
-Define the `auth.config.ts` file:
-
-```ts filename="auth.config.ts"
-export default {
-  providers: [GitHub, Google, Facebook, Twitter],
-} satisfies NextAuthConfig
-```
-
-Import and use the `PrismaAdapter` in the `auth.ts` file. This is your main Auth.js configuration file that you'll use around the rest of your application.
-
-```ts filename="auth.ts"
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client"
-
-globalThis.prisma ??= new PrismaClient()
-
-export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-  adapter: PrismaAdapter(globalThis.prisma),
-  session: { strategy: "jwt" },
-  ...authConfig,
-})
-```
-
-In the middleware file, however, import the first `auth.config` and instantiate a second instance of `NextAuth` using it as the configuration (note that the `adapter` is not used here to avoid the error).
-
-```ts filename="middleware.ts"
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
-
-export const middleware = NextAuth(authConfig).auth
-```
-
-</Accordion>
-</Accordions>
 
 ### Schema
 
@@ -259,8 +241,8 @@ model User {
   email         String?         @unique
   emailVerified DateTime?
   image         String?
-  Session       Session[]
-  Account       Account?
+  accounts      Account[]
+  sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
@@ -496,7 +478,7 @@ model VerificationToken {
 
 // Optional for WebAuthn support
 model Authenticator {
-  credentialID         String  @unique
+  credentialID         String  @id @map("_id")
   userId               String  @db.ObjectId
   providerAccountId    String
   credentialPublicKey  String
@@ -507,7 +489,7 @@ model Authenticator {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([userId, credentialID])
+  @@unique([userId, credentialID])
 }
 ```
 
@@ -541,7 +523,7 @@ This will create an SQL migration file and execute it:
 npm exec prisma migrate dev
 ```
 
-Note that you will need to specify your database connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project. Note Prisma doesn't support `.env.local` syntax, it must be named `.env`. For more information, check out their [environment variables docs](https://www.prisma.io/docs/orm/more/development-environment/environment-variables/using-multiple-env-files).
+Note that you will need to specify your database connection string in the environment variable `DATABASE_URL`. You can do this by setting it in a `.env` file at the root of your project.
 
 ### Generate Prisma Client
 
@@ -615,6 +597,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@map("verificationtokens")
+  @@map("verification_tokens")
 }
 ```

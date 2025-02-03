@@ -7,7 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Hasura Docs](https://hasura.io/docs)
+- [Hasura documentation](https://hasura.io/docs)
 
 ## Setup
 
@@ -42,6 +42,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { HasuraAdapter } from "@auth/hasura-adapter"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: HasuraAdapter({
+      endpoint: import.meta.env.AUTH_HASURA_GRAPHQL,
+      adminSecret: import.meta.env.AUTH_HASURA_SECRET,
+    }),
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./auth.ts"

@@ -77,6 +77,49 @@ export const { auth, handlers } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="plugin@auth.ts"
+import { DefaultSession, QwikAuth$ } from "@auth/qwik"
+
+declare module "@auth/qwik" {
+  /**
+   * Returned by the `useSession` hook and the `session` object in the sharedMap
+   */
+  interface Session {
+    user: {
+      /** The user's postal address. */
+      address: string
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"]
+  }
+}
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    callbacks: {
+      session({ session, token, user }) {
+        // `session.user.address` is now a valid property, and will be type-checked
+        // in places like `useSession().user` or `sharedMap.get('session').user`
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            address: user.address,
+          },
+        }
+      },
+    },
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="auth.ts"
@@ -111,6 +154,40 @@ export const { handle } = SvelteKitAuth({
 ```
 
 </Code.Svelte>
+<Code.Express>
+```ts filename="auth.ts"
+import { ExpressAuthConfig } from "@auth/express";
+// Extend the default Session type to include custom properties
+declare module "@auth/express" {
+  interface Session {
+    user: {
+      id: string; // Add a custom `id` property to the session user object
+    };
+  }
+}
+
+export const authConfig: ExpressAuthConfig = {
+  callbacks: {
+    /**
+     * The `session` callback is used to customize the session object
+     * returned to the client. Here, we add a custom `id` property to
+     * the session user object, which is populated from the JWT token.
+     *
+     * @param session - The current session object.
+     * @param token - The JWT token containing user information.
+     * @returns The modified session object with the custom `id` property.
+     */
+    async session({ session, token }) {
+      if (token.sub) {
+        // Add the `id` property to the session user object
+        session.user.id = token.sub; // `token.sub` contains the user ID
+      }
+      return session;
+    },
+  },
+};
+```
+</Code.Express>
 </Code>
 
 Module augmentation is not limited to specific interfaces. You can augment any `interface` we've defined, here are some of the more common interfaces that you might want to override based on your use case.

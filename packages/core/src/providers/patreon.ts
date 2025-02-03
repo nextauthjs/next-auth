@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>Patreon</b> integration.</span>
  * <a href="https://www.patreon.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/patreon.svg" height="48" />
@@ -28,13 +28,18 @@ export interface PatreonProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import Patreon from "@auth/core/providers/patreon"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [Patreon({ clientId: PATREON_CLIENT_ID, clientSecret: PATREON_CLIENT_SECRET })],
+ *   providers: [
+ *     Patreon({
+ *       clientId: PATREON_CLIENT_ID,
+ *       clientSecret: PATREON_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *

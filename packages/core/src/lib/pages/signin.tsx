@@ -126,22 +126,10 @@ export default function SigninPage(props: {
                     type="submit"
                     className="button"
                     style={{
-                      "--provider-bg": "#fff",
-                      "--provider-bg-hover": `color-mix(in srgb, ${color} 30%, #fff)`,
-                      "--provider-dark-bg": "#161b22",
-                      "--provider-dark-bg-hover": `color-mix(in srgb, ${color} 30%, #000)`,
+                      "--provider-brand-color": color,
                     }}
                     tabIndex={0}
                   >
-                    {logo && (
-                      <img
-                        loading="lazy"
-                        height={24}
-                        width={24}
-                        id="provider-logo"
-                        src={logo}
-                      />
-                    )}
                     <span
                       style={{
                         filter:
@@ -152,6 +140,7 @@ export default function SigninPage(props: {
                     >
                       Sign in with {provider.name}
                     </span>
+                    {logo && <img loading="lazy" height={24} src={logo} />}
                   </button>
                 </form>
               ) : null}

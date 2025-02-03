@@ -1,5 +1,5 @@
 /**
- * <div style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
  * <span>Built-in <b>EVEOnline</b> integration.</span>
  * <a href="https://eveonline.com">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/eveonline.svg" height="48" width="48"/>
@@ -31,13 +31,18 @@ export interface EVEOnlineProfile extends Record<string, any> {
  * ```
  *
  * #### Configuration
- *```js
- * import Auth from "@auth/core"
+ *```ts
+ * import { Auth } from "@auth/core"
  * import EveOnline from "@auth/core/providers/eveonline"
  *
  * const request = new Request(origin)
  * const response = await Auth(request, {
- *   providers: [EveOnline({ clientId: EVEONLINE_CLIENT_ID, clientSecret: EVEONLINE_CLIENT_SECRET })],
+ *   providers: [
+ *     EveOnline({
+ *       clientId: EVEONLINE_CLIENT_ID,
+ *       clientSecret: EVEONLINE_CLIENT_SECRET,
+ *     }),
+ *   ],
  * })
  * ```
  *
@@ -53,7 +58,7 @@ export interface EVEOnlineProfile extends Record<string, any> {
  *
  * :::tip
  * If using JWT for the session, you can add the `CharacterID` to the JWT and session. Example:
- * ```js
+ * ```ts
  * options: {
  *   jwt: {
  *     secret: process.env.JWT_SECRET,
@@ -98,6 +103,7 @@ export default function EVEOnline<P extends EVEOnlineProfile>(
       "https://login.eveonline.com/v2/oauth/authorize?scope=publicData",
     token: "https://login.eveonline.com/v2/oauth/token",
     userinfo: "https://login.eveonline.com/oauth/verify",
+    checks: ["state"],
     profile(profile) {
       return {
         id: String(profile.CharacterID),
