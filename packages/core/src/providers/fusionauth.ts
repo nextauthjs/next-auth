@@ -69,7 +69,7 @@ export interface FusionAuthProfile extends Record<string, any> {
  *
  * ### Resources
  *
- *  - [FusionAuth OAuth documentation](https://fusionauth.io/docs/v1/tech/oauth/)
+ *  - [FusionAuth OAuth documentation](https://fusionauth.io/docs/lifecycle/authenticate-users/oauth/)
  *
  * ### Notes
  *
