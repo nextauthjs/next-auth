@@ -33,15 +33,8 @@ export async function getAuthorizationUrl(
     const as = await o
       .processDiscoveryResponse(issuer, discoveryResponse)
       .catch((error) => {
-        if (error instanceof TypeError && error.message === "Invalid URL") {
-          throw new TypeError(
-            "Authorization server metadata discovery returned an invalid issuer." +
-              "expected: " +
-              issuer
-          )
-        } else {
-          throw error
-        }
+        if (!(error instanceof TypeError) || error.message !== "Invalid URL") throw error
+        throw new TypeError(`Discovery request responded with an invalid issuer. expected: ${issuer}`)
       })
 
     if (!as.authorization_endpoint) {
