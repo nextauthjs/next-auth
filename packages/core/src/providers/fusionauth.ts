@@ -24,11 +24,16 @@ export interface FusionAuthProfile extends Record<string, any> {
   authenticationType: string
   email: string
   email_verified: boolean
-  preferred_username: string
+  preferred_username?: string
+  name?: string
+  given_name?: string
+  middle_name?: string
+  family_name?: string
   at_hash: string
   c_hash: string
   scope: string
   sid: string
+  picture?: string
 }
 
 /**
@@ -149,7 +154,13 @@ export default function FusionAuth<P extends FusionAuthProfile>(
       return {
         id: profile.sub,
         email: profile.email,
-        name: profile?.preferred_username,
+        name:
+          profile.name ??
+          profile.preferred_username ??
+          [profile.given_name, profile.middle_name, profile.family_name]
+            .filter((x) => x)
+            .join(" "),
+        image: profile.picture,
       }
     },
     options,
