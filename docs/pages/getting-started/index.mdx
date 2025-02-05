@@ -849,14 +849,13 @@ TODO:
 
 <small>Next section: [Deployment](#deployment)</small>
 
-Auth.js is fully authored in TypeScript. It comes with its own type definitions to use in your project.
+Auth.js is fully type-safe and written in TypeScript.
 
-Even if you don't use TypeScript, IDEs like VS Code will pick this up to provide you with a better developer experience. While you are typing, you will get suggestions about what certain objects/functions look like, and sometimes links to documentation, examples, and other valuable resources.
+**Our Philosophy**
 
-**Philosophy**
-
-We have chosen [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
-over [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) as the main technique to type Auth.js resources across your application in case you extend them.
+We use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
+over [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html) to type Auth.js. These types can be used across the Auth.js submodules and libraries and your application
+without passing around generics.
 
 <details>
 <summary>
@@ -872,12 +871,13 @@ With module augmentation, you defined the types once, and you can be sure that t
 
 **Module Augmentation**
 
-Auth.js libraries come with certain interfaces that are shared across submodules and different Auth.js libraries (For example: `next-auth` and `@auth/prisma-adapter` will rely on types from `@auth/core`).
+Common interfaces to augment are `Session`, `User`, `Account` or `JWT`. To extend these types, let's look at extending `Session` for example.
 
-Good examples of such interfaces are `Session` or `User`. You can use TypeScript's [Module
-Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to extend these types to add your own properties across Auth.js without having to pass generic all over the place.
-
-Let's look at extending `Session` for example.
+<Callout type="info">
+  The module declaration can be added to any file that is
+  ["included"](https://www.typescriptlang.org/tsconfig#include) in your
+  project&apos;s `tsconfig.json`.
+</Callout>
 
 <Code>
 <Code.Next>
@@ -1000,43 +1000,12 @@ export const { handle } = SvelteKitAuth({
 </Code.Svelte>
 </Code>
 
-Module augmentation is not limited to specific interfaces. You can augment any `interface` we've defined, here are some of the more common interfaces that you might want to override based on your use case.
-
-```ts filename="types.d.ts"
-declare module "next-auth" {
-  /**
-   * The shape of the user object returned in the OAuth providers' `profile` callback,
-   * or the second parameter of the `session` callback, when using a database.
-   */
-  interface User {}
-  /**
-   * The shape of the account object returned in the OAuth providers' `account` callback,
-   * Usually contains information about the provider being used, like OAuth tokens (`access_token`, etc).
-   */
-  interface Account {}
-
-  /**
-   * Returned by `useSession`, `auth`, contains information about the active session.
-   */
-  interface Session {}
-}
-
-// The `JWT` interface can be found in the `next-auth/jwt` submodule
-import { JWT } from "next-auth/jwt"
-
-declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
-  interface JWT {
-    /** OpenID ID Token */
-    idToken?: string
-  }
-}
-```
-
 <Callout type="info">
-  The module declaration can be added to any file that is
-  ["included"](https://www.typescriptlang.org/tsconfig#include) in your
-  project&apos;s `tsconfig.json`.
+  Even if you don't use TypeScript in your project, IDEs like VS Code will pick
+  this up to provide you with a better developer experience. While you are
+  typing, you will get suggestions about what certain objects/functions look
+  like, and sometimes links to documentation, examples, and other valuable
+  resources.
 </Callout>
 
 **Resources**
@@ -1051,32 +1020,38 @@ declare module "next-auth/jwt" {
 
 **Environment Variables**
 
-- As for development, `AUTH_SECRET` is the only required environment variable.
+You are ready to deploy your app! The first thing you need to do is to set up your environment variables.
 
-```bash npm2yarn
-npm exec auth secret
+- Generate a different `AUTH_SECRET` for production. You can use the Auth.js CLI:
+
+```bash
+npx auth secret # save this as `AUTH_SECRET` in your production environment
 ```
 
 <Callout type="info">
-  You can rotate your secret without invalidating active sessions, by also
-  setting `AUTH_SECRET_1` up to `AUTH_SECRET_3`. The lowest number will be
-  preferred. Once you are confident all new sessions use the new secret, you can
-  remove the old one.
+  You can rotate your secret without invalidating active sessions, by setting
+  `AUTH_SECRET_1`, `AUTH_SECRET_AUTH_2` and `AUTH_SECRET_3`. The lowest number
+  will be preferred.
 </Callout>
 
-- `AUTH_URL`: You may set this to a full URL - including the path up to your handlers, eg.: `/api/auth`- in case you host behind a reverse proxy, or similar, for example, `AUTH_URL=http://localhost:3000/web/auth`. When set, `AUTH_TRUST_HOST` is unnecessary.
+The following are all _optional_ environment variables, depending on your use case and setup:
+
+- `AUTH_URL`: If you host from behind a reverse proxy, or a custom path, set this to a full URL - including the path up until your REST API handlers, eg.: `/api/auth`.
 - `AUTH_TRUST_HOST`: Set to `true` so Auth.js can trust the hosting provider to santizize the `host`, `x-forwarded-host` and `x-forwarded-proto` headers.
 
-  Auth.js will try to detect the if you host on a trustable hosting provider, in which case you don't need to set this variable. Currently Vercel (`VERCEL`) and Cloudflare (`CF_PAGES`) are supported.
+  Auth.js will try to detect the if you host on a trustable hosting provider, in which case you don't need to set this variable. Currently Vercel (`VERCEL`) and Cloudflare (`CF_PAGES`) are supported,
+  but we are open to adding more. Reach out to us if you want to add support for your hosting provider automatically.
 
 - `AUTH_REDIRECT_PROXY_URL`: See [Securing a multiple deployments](#securing-multiple-deployments) for more information.
 
   Providers relying on `response_mode=form_post` (like Apple) do not support this setting.
 
-If you are using an [OAuth Provider](/concepts/oauth), your provider will provide you with a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's specific documentation).
+- OAuth Providers:
+
+  If you are using an [OAuth Provider](/concepts/oauth), your provider will provide you with a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's specific documentation).
 
 <Callout type="info">
-Auth.js supports **environment variable inference**, meaning that if you name your provider environment variables following a specific syntax, you won't need to explicitly pass them to the providers in your configuration.
+The following is not required, but if you call the environment variables with the following syntax, Auth.js will pick them up automatically.
 
 Client ID's and client secrets should be named `AUTH_[PROVIDER]_ID` and `AUTH_[PROVIDER]_SECRET`. If your provider requires an issuer, that should be named `AUTH_[PROVIDER]_ISSUER`. For example:
 
@@ -1090,19 +1065,13 @@ For more information, check out our [environment variables](/guides/environment-
 
 </Callout>
 
-<Callout>
-  For consistency, we recommend prefixing all Auth.js environment variables with
-  `AUTH_`. This way we can better autodetect them, and they can also be
-  distinguished from other environment variables more easily.
-</Callout>
-
 ### Serverless
 
 1. Create the required [environment variables](#environment-variables) for your desired environments. Don't forget to also add the required environment variables for your provider(s) of choice (i.e. OAuth `clientId` / `clientSecret`, etc.).
-2. When using an OAuth provider, make sure the callback URL for your production URL is setup correctly. Many OAuth providers will only allow you to set 1 `callbackUrl` per OAuth application. In which case, you'll need to create separate applications for each environment (development, production, etc.). Other providers, like Google, allow you to add many `callbackUrl`s to one application.
-   - By default, the callbackUrl for `next-auth` (Next.js) applications should look something like this: `https://company.com/api/auth/callback/[provider]` (replace `company.com` with your domain and `provider` with the provider name, i.e. `github`).
-   - All other frameworks (`@auth/sveltekit`, `@auth/express`, etc.), by default, will use the path `/auth/callback/[provider]`.
-3. Deploy! After having setup those two prerequisites, you should be able to deploy and run your Auth.js application on Netlify, Vercel, etc.
+2. When using an OAuth provider, make sure the callback URL for your production URL is setup correctly. Many OAuth providers will only allow you to set one `callbackUrl` per OAuth application. In which case, you'll need to create separate applications for each environment (development, production, etc.). Other providers, like Google, allow you to add many `callbackUrl`s to one application.
+   - Callback URls have the following format by default `https://company.com/auth/callback/[provider]` (replace `company.com` with your domain and `provider` with the provider name, i.e. `github`).
+   - `next-auth` (Next.js) applications should look something like this: will use the path `/api/auth/callback/[provider]` by default for backwards compatibility.
+3. Deploy! You should now be able to deploy and run your Auth.js application on any serverless platform and have it work as expected.
 
 <Callout type="warning">
   If you are storing users in a [database](/getting-started/database), we
@@ -1112,11 +1081,13 @@ For more information, check out our [environment variables](/guides/environment-
 
 ### Self-hosted
 
-Auth.js can also be deployed anywhere you can deploy your framework of choice. Check out the framework's documentation on self-hosting.
+Auth.js can also be deployed anywhere you can deploy your framework of choice.
 
 - Docker: In a Docker environment, make sure to set either `trustHost: true` in your Auth.js configuration or the `AUTH_TRUST_HOST` environment variable to `true`.
 
-Our example application is also hosted via Docker [here](https://nextjs-docker-example.authjs.dev) (see the [source code](https://github.com/nextauthjs/next-auth-example)). Below is an example `Dockerfile` for a Next.js application using Auth.js.
+We have an example application running in Docker [here](https://nextjs-docker-example.authjs.dev), (see the [source code](https://github.com/nextauthjs/next-auth-example)). Below is an example `Dockerfile` for a Next.js application using Auth.js.
+
+````bash
 
 ```docker filename="Dockerfile"
 # syntax=docker/dockerfile:1
@@ -1178,15 +1149,15 @@ ENV HOSTNAME "0.0.0.0"
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 CMD ["node", "server.js"]
-```
+````
 
 ### Securing multiple deployments
 
-OAuth providers in general cannot be configured to allow multiple callback URLs or using a wildcard.
+A common use case is to have OAuth apps configured on multiple URLs like subdomains, or preview URLs. OAuth providers in general cannot be configured to allow multiple callback URLs or using a wildcard.
 
-However, Auth.js **supports multiple deployments**, even **with most OAuth providers**. The idea is to have one deployment which proxies authentication requests to the dynamic URLs of your main application. So you could have 1 stable deployment, like at `auth.company.com` where you would point all your OAuth provider's `callbackUrl`s, and this application would then, upon successful authentication, redirect the user back to the preview deploy URL, like `https://git-abc123-myapp.vercel.app`. Follow these steps to get started with securing preview deploys with Auth.js.
+This is a security feature to accidentally allowing a malicious actor to redirect the user to a subdomain they control, for example.
 
-A common use case is to use the same OAuth client for all preview deployments.
+However, Auth.js **supports multiple deployments** even with **OAuth providers**. It is achieved by configuring a deployment which proxies authentication requests to the dynamic URLs of your main application. So you could have 1 stable deployment, like at `auth.company.com` where you would point all your OAuth provider's `callbackUrl`s, and this application would then, upon successful authentication, redirect the user back to the preview deploy URL, like `https://git-abc123-myapp.vercel.app`. Follow these steps to get started with securing preview deploys with Auth.js.
 
 Here is how to achieve this:
 
@@ -1260,10 +1231,10 @@ When `logger` options are set, the `debug` option is ignored. You can also provi
 
 ## Congratulations
 
-You have configured Auth.js in your application!
+You have successfully set up Auth.js in your application! 🎉
 
 Next steps:
 
 - For more in-depth customization and advanced use-cases, check out our [Guides](/guides).
 - Check out our hosted [examples](/about#examples) for more complete implementations.
-- Learn more about auth concepts in the [concepts](/concepts) section. (Not just for Auth.js users!).
+- We have gathered useful auth concepts in the [concepts](/concepts) section, not just for Auth.js users!
