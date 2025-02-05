@@ -18,7 +18,7 @@ import manifest from "@/data/manifest.json"
 
 ### Installation
 
-To get started, install one of the framework integrations.
+To get started, install the integration of your chosen framework.
 
 <Code>
   <Code.Next>
@@ -52,25 +52,20 @@ To get started, install one of the framework integrations.
 
 ### Environment
 
-For development, the only required environment variable is `AUTH_SECRET`. Generate one via the [Auth.js CLI](https://cli.authjs.dev):
+The only required environment variable is `AUTH_SECRET`. You can use the [Auth.js CLI](https://cli.authjs.dev) to generate one:
 
 ```bash
-npx auth secret
+npx auth secret # run this in the root of your project, it will add the secret to your .env file
 ```
 
-Any other environment variable is optional. Continue reading to learn about when and how to use them.
-
-<small>
-- The CLI updates the **.env** file automatically.
-
-</small>
+All other environment variable is optional. Continue reading to learn about when and how to use them.
 
 ### Configuration
 
-To configure Auth.js, each integration does the following:
+To use Auth.js, you need to create a [configuration](/reference/core#authconfig). This file is where you define your authentication providers, callbacks, and other settings.
 
-- Adds the [configuration](/reference/core#authconfig)
-- Registers [REST API](/reference/rest-api) endpoints for [OAuth](#oauth) callbacks, rendering default pages, and [email](#email) verification
+If you are using [OAuth](#oauth), want to render default pages, need [email](#email) verification, or want to interact with Auth.js from the browser via `fetch`, your app needs to
+expose some public REST API endpoints. Auth.js handles all this for you by setting up the necessary routes which is specific for each framework integration.
 
 <Code>
   <Code.Next>
@@ -141,67 +136,12 @@ app.use(
 <small>Next section: [Authentication methods](#authentication-methods)</small>
 
 <Callout type="info">
-  This section is optional. If you're using a provider that doesn't require a
-  database, or you don't need to persist any data, you can skip to the [next
-  section](#authentication-methods).
+  This section is optional. [Skip to the next section](#authentication-methods)
+  if you're using a provider that doesn't require a database, or you don't need
+  to persist any user data. (I.e you only need the user to log in.)
 </Callout>
 
-Auth.js has little opinions when it comes to persisting data. It is compatible with any database/service, and even supports mix and matching them in a single adapter - for example using Redis for sessions and Magic Links, and SQL for persisting user and account data.
-Learn more in the [create your own adapter](/guides/creating-a-database-adapter) guide for a more detailed explanation.
-
-{/* TODO: Explain what model is needed when, what columns are optional, which ones aren't, etc. */}
-
-Below is a graph of how an Auth.js database _might_ look like, however, when you create your database, you only need to create the tables/columns that you need.
-
-```mermaid
-erDiagram
-    User ||--|{ Account : ""
-    User {
-      string id
-      string name
-      string email
-      timestamp emailVerified
-      string image
-    }
-    User ||--|{ Session : ""
-    Session {
-      string id
-      timestamp expires
-      string sessionToken
-      string userId
-    }
-    Account {
-      string id
-      string userId
-      string type
-      string provider
-      string providerAccountId
-      string refresh_token
-      string access_token
-      int expires_at
-      string token_type
-      string scope
-      string id_token
-      string session_state
-    }
-    User ||--|{ VerificationToken : ""
-    VerificationToken {
-      string identifier
-      string token
-      timestamp expires
-    }
-```
-
-<Callout type="info">
-  Auth.js uses `camelCase` for the database rows that are coming from
-  JavaScript, while respecting the conventional `snake_case` formatting for
-  OAuth-related values. However, there is no strict requirement for this mixed
-  format. Most built-in adapters support a configuration option to change the
-  table and column names, and you can also create your own adapter and map the
-  values however you like.
-</Callout>
-
-Official database adapters are available under the `@auth/` scope on npm. Their source code is available [in our monorepo](https://github.com/nextauthjs/next-auth/tree/main/packages).
+To connect Auth.js Choose a database adapter from the list below, or if you don't see one for your database or service, you can also create your own. Have a look at our guide on [connecting to a database](/guides/creating-a-database-adapter).
 
 <div>
   {Object.entries(manifest.adapters).map(([value, label]) => (
@@ -219,36 +159,25 @@ Official database adapters are available under the `@auth/` scope on npm. Their 
   ))}
 </div>
 
-<Callout>
-  If you don't find an adapter for your database or service, you can create one
-  yourself. Have a look at our guide on [how to create a database
-  adapter](/guides/creating-a-database-adapter). If you create a new adapter,
-  we'd love it if you [opened a
-  PR](/guides/creating-a-database-adapter#official-adapter-guidelines) to share
-  it with everyone!
-</Callout>
-
 ## Authentication methods
 
 <small>Next section: [Signing in](#signing-in)</small>
 
-In addition to the guides below, you can also use the [Auth.js CLI tool](https://cli.authjs.dev) inside your project:
+<Callout type="info">
+You can also use the [Auth.js CLI tool](https://cli.authjs.dev) to set up a provider in your project.
 
 ```bash
 npx auth add [provider]
 ```
 
+</Callout>
+
 ### OAuth
 
 Choose an OAuth/OIDC provider to enable social logins.
+To enable social logins, choose an OAuth/OIDC provider from the list below, or if you don't see your provider, you can also create one. Have a look at our guide on [connecting a custom OAuth provider](/guides/configuring-oauth-providers#use-your-own-provider).
 
 <OAuthProviderSelect />
-
-<Callout>
-  Can't find yours? You can [configure any OAuth
-  provider](/guides/configuring-oauth-providers#use-your-own-provider), even if
-  it's not on the list.
-</Callout>
 
 <Callout type="info">
   Auth.js supports using the same OAuth client on multiple domains. Learn more

@@ -1,14 +1,26 @@
 import { Callout } from "nextra/components"
 
-# Creating a database adapter
+# Connecting a database
 
-Auth.js adapters allow you to integrate with any (even multiple) database/back-end service, even if we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet. (We welcome PRs for new adapters! See the [guidelines](#official-adapter-guidelines) below.)
+Auth.js has a conecpt of database adapters which lets you save and retrieve data from a database/service related to users, accounts, sessions, and verification tokens, passkeys and more.
 
-Auth.js adapters are very flexible, and you can implement only the methods you need, and only create the database tables/columns that are actually going to be used.
+Auth.js is little opinionated when it comes to persisting data. It is compatible with any database/service, and even supports mixing and matching them - for example using Redis for sessions and Email logins, and an SQL database for persisting user and account data.
+
+You also only need to create the database tables/columns that are actually going to be used.
 
 An Auth.js adapter is a function that receives an ORM/database client and returns an object with methods (based on the [`Adapter` interface](/reference/core/adapters#adapter)) that interact with the database. The same database Adapter will be compatible with any Auth.js library.
 
 Optionally, you can run our [Adapter tests](https://github.com/nextauthjs/next-auth/blob/main/packages/utils/adapter.ts) on your adapter to ensure it is compliant with the Auth.js.
+
+All our official database adapters are available under the `@auth/` scope on npm. If we don't have an [official package](https://github.com/nextauthjs/next-auth/tree/main/packages) available yet, you can create your own! (We welcome PRs for new adapters! See the [guidelines](#official-adapter-guidelines) below.)
+
+<Callout type="info">
+  _By default_, Auth.js saves values that are coming from JavaScript as
+  `camelCase`, while respecting the conventional `snake_case` formatting for
+  OAuth-related values. However, this is not a strict requirement. Most built-in
+  adapters we provide will support a configuration option to change the table
+  and column names, and you map the values however you like in your own adapter.
+</Callout>
 
 ## User management
 
