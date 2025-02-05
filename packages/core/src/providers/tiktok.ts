@@ -293,7 +293,7 @@ export default function TikTok(
       url: "https://www.tiktok.com/v2/auth/authorize",
       params: {
         client_key: options.clientId,
-        scope: "user.info.profile",
+        scope: "user.info.basic",
       },
     },
 
