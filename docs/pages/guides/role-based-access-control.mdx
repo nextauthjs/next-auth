@@ -66,6 +66,25 @@ export const { handle } = SvelteKitAuth({
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/auth/config.ts"
+import { ExpressAuthConfig } from "@auth/express";
+import Google from "@auth/core/providers/google";
+
+export const Config: ExpressAuthConfig = {
+    providers: [
+        Google({
+            profile(profile) {
+                return { role: profile.role ?? "user", ... };
+            },
+        }
+        ),
+    ],
+};
+```
+
+</Code.Express>
 </Code>
 
 <Callout>
@@ -170,6 +189,58 @@ export const { handle } = SvelteKitAuth({
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/auth/config.ts" {8}
+import { ExpressAuthConfig } from "@auth/express";
+import Google from "@auth/core/providers/google";
+
+declare module "@auth/express" {
+    interface User {
+        role: string;
+    }
+    interface Session {
+        user: User;
+    }
+    interface JWT {
+        role: string;
+    }
+}
+
+export const Config: ExpressAuthConfig = {
+    providers: [
+        Google({
+            profile(profile) {
+                return {
+                    role: "User", ...}; // default role, '...'refer to other properties
+            },
+        }
+
+        ),
+    ],
+    session: {
+        strategy: "jwt"
+    },
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user?.role) {
+                token.role = user.role;
+            }
+            console.log(" token" + token)
+            return token;
+        },
+
+        async session({ session, token }) {
+            if (token.role) {
+                session.user.role = token.role as string;
+            }
+            return session;
+        },
+    },
+};
+```
+
+</Code.Express>
 </Code>
 
 <Callout type="info">
@@ -282,6 +353,52 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/auth/config.ts"
+import { ExpressAuthConfig } from "@auth/express";
+import Google from "@auth/core/providers/google";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import prisma from "../prismaClient";
+
+declare module "@auth/express" {
+    interface User {
+        role: string;
+    }
+    interface Session {
+        user: User;
+    }
+    interface JWT {
+        role: string;
+    }
+}
+
+export const Config: ExpressAuthConfig = {
+    providers: [
+        Google({
+            profile(profile) {
+                return {
+                    ...,  // other properties
+                    role: "USER",  // default role
+                };
+            },
+        }
+
+        ),
+    ],
+    adapter: PrismaAdapter(prisma),
+    callbacks: {
+        async session({ session, user }) {
+            if (user.role) {
+                session.user.role = user.role as string;
+            }
+            return session;
+        },
+    },
+};
+```
+
+</Code.Express>
 </Code>
 
 <Callout type="info">
