@@ -45,7 +45,7 @@
     "typescript": "5.4.5",
     "undici": "*",
     "vercel": "^29.1.1",
-    "vite": "^5.2.10",
+    "vite": "^5.4.12",
     "vite-tsconfig-paths": "^4.2.1"
   }
 }
