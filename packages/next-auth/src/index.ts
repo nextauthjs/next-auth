@@ -91,10 +91,10 @@ export { AuthError, CredentialsSignin } from "@auth/core/errors"
 export { customFetch }
 
 export type {
-  Account,
-  DefaultSession,
-  Profile,
   Session,
+  Account,
+  Profile,
+  DefaultSession,
   User,
 } from "@auth/core/types"
 
