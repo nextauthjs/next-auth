@@ -103,7 +103,7 @@ type AppRouteHandlers = Record<
   (req: NextRequest) => Promise<Response>
 >
 
-export type { NextAuthConfig }
+export type { NextAuthConfig, NextAuthRequest }
 
 /**
  * The result of invoking {@link NextAuth|NextAuth}, initialized with the {@link NextAuthConfig}.
