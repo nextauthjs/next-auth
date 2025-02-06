@@ -68,12 +68,12 @@
  */
 
 import { Auth, customFetch } from "@auth/core"
-import { signIn, signOut, update } from "./lib/actions.js"
 import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
+import { signIn, signOut, update } from "./lib/actions.js"
 
-import type { BuiltInProviderType } from "@auth/core/providers"
 import type { Awaitable, Session } from "@auth/core/types"
+import type { BuiltInProviderType } from "@auth/core/providers"
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
