@@ -193,6 +193,12 @@ app.use(
   </Code.Express>
 </Code>
 
+```env filename=".env.local"
+AUTH_MICROSOFT_ENTRA_ID_ID="<Application (client) ID>"
+AUTH_MICROSOFT_ENTRA_ID_SECRET="<Client secret value>"
+AUTH_MICROSOFT_ENTRA_ID_ISSUER="https://login.microsoftonline.com/<Directory (tenant) ID>/v2.0"
+```
+
 ## Notes
 
 - If the issuer paramater is not set it will default to
