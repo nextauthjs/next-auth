@@ -442,7 +442,11 @@ export default function MicrosoftEntraID(
 ): OIDCConfig<MicrosoftEntraIDProfile> {
   const { profilePhotoSize = 48 } = config
 
-  config.issuer ??= "https://login.microsoftonline.com/common/v2.0"
+  // If issuer is not set, first fallback to environment variable, then
+  // fallback to /common/ uri.
+  config.issuer ??=
+    process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER ||
+    "https://login.microsoftonline.com/common/v2.0"
 
   return {
     id: "microsoft-entra-id",
