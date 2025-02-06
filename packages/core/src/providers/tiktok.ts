@@ -299,14 +299,15 @@ export default function TikTok(
 
     token: "https://open.tiktokapis.com/v2/oauth/token/",
     userinfo:
-      "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,username",
+      "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name",
 
     profile(profile) {
       return {
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,
         image: profile.data.user.avatar_url,
-        email: profile.data.user.email || profile.data.user.username || null,
+         // Email address is not supported by TikTok.
+        email: null,
       }
     },
     style: {
