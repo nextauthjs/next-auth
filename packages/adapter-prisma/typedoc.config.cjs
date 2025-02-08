@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   plugin: [
-    require.resolve("./../../docs/typedoc-nextauth.cjs"),
+    require.resolve("./../../docs/typedoc-nextauth.js"),
     "typedoc-plugin-markdown",
   ],
   entryFileName: "../prisma-adapter.mdx",
