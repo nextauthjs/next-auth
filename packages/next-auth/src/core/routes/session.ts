@@ -32,7 +32,25 @@ export default async function session(
 
   const response: ResponseInternal<Session | {}> = {
     body: {},
-    headers: [{ key: "Content-Type", value: "application/json" }],
+    headers: [
+      { key: "Content-Type", value: "application/json" },
+      ...(isUpdate
+        ? []
+        : [
+            {
+              key: "Cache-Control",
+              value: "private, no-cache, no-store",
+            },
+            {
+              key: "Pragma",
+              value: "no-cache",
+            },
+            {
+              key: "Expires",
+              value: "0",
+            },
+          ]),
+    ].filter(Boolean),
     cookies: [],
   }
 
@@ -98,8 +116,7 @@ export default async function session(
   } else {
     try {
       // @ts-expect-error -- adapter is checked to be defined in `init`
-      const { getSessionAndUser, deleteSession, updateSession } =
-        adapter
+      const { getSessionAndUser, deleteSession, updateSession } = adapter
       let userAndSession = await getSessionAndUser(sessionToken)
 
       // If session has expired, clean up the database
