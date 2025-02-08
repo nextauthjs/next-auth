@@ -14,17 +14,10 @@ import {
   testConfig,
   AUTH_SECRET,
   SESSION_COOKIE_NAME,
+  assertNoCacheResponseHeaders,
 } from "../utils.js"
 
 const { parse: parseCookie } = cookie
-const assertResponseHeaders = (response: Response) => {
-  expect(response.headers.get("Content-Type")).toEqual("application/json")
-  expect(response.headers.get("Cache-Control")).toEqual(
-    "private, no-cache, no-store"
-  )
-  expect(response.headers.get("Expires")).toEqual("0")
-  expect(response.headers.get("Pragma")).toEqual("no-cache")
-}
 
 describe("assert GET session action", () => {
   beforeEach(() => {
@@ -103,7 +96,7 @@ describe("assert GET session action", () => {
         token: expectedToken,
       })
 
-      assertResponseHeaders(response)
+      assertNoCacheResponseHeaders(response)
     })
 
     it("should return null if no JWT session in the requests cookies", async () => {
@@ -113,7 +106,7 @@ describe("assert GET session action", () => {
       const actual = await response.json()
       expect(actual).toEqual(null)
 
-      assertResponseHeaders(response)
+      assertNoCacheResponseHeaders(response)
     })
 
     it("should return null if JWT session is invalid", async () => {
@@ -126,7 +119,7 @@ describe("assert GET session action", () => {
       const actual = await response.json()
       expect(actual).toEqual(null)
 
-      assertResponseHeaders(response)
+      assertNoCacheResponseHeaders(response)
     })
 
     it("should throw invalid JWT error if salt is invalid", async () => {
@@ -149,7 +142,7 @@ describe("assert GET session action", () => {
       expect(actual).toEqual(null)
       expect(logger.error).toHaveBeenCalledOnce()
 
-      assertResponseHeaders(response)
+      assertNoCacheResponseHeaders(response)
     })
   })
   describe("Database strategy", () => {
@@ -224,7 +217,7 @@ describe("assert GET session action", () => {
       })
       expect(actualBodySession.expires).toEqual(currentExpires.toISOString())
 
-      assertResponseHeaders(response)
+      assertNoCacheResponseHeaders(response)
     })
 
     it("should return null in the response, and delete the session", async () => {
@@ -278,7 +271,7 @@ describe("assert GET session action", () => {
       expect(actualSessionToken).toEqual("")
       expect(actualBodySession).toEqual(null)
 
-      assertResponseHeaders(response)
+      assertNoCacheResponseHeaders(response)
     })
   })
 })
