@@ -306,7 +306,7 @@ export default function TikTok(
         id: profile.data.user.open_id,
         name: profile.data.user.display_name,
         image: profile.data.user.avatar_url,
-         // Email address is not supported by TikTok.
+        // Email address is not supported by TikTok.
         email: null,
       }
     },
