@@ -48,7 +48,9 @@ export class AuthError extends Error {
    * @internal
    */
   kind?: "signIn" | "error"
+
   cause?: Record<string, unknown> & { err?: Error }
+
   constructor(
     message?: string | Error | ErrorOptions,
     errorOptions?: ErrorOptions
@@ -77,11 +79,15 @@ export class AuthError extends Error {
   }
 }
 
+/**
+ * @noInheritDoc
+ */
 export class SignInError extends AuthError {
   static kind = "signIn"
 }
 
 /**
+ * @noInheritDoc
  * One of the database [`Adapter` methods](https://authjs.dev/reference/core/adapters#methods)
  * failed during execution.
  *
@@ -99,6 +105,7 @@ export class AdapterError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when the execution of the [`signIn` callback](https://authjs.dev/reference/core/types#signin) fails
  * or if it returns `false`.
  */
@@ -107,6 +114,7 @@ export class AccessDenied extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * This error occurs when the user cannot finish login.
  * Depending on the provider type, this could have happened for multiple reasons.
  *
@@ -150,6 +158,7 @@ export class CallbackRouteError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when Auth.js is misconfigured and accidentally tried to require authentication on a custom error page.
  * To prevent an infinite loop, Auth.js will instead render its default error page.
  *
@@ -162,6 +171,7 @@ export class ErrorPageLoop extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * One of the [`events` methods](https://authjs.dev/reference/core/types#eventcallbacks)
  * failed during execution.
  *
@@ -174,6 +184,7 @@ export class EventError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when Auth.js is unable to verify a `callbackUrl` value.
  * The browser either disabled cookies or the `callbackUrl` is not a valid URL.
  *
@@ -188,6 +199,7 @@ export class InvalidCallbackUrl extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Can be thrown from the `authorize` callback of the Credentials provider.
  * When an error occurs during the `authorize` callback, two things can happen:
  * 1. The user is redirected to the signin page, with `error=CredentialsSignin&code=credentials` in the URL. `code` is configurable.
@@ -210,6 +222,7 @@ export class CredentialsSignin extends SignInError {
 }
 
 /**
+ * @noInheritDoc
  * One of the configured OAuth or OIDC providers is missing the `authorization`, `token` or `userinfo`, or `issuer` configuration.
  * To perform OAuth or OIDC sign in, at least one of these endpoints is required.
  *
@@ -220,6 +233,7 @@ export class InvalidEndpoints extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when a PKCE, state or nonce OAuth check could not be performed.
  * This could happen if the OAuth provider is configured incorrectly or if the browser is blocking cookies.
  *
@@ -230,6 +244,7 @@ export class InvalidCheck extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Logged on the server when Auth.js could not decode or encode a JWT-based (`strategy: "jwt"`) session.
  *
  * Possible causes are either a misconfigured `secret` or a malformed JWT or `encode/decode` methods.
@@ -245,6 +260,7 @@ export class JWTSessionError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown if Auth.js is misconfigured. This could happen if you configured an Email provider but did not set up a database adapter,
  * or tried using a `strategy: "database"` session without a database adapter.
  * In both cases, make sure you either remove the configuration or add the missing adapter.
@@ -256,6 +272,7 @@ export class MissingAdapter extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown similarily to [`MissingAdapter`](https://authjs.dev/reference/core/errors#missingadapter), but only some required methods were missing.
  *
  * Make sure you either remove the configuration or add the missing methods to the adapter.
@@ -267,6 +284,7 @@ export class MissingAdapterMethods extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when a Credentials provider is missing the `authorize` configuration.
  * To perform credentials sign in, the `authorize` method is required.
  *
@@ -277,6 +295,7 @@ export class MissingAuthorize extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Auth.js requires a secret or multiple secrets to be set, but none was not found. This is used to encrypt cookies, JWTs and other sensitive data.
  *
  * :::note
@@ -294,6 +313,7 @@ export class MissingSecret extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when an Email address is already associated with an account
  * but the user is trying an OAuth account that is not linked to it.
  *
@@ -310,6 +330,7 @@ export class OAuthAccountNotLinked extends SignInError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when an OAuth provider returns an error during the sign in process.
  * This could happen for example if the user denied access to the application or there was a configuration error.
  *
@@ -320,6 +341,7 @@ export class OAuthCallbackError extends SignInError {
 }
 
 /**
+ * @noInheritDoc
  * This error occurs during an OAuth sign in attempt when the provider's
  * response could not be parsed. This could for example happen if the provider's API
  * changed, or the [`OAuth2Config.profile`](https://authjs.dev/reference/core/providers#oauth2configprofile) method is not implemented correctly.
@@ -329,6 +351,7 @@ export class OAuthProfileParseError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Logged on the server when Auth.js could not retrieve a session from the database (`strategy: "database"`).
  *
  * The database adapter might be misconfigured or the database is not reachable.
@@ -340,6 +363,7 @@ export class SessionTokenError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Happens when login by [OAuth](https://authjs.dev/getting-started/authentication/oauth) could not be started.
  *
  * Possible causes are:
@@ -359,6 +383,7 @@ export class OAuthSignInError extends SignInError {
 }
 
 /**
+ * @noInheritDoc
  * Happens when the login by an [Email provider](https://authjs.dev/getting-started/authentication/email) could not be started.
  *
  * Possible causes are:
@@ -373,6 +398,7 @@ export class EmailSignInError extends SignInError {
 }
 
 /**
+ * @noInheritDoc
  * Represents an error that occurs during the sign-out process. This error
  * is logged when there are issues in terminating a user's session, either
  * by failing to delete the session from the database (in database session
@@ -387,6 +413,7 @@ export class SignOutError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Auth.js was requested to handle an operation that it does not support.
  *
  * See [`AuthAction`](https://authjs.dev/reference/core/types#authaction) for the supported actions.
@@ -396,6 +423,7 @@ export class UnknownAction extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when a Credentials provider is present but the JWT strategy (`strategy: "jwt"`) is not enabled.
  *
  * Learn more at [`strategy`](https://authjs.dev/reference/core#strategy) or [Credentials provider](https://authjs.dev/getting-started/authentication/credentials)
@@ -404,12 +432,16 @@ export class UnsupportedStrategy extends AuthError {
   static type = "UnsupportedStrategy"
 }
 
-/** Thrown when an endpoint was incorrectly called without a provider, or with an unsupported provider. */
+/**
+ * @noInheritDoc
+ * Thrown when an endpoint was incorrectly called without a provider, or with an unsupported provider.
+ */
 export class InvalidProvider extends AuthError {
   static type = "InvalidProvider"
 }
 
 /**
+ * @noInheritDoc
  * Thrown when the `trustHost` option was not set to `true`.
  *
  * Auth.js requires the `trustHost` option to be set to `true` since it's relying on the request headers' `host` value.
@@ -425,6 +457,7 @@ export class UntrustedHost extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * The user's email/token combination was invalid.
  * This could be because the email/token combination was not found in the database,
  * or because the token has expired. Ask the user to log in again.
@@ -434,6 +467,7 @@ export class Verification extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Error for missing CSRF tokens in client-side actions (`signIn`, `signOut`, `useSession#update`).
  * Thrown when actions lack the double submit cookie, essential for CSRF protection.
  *
@@ -469,6 +503,7 @@ export function isClientError(error: Error): error is AuthError {
   return false
 }
 /**
+ * @noInheritDoc
  * Thrown when multiple providers have `enableConditionalUI` set to `true`.
  * Only one provider can have this option enabled at a time.
  */
@@ -477,6 +512,7 @@ export class DuplicateConditionalUI extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when a WebAuthn provider has `enableConditionalUI` set to `true` but no formField has `webauthn` in its autocomplete param.
  *
  * The `webauthn` autocomplete param is required for conditional UI to work.
@@ -486,6 +522,7 @@ export class MissingWebAuthnAutocomplete extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when a WebAuthn provider fails to verify a client response.
  */
 export class WebAuthnVerificationError extends AuthError {
@@ -493,6 +530,7 @@ export class WebAuthnVerificationError extends AuthError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when an Email address is already associated with an account
  * but the user is trying an account that is not linked to it.
  *
@@ -503,6 +541,7 @@ export class AccountNotLinked extends SignInError {
 }
 
 /**
+ * @noInheritDoc
  * Thrown when an experimental feature is used but not enabled.
  */
 export class ExperimentalFeatureNotEnabled extends AuthError {
