@@ -161,7 +161,7 @@ In `.env.local` create the following entries:
 ```
 AUTH_MICROSOFT_ENTRA_ID_ID=<copy Application (client) ID here>
 AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
-AUTH_MICROSOFT_ENTRA_ID_ISSUER=<copy the issuer here>
+AUTH_MICROSOFT_ENTRA_ID_ISSUER=https://login.microsoftonline.com/<copy the issuer here>/v2.0
 ```
 
 That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
