@@ -4,6 +4,6 @@
     "outDir": ".",
     "rootDir": "src"
   },
-  "exclude": ["*.js", "!typedoc.config.js", "*.d.ts"],
+  "exclude": ["*.js", "*.d.ts"],
   "include": ["src/**/*"]
 }

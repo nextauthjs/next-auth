@@ -41,7 +41,9 @@ type ErrorType =
  * @noInheritDoc
  */
 export class AuthError extends Error {
-  /** The error type. Used to identify the error in the logs. */
+  /** The error type. Used to identify the error in the logs.
+   * @internal
+   */
   type: ErrorType
   /**
    * Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page.
@@ -50,8 +52,10 @@ export class AuthError extends Error {
    */
   kind?: "signIn" | "error"
 
+  /** @internal */
   cause?: Record<string, unknown> & { err?: Error }
 
+  /** @internal */
   constructor(
     message?: string | Error | ErrorOptions,
     errorOptions?: ErrorOptions
@@ -85,6 +89,7 @@ export class AuthError extends Error {
  * @noInheritDoc
  */
 export class SignInError extends AuthError {
+  /** @internal */
   static kind = "signIn"
 }
 
