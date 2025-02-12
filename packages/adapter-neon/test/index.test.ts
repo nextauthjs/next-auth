@@ -1,5 +1,5 @@
 import { runBasicTests } from "utils/adapter"
-import PostgresAdapter from "../src"
+import NeonAdapter from "../src"
 import { neonConfig, Pool } from "@neondatabase/serverless"
 
 // Using websockets
@@ -27,7 +27,7 @@ const client = new Pool({
 })
 
 runBasicTests({
-  adapter: PostgresAdapter(client),
+  adapter: NeonAdapter(client),
   db: {
     disconnect: async () => {
       await client.end()
