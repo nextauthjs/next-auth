@@ -52,7 +52,7 @@ export interface MongoDBAdapterOptions {
   databaseName?: string
   /**
    * Callback function for managing the closing of the MongoDB client.
-   * This could be useful when `client` is provided as a function returning MongoClient.
+   * This could be useful when `client` is provided as a function returning MongoClient | Promise<MongoClient>.
    * It allows for more customized management of database connections,
    * addressing persistence, container reuse, and connection closure issues.
    */
@@ -115,7 +115,7 @@ export function MongoDBAdapter(
    * - A promise that resolves to a connected `MongoClient` (not recommended).
    * - A function, to handle more complex and custom connection strategies.
    *
-   * Using a function combined with `options.onClose`, can be useful when you want a more advanced and customized connection strategy to address challenges related to persistence, container reuse, and connection closure.
+   * Using a function that returns `MongoClient | Promise<MongoClient>`, combined with `options.onClose`, can be useful when you want a more advanced and customized connection strategy to address challenges related to persistence, container reuse, and connection closure.
    */
   client:
     | MongoClient
