@@ -23,7 +23,7 @@ import type {
 } from "@auth/core/adapters"
 import type { Pool } from "@neondatabase/serverless"
 
-export default function PostgresAdapter(client: Pool): Adapter {
+export default function NeonAdapter(client: Pool): Adapter {
   return {
     async createVerificationToken(
       verificationToken: VerificationToken
