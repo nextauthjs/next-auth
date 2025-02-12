@@ -1,15 +1,15 @@
 // @ts-check
 
-import { MarkdownPageEvent } from "typedoc-plugin-markdown"
-import path from "path"
-import fs from "fs"
+const { MarkdownPageEvent } = require("typedoc-plugin-markdown")
+const path = require("path")
+const fs = require("fs")
 
 /**
  * Local plugin to tweak TypeDoc output for nextra docs
  *
  *  @param {import("typedoc-plugin-markdown").MarkdownApplication} app
  */
-export function load(app) {
+module.exports.load = (app) => {
   injectNextraCalloutImport(app)
   parseOutput(app)
   writeMetaJsFiles(app)

@@ -43,7 +43,7 @@ export interface LogtoProfile {
   organizations: string[]
   /** The organization data the user belongs to */
   organization_data: object[]
-  /** The organization roles the user belongs to with the format of organization_id:/role_name */
+  /** The organization roles the user belongs to with the format of <organization_id>:<role_name> */
   organization_roles: string[]
   /** The user's custom attributes */
   [claim: string]: unknown
