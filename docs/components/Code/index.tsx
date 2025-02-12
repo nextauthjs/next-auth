@@ -48,10 +48,10 @@ const parseParams = (url: string): string => {
 export function Code({ children }: ChildrenProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const childs = Children.toArray(children)
+  const childElements = Children.toArray(children)
   const { project } = useThemeConfig()
 
-  const withNextJsPages = childs.some(
+  const withNextJsPages = childElements.some(
     // @ts-expect-error: Hacky dynamic child wrangling
     (p) => p && p.type.name === NextClientCode.name
   )
@@ -93,7 +93,7 @@ export function Code({ children }: ChildrenProps) {
       >
         {Object.keys(renderedFrameworks).map((f) => {
           // @ts-expect-error: Hacky dynamic child wrangling
-          const child = childs.find((c) => c?.type?.name === f)
+          const child = childElements.find((c) => c?.type?.name === f)
 
           // @ts-expect-error: Hacky dynamic child wrangling
           return Object.keys(child?.props ?? {}).length ? (
