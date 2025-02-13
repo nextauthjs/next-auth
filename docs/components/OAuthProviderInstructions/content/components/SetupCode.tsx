@@ -3,12 +3,12 @@ import { Pre, Code as NXCode } from "nextra/components"
 import { TSIcon } from "./TSIcon"
 
 interface Props {
-  providerName: string
+  providerSymbol: string
   providerId: string
   highlight: (code: string) => string
 }
 
-export function SetupCode({ providerId, providerName, highlight }: Props) {
+export function SetupCode({ providerId, providerSymbol, highlight }: Props) {
   return (
     <Code>
       <Code.Next>
@@ -25,10 +25,10 @@ export function SetupCode({ providerId, providerName, highlight }: Props) {
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import NextAuth from "next-auth"
-import ${providerName} from "next-auth/providers/${providerId}"
+import ${providerSymbol} from "next-auth/providers/${providerId}"
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [${providerName}],
+  providers: [${providerSymbol}],
 })`),
           }}
         />
@@ -64,10 +64,10 @@ export const { GET, POST } = handlers
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import { QwikAuth$ } from "@auth/qwik"
-import ${providerName} from "@auth/qwik/providers/${providerId}"
+import ${providerSymbol} from "@auth/qwik/providers/${providerId}"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$({
-  providers: [${providerName}],
+  providers: [${providerSymbol}],
 }) `),
           }}
         />
@@ -86,10 +86,10 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$({
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import { SvelteKitAuth } from "@auth/sveltekit"
-import ${providerName} from "@auth/sveltekit/providers/${providerId}"
+import ${providerSymbol} from "@auth/sveltekit/providers/${providerId}"
  
 export const { handle, signIn } = SvelteKitAuth({
-  providers: [${providerName}],
+  providers: [${providerSymbol}],
 }) `),
           }}
         />
@@ -145,14 +145,14 @@ export const load: LayoutServerLoad = async (event) => {
           dangerouslySetInnerHTML={{
             __html: highlight(`
 import { ExpressAuth } from "@auth/express"
-import ${providerName} from "@auth/express/providers/${providerId}"
+import ${providerSymbol} from "@auth/express/providers/${providerId}"
 import express from "express"
  
 const app = express()
  
 // If app is served through a proxy, trust the proxy to allow HTTPS protocol to be detected
 app.set('trust proxy', true)
-app.use("/auth/*", ExpressAuth({ providers: [ ${providerName} ] }))
+app.use("/auth/*", ExpressAuth({ providers: [ ${providerSymbol} ] }))
 `),
           }}
         />

@@ -32,7 +32,6 @@ packages/next-auth/providers
 # copied from @auth/core
 packages/frameworks-*/**/providers
 packages/*/*.js
-!packages/*/typedoc.config.js
 packages/*/*.d.ts
 packages/*/*.d.ts.map
 packages/*/lib

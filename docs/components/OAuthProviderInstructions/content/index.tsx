@@ -38,6 +38,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
   }
 
   const providerName = manifest.providersOAuth[providerId]
+  const providerSymbol = providerName.replace(/\s+/g, "")
   const envVars = [
     `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_ID={CLIENT_ID}`,
     `AUTH_${providerId.toUpperCase().replace(/-/gi, "_")}_SECRET={CLIENT_SECRET}`,
@@ -205,7 +206,7 @@ export function OAuthInstructions({ providerId, disabled = false }: Props) {
       </p>
       <SetupCode
         providerId={providerId}
-        providerName={providerName}
+        providerSymbol={providerSymbol}
         highlight={highlight}
       />
       {/* Step 4 */}
