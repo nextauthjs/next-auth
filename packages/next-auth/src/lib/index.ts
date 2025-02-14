@@ -2,7 +2,7 @@ import { Auth, createActionURL, type AuthConfig } from "@auth/core"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { headers } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { reqWithEnvURL } from "./env.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -13,7 +13,7 @@ import type {
 } from "next"
 import type { AppRouteHandlerFn } from "./types.js"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
-import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
+import type { NextFetchEvent, NextMiddleware } from "next/server"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
@@ -121,11 +121,12 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
  * Creates a Request object from Headers, primarily for server-side contexts
  * where we need to reconstruct request information.
  */
-function createRequestFromHeaders(headers: Headers): Request {
+function createRequestFromHeaders(headers: Headers): NextRequest {
   const url = headers.get("x-url") ||
     `${headers.get("x-forwarded-proto") || "http"}://${headers.get("host")}`;
 
-  return new Request(url, {
+  // this constructor will properly parse and set cookies field from given headers
+  return new NextRequest(url, {
     headers: new Headers(headers)
   })
 }
