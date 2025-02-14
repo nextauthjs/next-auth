@@ -117,6 +117,19 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
   return typeof arg === "function"
 }
 
+/**
+ * Creates a Request object from Headers, primarily for server-side contexts
+ * where we need to reconstruct request information.
+ */
+function createRequestFromHeaders(headers: Headers): Request {
+  const url = headers.get("x-url") ||
+    `${headers.get("x-forwarded-proto") || "http"}://${headers.get("host")}`;
+
+  return new Request(url, {
+    headers: new Headers(headers)
+  })
+}
+
 export function initAuth(
   config:
     | NextAuthConfig
@@ -128,10 +141,11 @@ export function initAuth(
       if (!args.length) {
         // React Server Components
         const _headers = await headers()
-        const _config = await config(undefined) // Review: Should we pass headers() here instead?
+        const _request = createRequestFromHeaders(_headers)
+        const _config = await config(_request)
         onLazyLoad?.(_config)
 
-        return getSession(_headers, _config).then((r) => r.json())
+        return getSession(_request.headers, _config).then((r) => r.json())
       }
 
       if (args[0] instanceof Request) {
@@ -183,9 +197,10 @@ export function initAuth(
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
-      return Promise.resolve(headers()).then((h: Headers) =>
-        getSession(h, config).then((r) => r.json())
-      )
+      return Promise.resolve(headers()).then((h: Headers) =>{
+        const request = createRequestFromHeaders(h)
+        return getSession(request.headers, config).then((r) => r.json())
+      })
     }
     if (args[0] instanceof Request) {
       // middleware.ts inline
