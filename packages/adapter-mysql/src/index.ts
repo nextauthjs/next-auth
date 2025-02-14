@@ -34,7 +34,7 @@ const mysqlAdapter = (client: Pool): Adapter => {
       identifier: string;
       token: string;
     }): Promise<VerificationToken | null> {
-      const sql = `select* from verification_token
+      const sql = `select * from verification_token
       where identifier = ? and token = ?`;
       const sql1 = `delete from verification_token
       where identifier = ? and token = ?
