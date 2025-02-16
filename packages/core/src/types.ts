@@ -55,8 +55,7 @@ import type { SerializeOptions } from "./lib/vendored/cookie.js"
 import type { TokenEndpointResponse } from "oauth4webapi"
 import type { Adapter } from "./adapters.js"
 import { AuthConfig } from "./index.js"
-import type { JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/utils/cookie.js"
+import type { Cookie, SessionStore } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
 import type {
   CredentialsConfig,
@@ -69,6 +68,7 @@ import type {
   WebAuthnConfig,
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
+import { JWT } from "./jwt.js"
 
 export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
 export type { AuthConfig } from "./index.js"
@@ -222,8 +222,8 @@ export interface PagesOptions {
    *
    * @default "/signin"
    */
-  signIn: string
-  signOut: string
+  signIn?: string
+  signOut?: string
   /**
    * The path to the error page.
    *
@@ -232,10 +232,10 @@ export interface PagesOptions {
    *
    * @default "/error"
    */
-  error: string
-  verifyRequest: string
+  error?: string
+  verifyRequest?: string
   /** If set, new users will be directed here on first sign in */
-  newUser: string
+  newUser?: string
 }
 
 type ISODateString = string
@@ -396,7 +396,7 @@ export interface Authenticator {
 }
 
 /** @internal */
-export interface InternalOptions<TProviderType = ProviderType> {
+export interface InternalConfig<TProviderType = ProviderType> {
   providers: InternalProvider[]
   url: URL
   action: AuthAction
@@ -409,11 +409,18 @@ export interface InternalOptions<TProviderType = ProviderType> {
   csrfTokenVerified?: boolean
   secret: string | string[]
   theme: Theme
-  debug: boolean
   logger: LoggerInstance
-  session: NonNullable<Required<AuthConfig["session"]>>
+  session: {
+    isDatabase: boolean
+    unseal(value: string): Awaitable<JWT | null>
+    seal(payload: JWT): Awaitable<string>
+    generateSessionToken: NonNullable<
+      Required<AuthConfig["session"]>
+    >["generateSessionToken"]
+    maxAge: NonNullable<Required<AuthConfig["session"]>>["maxAge"]
+    updateAge: NonNullable<Required<AuthConfig["session"]>>["updateAge"]
+  }
   pages: Partial<PagesOptions>
-  jwt: JWTOptions
   events: NonNullable<AuthConfig["events"]>
   adapter: Required<Adapter> | undefined
   callbacks: NonNullable<Required<AuthConfig["callbacks"]>>
@@ -426,4 +433,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   isOnRedirectProxy: boolean
   experimental: NonNullable<AuthConfig["experimental"]>
   basePath: string
+  /** These set of cookies should be serialized and sent to the client as `Set-Cookie` headers */
+  resCookies: Cookie[]
+  sessionStore: SessionStore
 }

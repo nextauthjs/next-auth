@@ -1,9 +1,9 @@
 import { createHash, randomString } from "../../../utils/web.js"
 
-import type { AuthAction, InternalOptions } from "../../../../types.js"
+import type { AuthAction, InternalConfig } from "../../../../types.js"
 import { MissingCSRF } from "../../../../errors.js"
 interface CreateCSRFTokenParams {
-  options: InternalOptions
+  config: InternalConfig
   cookieValue?: string
   isPost: boolean
   bodyValue?: string
@@ -24,7 +24,7 @@ interface CreateCSRFTokenParams {
  * https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf
  */
 export async function createCSRFToken({
-  options,
+  config,
   cookieValue,
   isPost,
   bodyValue,
@@ -33,7 +33,7 @@ export async function createCSRFToken({
     const [csrfToken, csrfTokenHash] = cookieValue.split("|")
 
     const expectedCsrfTokenHash = await createHash(
-      `${csrfToken}${options.secret}`
+      `${csrfToken}${config.secret}`
     )
 
     if (csrfTokenHash === expectedCsrfTokenHash) {
@@ -48,7 +48,7 @@ export async function createCSRFToken({
 
   // New CSRF token
   const csrfToken = randomString(32)
-  const csrfTokenHash = await createHash(`${csrfToken}${options.secret}`)
+  const csrfTokenHash = await createHash(`${csrfToken}${config.secret}`)
   const cookie = `${csrfToken}|${csrfTokenHash}`
 
   return { cookie, csrfToken }

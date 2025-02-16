@@ -4,29 +4,15 @@ import * as cookie from "./utils/cookie.js"
 import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 
 import { AdapterError, EventError } from "../errors.js"
-import parseProviders from "./utils/providers.js"
+import parseProviders, { isOAuthProvider } from "./utils/providers.js"
 import { setLogger, type LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
+import { skipCSRFCheck } from "./symbols.js"
 
-import type { InternalOptions, RequestInternal } from "../types.js"
+import type { InternalConfig, RequestInternal } from "../types.js"
 import type { AuthConfig } from "../index.js"
 
-interface InitParams {
-  url: URL
-  authOptions: AuthConfig
-  providerId?: string
-  action: InternalOptions["action"]
-  /** Callback URL value extracted from the incoming request. */
-  callbackUrl?: string
-  /** CSRF token value extracted from the incoming request. From body if POST, from query if GET */
-  csrfToken?: string
-  /** Is the incoming request a POST request? */
-  csrfDisabled: boolean
-  isPost: boolean
-  cookies: RequestInternal["cookies"]
-}
-
-export const defaultCallbacks: InternalOptions["callbacks"] = {
+export const defaultCallbacks: InternalConfig["callbacks"] = {
   signIn() {
     return true
   },
@@ -50,31 +36,28 @@ export const defaultCallbacks: InternalOptions["callbacks"] = {
   },
 }
 
-/** Initialize all internal options and cookies. */
-export async function init({
-  authOptions: config,
-  providerId,
-  action,
-  url,
-  cookies: reqCookies,
-  callbackUrl: reqCallbackUrl,
-  csrfToken: reqCsrfToken,
-  csrfDisabled,
-  isPost,
-}: InitParams): Promise<{
-  options: InternalOptions
-  cookies: cookie.Cookie[]
-}> {
-  const logger = setLogger(config)
-  const { providers, provider } = parseProviders({ url, providerId, config })
+/** Initialize all internal options. */
+export async function init(
+  request: RequestInternal,
+  userConfig: AuthConfig
+): Promise<InternalConfig> {
+  const logger = setLogger(userConfig)
 
-  const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
+  const { providerId, action, url, cookies: reqCookies } = request
+  const isPost = request.method === "POST"
+  const csrfDisabled = userConfig.skipCSRFCheck === skipCSRFCheck
+
+  const reqCallbackUrl = request.body?.callbackUrl ?? request.query?.callbackUrl
+  const reqCsrfToken = request.body?.csrfToken
+
+  const { providers, provider } = parseProviders({
+    url,
+    providerId,
+    config: userConfig,
+  })
 
   let isOnRedirectProxy = false
-  if (
-    (provider?.type === "oauth" || provider?.type === "oidc") &&
-    provider.redirectProxyUrl
-  ) {
+  if (isOAuthProvider(provider) && provider.redirectProxyUrl) {
     try {
       isOnRedirectProxy =
         new URL(provider.redirectProxyUrl).origin === url.origin
@@ -85,10 +68,21 @@ export async function init({
     }
   }
 
+  const cookies = merge(
+    cookie.defaultCookies(
+      userConfig.useSecureCookies ?? url.protocol === "https:"
+    ),
+    userConfig.cookies
+  )
+
+  const sessionSecret = userConfig.jwt?.secret ?? userConfig.secret! // Asserted in assert.ts
+  const sessionSalt = cookies.sessionToken.name
+  const unseal = userConfig.jwt?.decode ?? jwt.decode
+  const seal = userConfig.jwt?.encode ?? jwt.encode
+
   // User provided options are overridden by other options,
   // except for the options with special handling above
-  const options: InternalOptions = {
-    debug: false,
+  const config: InternalConfig = {
     pages: {},
     theme: {
       colorScheme: "auto",
@@ -97,104 +91,107 @@ export async function init({
       buttonText: "",
     },
     // Custom options override defaults
-    ...config,
+    ...userConfig,
     // These computed settings can have values in userOptions but we override them
     // and are request-specific.
     url,
     action,
     // @ts-expect-errors
     provider,
-    cookies: merge(
-      cookie.defaultCookies(
-        config.useSecureCookies ?? url.protocol === "https:"
-      ),
-      config.cookies
-    ),
+    cookies,
     providers,
     // Session options
     session: {
-      // If no adapter specified, force use of JSON Web Tokens (stateless)
-      strategy: config.adapter ? "database" : "jwt",
-      maxAge,
-      updateAge: 24 * 60 * 60,
-      generateSessionToken: () => crypto.randomUUID(),
-      ...config.session,
-    },
-    // JWT options
-    jwt: {
-      secret: config.secret!, // Asserted in assert.ts
-      maxAge: config.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
-      encode: jwt.encode,
-      decode: jwt.decode,
-      ...config.jwt,
+      isDatabase: !userConfig.session?.strategy
+        ? !!userConfig.adapter
+        : userConfig.session.strategy === "database",
+      generateSessionToken() {
+        return crypto.randomUUID()
+      },
+      updateAge: 24 * 60 * 60, // Sessions are updated if they are within 24 hours of expiry by default
+      maxAge: userConfig.jwt?.maxAge ?? 30 * 24 * 60 * 60, // Sessions expire after 30 days of being idle by default
+      unseal(value) {
+        return unseal({
+          secret: sessionSecret,
+          token: value,
+          salt: sessionSalt,
+        })
+      },
+      seal(payload) {
+        return seal({
+          secret: sessionSecret,
+          token: payload,
+          salt: sessionSalt,
+        })
+      },
     },
     // Event messages
-    events: eventsErrorHandler(config.events ?? {}, logger),
-    adapter: adapterErrorHandler(config.adapter, logger),
+    events: eventsErrorHandler(userConfig.events ?? {}, logger),
+    adapter: adapterErrorHandler(userConfig.adapter, logger),
     // Callback functions
-    callbacks: { ...defaultCallbacks, ...config.callbacks },
+    callbacks: { ...defaultCallbacks, ...userConfig.callbacks },
     logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
-    experimental: {
-      ...config.experimental,
-    },
+    experimental: { ...userConfig.experimental },
+    resCookies: [],
+    sessionStore: new cookie.SessionStore(
+      cookies.sessionToken,
+      reqCookies,
+      logger
+    ),
   }
 
-  // Init cookies
-
-  const cookies: cookie.Cookie[] = []
-
   if (csrfDisabled) {
-    options.csrfTokenVerified = true
+    config.csrfTokenVerified = true
   } else {
     const {
       csrfToken,
       cookie: csrfCookie,
       csrfTokenVerified,
     } = await createCSRFToken({
-      options,
-      cookieValue: reqCookies?.[options.cookies.csrfToken.name],
+      config: config,
+      cookieValue: reqCookies?.[config.cookies.csrfToken.name],
       isPost,
       bodyValue: reqCsrfToken,
     })
 
-    options.csrfToken = csrfToken
-    options.csrfTokenVerified = csrfTokenVerified
+    config.csrfToken = csrfToken
+    config.csrfTokenVerified = csrfTokenVerified
 
     if (csrfCookie) {
-      cookies.push({
-        name: options.cookies.csrfToken.name,
+      config.resCookies.push({
+        name: config.cookies.csrfToken.name,
         value: csrfCookie,
-        options: options.cookies.csrfToken.options,
+        options: config.cookies.csrfToken.options,
       })
     }
   }
 
   const { callbackUrl, callbackUrlCookie } = await createCallbackUrl({
-    options,
-    cookieValue: reqCookies?.[options.cookies.callbackUrl.name],
+    config: config,
+    cookieValue: reqCookies?.[config.cookies.callbackUrl.name],
     paramValue: reqCallbackUrl,
   })
-  options.callbackUrl = callbackUrl
+  config.callbackUrl = callbackUrl
   if (callbackUrlCookie) {
-    cookies.push({
-      name: options.cookies.callbackUrl.name,
+    config.resCookies.push({
+      name: config.cookies.callbackUrl.name,
       value: callbackUrlCookie,
-      options: options.cookies.callbackUrl.options,
+      options: config.cookies.callbackUrl.options,
     })
   }
 
-  return { options, cookies }
+  return config
 }
 
 type Method = (...args: any[]) => Promise<any>
 
 /** Wraps an object of methods and adds error handling. */
 function eventsErrorHandler(
-  methods: Partial<InternalOptions["events"]>,
+  methods: Partial<InternalConfig["events"]>,
   logger: LoggerInstance
-): Partial<InternalOptions["events"]> {
+): Partial<InternalConfig["events"]> {
   return Object.keys(methods).reduce<any>((acc, name) => {
     acc[name] = async (...args: any[]) => {
       try {

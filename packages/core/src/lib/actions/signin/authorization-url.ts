@@ -1,7 +1,7 @@
 import * as checks from "../callback/oauth/checks.js"
 import * as o from "oauth4webapi"
 
-import type { InternalOptions, RequestInternal } from "../../../types.js"
+import type { InternalConfig, RequestInternal } from "../../../types.js"
 import type { Cookie } from "../../utils/cookie.js"
 import { customFetch } from "../../symbols.js"
 
@@ -12,9 +12,9 @@ import { customFetch } from "../../symbols.js"
  */
 export async function getAuthorizationUrl(
   query: RequestInternal["query"],
-  options: InternalOptions<"oauth" | "oidc">
+  config: InternalConfig<"oauth" | "oidc">
 ) {
-  const { logger, provider } = options
+  const { logger, provider } = config
 
   let url = provider.authorization?.url
   let as: o.AuthorizationServer | undefined
@@ -53,7 +53,7 @@ export async function getAuthorizationUrl(
 
   let redirect_uri: string = provider.callbackUrl
   let data: string | undefined
-  if (!options.isOnRedirectProxy && provider.redirectProxyUrl) {
+  if (!config.isOnRedirectProxy && provider.redirectProxyUrl) {
     redirect_uri = provider.redirectProxyUrl
     data = provider.callbackUrl
     logger.debug("using redirect proxy", { redirect_uri, data })
@@ -81,13 +81,13 @@ export async function getAuthorizationUrl(
     provider.authorization?.url.searchParams.get("response_mode") ===
     "form_post"
   ) {
-    options.cookies.state.options.sameSite = "none"
-    options.cookies.state.options.secure = true
-    options.cookies.nonce.options.sameSite = "none"
-    options.cookies.nonce.options.secure = true
+    config.cookies.state.options.sameSite = "none"
+    config.cookies.state.options.secure = true
+    config.cookies.nonce.options.sameSite = "none"
+    config.cookies.nonce.options.secure = true
   }
 
-  const state = await checks.state.create(options, data)
+  const state = await checks.state.create(config, data)
   if (state) {
     authParams.set("state", state.value)
     cookies.push(state.cookie)
@@ -99,14 +99,14 @@ export async function getAuthorizationUrl(
       // a random `nonce` must be used for CSRF protection.
       if (provider.type === "oidc") provider.checks = ["nonce"]
     } else {
-      const { value, cookie } = await checks.pkce.create(options)
+      const { value, cookie } = await checks.pkce.create(config)
       authParams.set("code_challenge", value)
       authParams.set("code_challenge_method", "S256")
       cookies.push(cookie)
     }
   }
 
-  const nonce = await checks.nonce.create(options)
+  const nonce = await checks.nonce.create(config)
   if (nonce) {
     authParams.set("nonce", nonce.value)
     cookies.push(nonce.cookie)

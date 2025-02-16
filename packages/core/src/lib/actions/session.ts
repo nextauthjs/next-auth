@@ -2,26 +2,25 @@ import { JWTSessionError, SessionTokenError } from "../../errors.js"
 import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
-import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
-import type { Cookie, SessionStore } from "../utils/cookie.js"
+import type { InternalConfig, ResponseInternal, Session } from "../../types.js"
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(
-  options: InternalOptions,
-  sessionStore: SessionStore,
-  cookies: Cookie[],
+  config: InternalConfig,
   isUpdate?: boolean,
   newSession?: any
 ): Promise<ResponseInternal<Session | null>> {
   const {
     adapter,
-    jwt,
     events,
     callbacks,
     logger,
-    session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
-  } = options
+    session: sessionConfig,
+    resCookies: cookies,
+    sessionStore,
+  } = config
 
+  const sessionMaxAge = sessionConfig.maxAge
   const response: ResponseInternal<Session | null> = {
     body: null,
     headers: { "Content-Type": "application/json" },
@@ -32,10 +31,9 @@ export async function session(
 
   if (!sessionToken) return response
 
-  if (sessionStrategy === "jwt") {
+  if (!sessionConfig.isDatabase) {
     try {
-      const salt = options.cookies.sessionToken.name
-      const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
+      const payload = await sessionConfig.unseal(sessionToken)
 
       if (!payload) throw new Error("Invalid JWT")
 
@@ -62,7 +60,7 @@ export async function session(
         response.body = newSession
 
         // Refresh JWT expiry by re-signing it, with an updated expiry date
-        const newToken = await jwt.encode({ ...jwt, token, salt })
+        const newToken = await sessionConfig.seal(token)
 
         // Set cookie, to also update expiry date on cookie
         const sessionCookies = sessionStore.chunk(newToken, {
@@ -102,7 +100,7 @@ export async function session(
     if (userAndSession) {
       const { user, session } = userAndSession
 
-      const sessionUpdateAge = options.session.updateAge
+      const sessionUpdateAge = config.session.updateAge
       // Calculate last updated date to throttle write updates to database
       // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
       //     e.g. ({expiry date} - 30 days) + 1 hour
@@ -137,10 +135,10 @@ export async function session(
 
       // Set cookie again to update expiry
       response.cookies?.push({
-        name: options.cookies.sessionToken.name,
+        name: config.cookies.sessionToken.name,
         value: sessionToken,
         options: {
-          ...options.cookies.sessionToken.options,
+          ...config.cookies.sessionToken.options,
           expires: newExpires,
         },
       })

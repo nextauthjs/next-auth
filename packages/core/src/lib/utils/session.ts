@@ -1,41 +1,27 @@
-import type { InternalOptions, User } from "../../types.js"
-import type { SessionStore } from "./cookie.js"
+import type { InternalConfig, User } from "../../types.js"
 
-/**
- * Returns the currently logged in user, if any.
- */
+/** Returns the currently logged in user, if any. */
 export async function getLoggedInUser(
-  options: InternalOptions,
-  sessionStore: SessionStore
+  config: InternalConfig
 ): Promise<User | null> {
-  const {
-    adapter,
-    jwt,
-    session: { strategy: sessionStrategy },
-  } = options
+  const { adapter, session, sessionStore } = config
 
-  const sessionToken = sessionStore.value
-  if (!sessionToken) return null
+  const sessionCookie = sessionStore.value
+  if (!sessionCookie) return null
 
-  // Try to decode JWT
-  if (sessionStrategy === "jwt") {
-    const salt = options.cookies.sessionToken.name
-    const payload = await jwt.decode({ ...jwt, token: sessionToken, salt })
-
-    if (payload && payload.sub) {
-      return {
-        id: payload.sub,
-        name: payload.name,
-        email: payload.email,
-        image: payload.picture,
-      }
-    }
-  } else {
-    const userAndSession = await adapter?.getSessionAndUser(sessionToken)
-    if (userAndSession) {
-      return userAndSession.user
-    }
+  if (session.isDatabase) {
+    const userAndSession = await adapter?.getSessionAndUser(sessionCookie)
+    if (userAndSession) return userAndSession.user
   }
 
-  return null
+  const payload = await session.unseal(sessionCookie)
+
+  if (!payload?.sub) return null
+
+  return {
+    id: payload.sub,
+    name: payload.name,
+    email: payload.email,
+    image: payload.picture,
+  }
 }

@@ -1,7 +1,7 @@
 import { createHash, randomString, toRequest } from "../../utils/web.js"
 import { AccessDenied } from "../../../errors.js"
 
-import type { InternalOptions, RequestInternal } from "../../../types.js"
+import type { InternalConfig, RequestInternal } from "../../../types.js"
 import type { Account } from "../../../types.js"
 
 /**
@@ -11,10 +11,10 @@ import type { Account } from "../../../types.js"
  */
 export async function sendToken(
   request: RequestInternal,
-  options: InternalOptions<"email">
+  config: InternalConfig<"email">
 ) {
   const { body } = request
-  const { provider, callbacks, adapter } = options
+  const { provider, callbacks, adapter } = config
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
   const email = normalizer(body?.email)
 
@@ -43,12 +43,12 @@ export async function sendToken(
     return {
       redirect: await callbacks.redirect({
         url: authorized,
-        baseUrl: options.url.origin,
+        baseUrl: config.url.origin,
       }),
     }
   }
 
-  const { callbackUrl, theme } = options
+  const { callbackUrl, theme } = config
   const token =
     (await provider.generateVerificationToken?.()) ?? randomString(32)
 
@@ -57,9 +57,9 @@ export async function sendToken(
     Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
   )
 
-  const secret = provider.secret ?? options.secret
+  const secret = provider.secret ?? config.secret
 
-  const baseUrl = new URL(options.basePath, options.url.origin)
+  const baseUrl = new URL(config.basePath, config.url.origin)
 
   const sendRequest = provider.sendVerificationRequest({
     identifier: email,
