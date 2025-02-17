@@ -130,6 +130,7 @@ export default function WeChat(
         id: profile.unionid,
         name: profile.nickname,
         email: profile.unionid,
+        unionid: profile.unionid,
         image: profile.headimgurl,
         openid: profile.openid,
       }
