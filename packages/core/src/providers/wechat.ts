@@ -129,8 +129,9 @@ export default function WeChat(
       return {
         id: profile.unionid,
         name: profile.nickname,
-        email: null,
+        email: profile.unionid,
         image: profile.headimgurl,
+        openid: profile.openid,
       }
     },
     options,
