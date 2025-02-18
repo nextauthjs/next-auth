@@ -10,6 +10,7 @@
  */
 
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import { customFetch } from "../lib/index.js"
 
 export interface GitHubEmail {
   email: string
@@ -134,6 +135,7 @@ export default function GitHub(
   const apiBaseUrl = config?.enterprise?.baseUrl
     ? `${config?.enterprise?.baseUrl}/api/v3`
     : "https://api.github.com"
+  const fetchToUse = config[customFetch] ?? fetch;
 
   return {
     id: "github",
@@ -147,7 +149,7 @@ export default function GitHub(
     userinfo: {
       url: `${apiBaseUrl}/user`,
       async request({ tokens, provider }) {
-        const profile = await fetch(provider.userinfo?.url as URL, {
+        const profile = await fetchToUse(provider.userinfo?.url as URL, {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,
             "User-Agent": "authjs",
@@ -157,7 +159,7 @@ export default function GitHub(
         if (!profile.email) {
           // If the user does not have a public email, get another via the GitHub API
           // See https://docs.github.com/en/rest/users/emails#list-public-email-addresses-for-the-authenticated-user
-          const res = await fetch(`${apiBaseUrl}/user/emails`, {
+          const res = await fetchToUse(`${apiBaseUrl}/user/emails`, {
             headers: {
               Authorization: `Bearer ${tokens.access_token}`,
               "User-Agent": "authjs",
