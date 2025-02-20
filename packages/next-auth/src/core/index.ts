@@ -166,7 +166,21 @@ export async function AuthHandler<
       }
       case "csrf":
         return {
-          headers: [{ key: "Content-Type", value: "application/json" }],
+          headers: [
+            { key: "Content-Type", value: "application/json" },
+            {
+              key: "Cache-Control",
+              value: "private, no-cache, no-store",
+            },
+            {
+              key: "Pragma",
+              value: "no-cache",
+            },
+            {
+              key: "Expires",
+              value: "0",
+            },
+          ],
           body: { csrfToken: options.csrfToken } as any,
           cookies,
         }
