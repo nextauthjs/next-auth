@@ -1,4 +1,4 @@
-import { vi } from "vitest"
+import { expect, vi } from "vitest"
 import { Auth, createActionURL } from "../src"
 
 import type { Adapter } from "../src/adapters"
@@ -92,4 +92,13 @@ export async function makeAuthRequest(params: {
     response,
     logger: config.logger,
   }
+}
+
+export const assertNoCacheResponseHeaders = (response: Response) => {
+  expect(response.headers.get("Content-Type")).toEqual("application/json")
+  expect(response.headers.get("Cache-Control")).toEqual(
+    "private, no-cache, no-store"
+  )
+  expect(response.headers.get("Expires")).toEqual("0")
+  expect(response.headers.get("Pragma")).toEqual("no-cache")
 }

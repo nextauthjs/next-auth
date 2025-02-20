@@ -205,3 +205,8 @@ app.get("/", (req, res) => {
 </Code>
 
 If you'd like to extend your session with more fields from your OAuth provider, for example, please check out our ["extending the session" guide](/guides/extending-the-session).
+
+<Callout>
+  By default, GET requests to the session endpoint will automatically return the
+  headers to prevent caching.
+</Callout>
