@@ -1,0 +1,65 @@
+{
+  "name": "@auth/redis-prisma-adapter",
+  "version": "1.0.0",
+  "description": "Prisma adapter for Auth.js, using Redis for caching",
+  "homepage": "https://authjs.dev/reference/adapter/prisma",
+  "author": "boul2gom <contact@boul2gom.com>",
+  "repository": "https://github.com/boul2gom/adapter-redis-prisma",
+  "bugs": {
+    "url": "https://github.com/boul2gom/adapter-redis-prisma"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "redis",
+    "prisma"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm ./prisma/dev.db* || echo 'File deleted' && rm -rf *.js *.d.ts*",
+    "init:default": "prisma migrate dev --name init --skip-seed",
+    "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
+    "test:default": "pnpm init:default && vitest run -c ../utils/vitest.config.ts",
+    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 vitest run -c ../utils/vitest.config.ts",
+    "test:mongodb": "./test/mongodb.test.sh",
+    "test": "pnpm test:default && pnpm test:custom",
+    "test:og": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
+    "build": "prisma generate && tsc",
+    "dev": "prisma generate && tsc -w",
+    "studio": "prisma studio"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@prisma/client": "^6.4.1",
+    "@redis/client": "^1.6.0"
+  },
+  "devDependencies": {
+    "@prisma/extension-accelerate": "1.1.0",
+    "@prisma/client": "^6.4.1",
+    "@redis/client": "^1.6.0",
+    "mongodb": "^6.9.0",
+    "prisma": "^6.4.0",
+    "typescript": "^5.7.3"
+  }
+}

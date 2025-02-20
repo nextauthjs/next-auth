@@ -38,6 +38,7 @@ on:
           - "@auth/pg-adapter"
           - "@auth/pouchdb-adapter"
           - "@auth/prisma-adapter"
+          - "@auth/redis-prisma-adapter"
           - "@auth/sequelize-adapter"
           - "@auth/supabase-adapter"
           - "@auth/surrealdb-adapter"
