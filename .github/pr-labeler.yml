@@ -1,6 +1,7 @@
 # https://github.com/actions/labeler#create-githublabeleryml
 adapters: ["packages/core/src/adapters.ts", "packages/adapter-*/**/*"]
 core: ["packages/core/src/**/*"]
+redis-cache: ["packages/adapter-redis-cache/**/*"]
 azure-tables: ["packages/adapter-azure-tables/**/*"]
 edgedb: ["packages/adapter-edgedb/**/*"]
 d1: ["packages/adapter-d1/**/*"]

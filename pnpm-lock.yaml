@@ -249,7 +249,7 @@ importers:
         version: 3.8.3(@algolia/client-search@5.20.0)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
       '@inkeep/widgets':
         specifier: ^0.2.289
-        version: 0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        version: 0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
       '@next/third-parties':
         specifier: ^14.2.15
         version: 14.2.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)
@@ -282,10 +282,10 @@ importers:
         version: 4.2.3(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))
       nextra:
         specifier: 3.0.15
-        version: 3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        version: 3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
       nextra-theme-docs:
         specifier: 3.0.15
-        version: 3.0.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(nextra@3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 3.0.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(nextra@3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -310,16 +310,16 @@ importers:
         version: 1.22.0
       tailwindcss:
         specifier: ^3.4.13
-        version: 3.4.13(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.3))
+        version: 3.4.13(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.7.3))
       typedoc:
         specifier: ^0.25.13
-        version: 0.25.13(typescript@5.6.3)
+        version: 0.25.13(typescript@5.7.3)
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.54
-        version: 4.0.0-next.54(typedoc@0.25.13(typescript@5.6.3))
+        version: 4.0.0-next.54(typedoc@0.25.13(typescript@5.7.3))
       typedoc-plugin-mdn-links:
         specifier: ^3.3.2
-        version: 3.3.2(typedoc@0.25.13(typescript@5.6.3))
+        version: 3.3.2(typedoc@0.25.13(typescript@5.7.3))
 
   packages/adapter-azure-tables:
     dependencies:
@@ -374,7 +374,7 @@ importers:
         version: 0.23.0
       drizzle-orm:
         specifier: ^0.32.0
-        version: 0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.27.5)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6)
+        version: 0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.7.0)(@prisma/client@6.4.1(typescript@5.3.3))(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.27.5)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6)
       libsql:
         specifier: ^0.3.18
         version: 0.3.18
@@ -422,7 +422,7 @@ importers:
         version: 1.3.1
       fauna-shell:
         specifier: 1.2.1
-        version: 1.2.1(@swc/core@1.3.106)(@types/node@22.7.5)(encoding@0.1.13)(typescript@5.6.3)
+        version: 1.2.1(@swc/core@1.3.106)(@types/node@22.7.5)(encoding@0.1.13)(typescript@5.7.3)
 
   packages/adapter-firebase:
     dependencies:
@@ -442,7 +442,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.0
-        version: 5.0.0(@parcel/watcher@2.4.1)(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.6.3)
+        version: 5.0.0(@parcel/watcher@2.4.1)(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.7.3)
       '@graphql-codegen/client-preset':
         specifier: ^4.1.0
         version: 4.1.0(encoding@0.1.13)(graphql@16.8.1)
@@ -575,6 +575,31 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
 
+  packages/adapter-redis-prisma:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@prisma/client':
+        specifier: ^6.4.1
+        version: 6.4.1(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3)
+      '@prisma/extension-accelerate':
+        specifier: 1.1.0
+        version: 1.1.0(@prisma/client@6.4.1(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3))
+      '@redis/client':
+        specifier: ^1.6.0
+        version: 1.6.0
+      mongodb:
+        specifier: ^6.9.0
+        version: 6.9.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0)(socks@2.7.1)
+      prisma:
+        specifier: ^6.4.0
+        version: 6.4.1(typescript@5.7.3)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
   packages/adapter-sequelize:
     dependencies:
       '@auth/core':
@@ -669,7 +694,7 @@ importers:
     devDependencies:
       '@xata.io/client':
         specifier: ^0.28.0
-        version: 0.28.0(typescript@5.6.3)
+        version: 0.28.0(typescript@5.7.3)
 
   packages/core:
     dependencies:
@@ -721,10 +746,10 @@ importers:
         version: 12.1.5(postcss@8.4.19)
       typedoc:
         specifier: ^0.25.12
-        version: 0.25.13(typescript@5.6.3)
+        version: 0.25.13(typescript@5.7.3)
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.53
-        version: 4.0.0-next.53(typedoc@0.25.13(typescript@5.6.3))
+        version: 4.0.0-next.53(typedoc@0.25.13(typescript@5.7.3))
 
   packages/frameworks-express:
     dependencies:
@@ -818,7 +843,7 @@ importers:
         version: 2.6.4(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.3.1(@types/node@22.7.5)(sass@1.70.0)(terser@5.27.0)))(svelte@4.2.19)(vite@5.3.1(@types/node@22.7.5)(sass@1.70.0)(terser@5.27.0))
       '@sveltejs/package':
         specifier: ^2.3.5
-        version: 2.3.5(svelte@4.2.19)(typescript@5.6.3)
+        version: 2.3.5(svelte@4.2.19)(typescript@5.7.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.1.2
         version: 3.1.2(svelte@4.2.19)(vite@5.3.1(@types/node@22.7.5)(sass@1.70.0)(terser@5.27.0))
@@ -830,16 +855,16 @@ importers:
         version: 4.2.19
       svelte-check:
         specifier: ^4.0.4
-        version: 4.0.4(svelte@4.2.19)(typescript@5.6.3)
+        version: 4.0.4(svelte@4.2.19)(typescript@5.7.3)
       tslib:
         specifier: ^2.7.0
         version: 2.7.0
       typedoc:
         specifier: ^0.25.12
-        version: 0.25.13(typescript@5.6.3)
+        version: 0.25.13(typescript@5.7.3)
       typedoc-plugin-markdown:
         specifier: 4.0.0-next.53
-        version: 4.0.0-next.53(typedoc@0.25.13(typescript@5.6.3))
+        version: 4.0.0-next.53(typedoc@0.25.13(typescript@5.7.3))
 
   packages/frameworks-template:
     dependencies:
@@ -4070,6 +4095,7 @@ packages:
   '@playwright/test@1.41.2':
     resolution: {integrity: sha512-qQB9h7KbibJzrDpkXkYvsmiDJK14FULCCZgEcoe2AvFAS64oCirWTwzTlAYEbKaRxWs5TFesE1Na6izMv3HfGg==}
     engines: {node: '>=16'}
+    deprecated: Please update to the latest version of Playwright to test up-to-date browsers.
     hasBin: true
 
   '@polka/url@1.0.0-next.24':
@@ -4113,14 +4139,35 @@ packages:
       prisma:
         optional: true
 
+  '@prisma/client@6.4.1':
+    resolution: {integrity: sha512-A7Mwx44+GVZVexT5e2GF/WcKkEkNNKbgr059xpr5mn+oUm2ZW1svhe+0TRNBwCdzhfIZ+q23jEgsNPvKD9u+6g==}
+    engines: {node: '>=18.18'}
+    peerDependencies:
+      prisma: '*'
+      typescript: '>=5.1.0'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+      typescript:
+        optional: true
+
   '@prisma/debug@6.0.0':
     resolution: {integrity: sha512-eUjoNThlDXdyJ1iQ2d7U6aTVwm59EwvODb5zFVNJEokNoSiQmiYWNzZIwZyDmZ+j51j42/0iTaHIJ4/aZPKFRg==}
+
+  '@prisma/debug@6.4.1':
+    resolution: {integrity: sha512-Q9xk6yjEGIThjSD8zZegxd5tBRNHYd13GOIG0nLsanbTXATiPXCLyvlYEfvbR2ft6dlRsziQXfQGxAgv7zcMUA==}
 
   '@prisma/engines-version@5.23.0-27.5dbef10bdbfb579e07d35cc85fb1518d357cb99e':
     resolution: {integrity: sha512-JmIds0Q2/vsOmnuTJYxY4LE+sajqjYKhLtdOT6y4imojqv5d/aeVEfbBGC74t8Be1uSp0OP8lxIj2OqoKbLsfQ==}
 
+  '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d':
+    resolution: {integrity: sha512-Xq54qw55vaCGrGgIJqyDwOq0TtjZPJEWsbQAHugk99hpDf2jcEeQhUcF+yzEsSqegBaDNLA4IC8Nn34sXmkiTQ==}
+
   '@prisma/engines@6.0.0':
     resolution: {integrity: sha512-ZZCVP3q22ifN6Ex6C8RIcTDBlRtMJS2H1ljV0knCiWNGArvvkEbE88W3uDdq/l4+UvyvHpGzdf9ZsCWSQR7ZQQ==}
+
+  '@prisma/engines@6.4.1':
+    resolution: {integrity: sha512-KldENzMHtKYwsOSLThghOIdXOBEsfDuGSrxAZjMnimBiDKd3AE4JQ+Kv+gBD/x77WoV9xIPf25GXMWffXZ17BA==}
 
   '@prisma/extension-accelerate@1.1.0':
     resolution: {integrity: sha512-sESjhBZ4ywQjAVpKzsfhxyNu+9txIM5I6M1MPBaJBq/xDlqmniIAhlwIEt9KLtO80zqPxqbZYes18zrkgYqNiQ==}
@@ -4131,8 +4178,14 @@ packages:
   '@prisma/fetch-engine@6.0.0':
     resolution: {integrity: sha512-j2m+iO5RDPRI7SUc7sHo8wX7SA4iTkJ+18Sxch8KinQM46YiCQD1iXKN6qU79C1Fliw5Bw/qDyTHaTsa3JMerA==}
 
+  '@prisma/fetch-engine@6.4.1':
+    resolution: {integrity: sha512-uZ5hVeTmDspx7KcaRCNoXmcReOD+84nwlO2oFvQPRQh9xiFYnnUKDz7l9bLxp8t4+25CsaNlgrgilXKSQwrIGQ==}
+
   '@prisma/get-platform@6.0.0':
     resolution: {integrity: sha512-PS6nYyIm9g8C03E4y7LknOfdCw/t2KyEJxntMPQHQZCOUgOpF82Ma60mdlOD08w90I3fjLiZZ0+MadenR3naDQ==}
+
+  '@prisma/get-platform@6.4.1':
+    resolution: {integrity: sha512-gXqZaDI5scDkBF8oza7fOD3Q3QMD0e0rBynlzDDZdTWbWmzjuW58PRZtj+jkvKje2+ZigCWkH8SsWZAsH6q1Yw==}
 
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -4377,6 +4430,10 @@ packages:
 
   '@redis/client@1.5.13':
     resolution: {integrity: sha512-epkUM9D0Sdmt93/8Ozk43PNjLi36RZzG+d/T1Gdu5AI8jvghonTeLYV69WVWdilvFo+PYxbP0TZ0saMvr6nscQ==}
+    engines: {node: '>=14'}
+
+  '@redis/client@1.6.0':
+    resolution: {integrity: sha512-aR0uffYI700OEEH4gYnitAnv3vzVGXCFvYfdpu/CJKvk4pHfLPEy/JSZyrpQ+15WhXe1yJRXLtfQ84s4mEXnPg==}
     engines: {node: '>=14'}
 
   '@redis/graph@1.1.1':
@@ -6497,6 +6554,7 @@ packages:
   bson@6.8.0:
     resolution: {integrity: sha512-iOJg8pr7wq2tg/zSlCCHMi3hMm5JTOxLTagf3zxhcenHsFp+c6uOs6K7W5UE7A4QIJGtqh/ZovFNMP4mOPJynQ==}
     engines: {node: '>=16.20.1'}
+    deprecated: a critical bug affecting only useBigInt64=true deserialization usage is fixed in bson@6.10.3
 
   btoa-lite@1.0.0:
     resolution: {integrity: sha512-gvW7InbIyF8AicrqWoptdW08pUxuhq8BEgowNajy9RhiE86fmGAGl+bLKo6oB8QP0CkqHLowfN0oJdKC/J6LbA==}
@@ -7678,6 +7736,11 @@ packages:
 
   esbuild-register@3.5.0:
     resolution: {integrity: sha512-+4G/XmakeBAsvJuDugJvtyF1x+XJT4FMocynNpxrvEBViirpfUn2PgNpCHedfWhF4WokNsO/OvMKrmJOIJsI5A==}
+    peerDependencies:
+      esbuild: '>=0.12 <1'
+
+  esbuild-register@3.6.0:
+    resolution: {integrity: sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==}
     peerDependencies:
       esbuild: '>=0.12 <1'
 
@@ -11201,6 +11264,16 @@ packages:
     engines: {node: '>=18.18'}
     hasBin: true
 
+  prisma@6.4.1:
+    resolution: {integrity: sha512-q2uJkgXnua/jj66mk6P9bX/zgYJFI/jn4Yp0aS6SPRrjH/n6VyOV7RDe1vHD0DX8Aanx4MvgmUPPoYnR6MJnPg==}
+    engines: {node: '>=18.18'}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=5.1.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   prismjs@1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
     engines: {node: '>=6'}
@@ -12942,8 +13015,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -16271,7 +16344,7 @@ snapshots:
       graphql: 16.8.1
       tslib: 2.5.3
 
-  '@graphql-codegen/cli@5.0.0(@parcel/watcher@2.4.1)(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.6.3)':
+  '@graphql-codegen/cli@5.0.0(@parcel/watcher@2.4.1)(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.7.3)':
     dependencies:
       '@babel/generator': 7.23.6
       '@babel/template': 7.23.9
@@ -16290,11 +16363,11 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
-      cosmiconfig: 8.3.6(typescript@5.6.3)
+      cosmiconfig: 8.3.6(typescript@5.7.3)
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.8.1
-      graphql-config: 5.0.3(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.6.3)
+      graphql-config: 5.0.3(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.7.3)
       inquirer: 8.2.6
       is-glob: 4.0.3
       jiti: 1.21.0
@@ -16835,14 +16908,14 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
     dependencies:
       '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.44
-      '@pandacss/dev': 0.22.1(typescript@5.6.3)
+      '@pandacss/dev': 0.22.1(typescript@5.7.3)
       framer-motion: 10.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -16851,22 +16924,22 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)':
     dependencies:
       '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
       '@inkeep/shared': 0.0.25
-      '@pandacss/dev': 0.22.1(typescript@5.6.3)
+      '@pandacss/dev': 0.22.1(typescript@5.7.3)
     transitivePeerDependencies:
       - '@internationalized/date'
       - jsdom
       - typescript
 
-  '@inkeep/preset@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset@0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)':
     dependencies:
       '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)
       '@inkeep/shared': 0.0.25
-      '@pandacss/dev': 0.22.1(typescript@5.6.3)
+      '@pandacss/dev': 0.22.1(typescript@5.7.3)
       colorjs.io: 0.4.5
     transitivePeerDependencies:
       - '@internationalized/date'
@@ -16879,14 +16952,14 @@ snapshots:
 
   '@inkeep/styled-system@0.0.46': {}
 
-  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
     dependencies:
       '@apollo/client': 3.9.5(@types/react@18.2.78)(graphql-ws@5.14.3(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/color-mode': 0.0.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.7.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.46
       '@types/lodash.isequal': 4.5.8
@@ -17505,7 +17578,7 @@ snapshots:
       supports-color: 8.1.1
       tslib: 2.7.0
 
-  '@oclif/core@2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)':
+  '@oclif/core@2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)':
     dependencies:
       '@types/cli-progress': 3.11.5
       ansi-escapes: 4.3.2
@@ -17530,7 +17603,7 @@ snapshots:
       strip-ansi: 6.0.1
       supports-color: 8.1.1
       supports-hyperlinks: 2.3.0
-      ts-node: 10.9.2(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)
+      ts-node: 10.9.2(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)
       tslib: 2.7.0
       widest-line: 3.1.0
       wordwrap: 1.0.0
@@ -17551,19 +17624,19 @@ snapshots:
 
   '@oclif/linewrap@1.0.0': {}
 
-  '@oclif/plugin-help@5.2.20(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)':
+  '@oclif/plugin-help@5.2.20(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)':
     dependencies:
-      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)
+      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
       - typescript
 
-  '@oclif/plugin-plugins@2.4.7(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)':
+  '@oclif/plugin-plugins@2.4.7(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)':
     dependencies:
       '@oclif/color': 1.0.13
-      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)
+      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)
       chalk: 4.1.2
       debug: 4.3.7(supports-color@8.1.1)
       fs-extra: 9.1.0
@@ -17596,7 +17669,7 @@ snapshots:
       escalade: 3.1.1
       jiti: 1.21.6
       merge-anything: 5.1.7
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   '@pandacss/core@0.22.1':
     dependencies:
@@ -17618,14 +17691,14 @@ snapshots:
       postcss-selector-parser: 6.1.2
       ts-pattern: 5.0.5
 
-  '@pandacss/dev@0.22.1(typescript@5.6.3)':
+  '@pandacss/dev@0.22.1(typescript@5.7.3)':
     dependencies:
       '@clack/prompts': 0.6.3
       '@pandacss/config': 0.22.1
       '@pandacss/error': 0.22.1
       '@pandacss/logger': 0.22.1
-      '@pandacss/node': 0.22.1(typescript@5.6.3)
-      '@pandacss/postcss': 0.22.1(typescript@5.6.3)
+      '@pandacss/node': 0.22.1(typescript@5.7.3)
+      '@pandacss/postcss': 0.22.1(typescript@5.7.3)
       '@pandacss/preset-panda': 0.22.1
       '@pandacss/shared': 0.22.1
       '@pandacss/token-dictionary': 0.22.1
@@ -17639,9 +17712,9 @@ snapshots:
 
   '@pandacss/error@0.22.1': {}
 
-  '@pandacss/extractor@0.22.1(typescript@5.6.3)':
+  '@pandacss/extractor@0.22.1(typescript@5.7.3)':
     dependencies:
-      ts-evaluator: 1.2.0(typescript@5.6.3)
+      ts-evaluator: 1.2.0(typescript@5.7.3)
       ts-morph: 19.0.0
     transitivePeerDependencies:
       - jsdom
@@ -17669,16 +17742,16 @@ snapshots:
       kleur: 4.1.5
       lil-fp: 1.4.5
 
-  '@pandacss/node@0.22.1(typescript@5.6.3)':
+  '@pandacss/node@0.22.1(typescript@5.7.3)':
     dependencies:
       '@pandacss/config': 0.22.1
       '@pandacss/core': 0.22.1
       '@pandacss/error': 0.22.1
-      '@pandacss/extractor': 0.22.1(typescript@5.6.3)
+      '@pandacss/extractor': 0.22.1(typescript@5.7.3)
       '@pandacss/generator': 0.22.1
       '@pandacss/is-valid-prop': 0.22.1
       '@pandacss/logger': 0.22.1
-      '@pandacss/parser': 0.22.1(typescript@5.6.3)
+      '@pandacss/parser': 0.22.1(typescript@5.7.3)
       '@pandacss/shared': 0.22.1
       '@pandacss/token-dictionary': 0.22.1
       '@pandacss/types': 0.22.1
@@ -17703,15 +17776,15 @@ snapshots:
       prettier: 2.8.8
       ts-morph: 19.0.0
       ts-pattern: 5.0.5
-      tsconfck: 2.1.2(typescript@5.6.3)
+      tsconfck: 2.1.2(typescript@5.7.3)
     transitivePeerDependencies:
       - jsdom
       - typescript
 
-  '@pandacss/parser@0.22.1(typescript@5.6.3)':
+  '@pandacss/parser@0.22.1(typescript@5.7.3)':
     dependencies:
       '@pandacss/config': 0.22.1
-      '@pandacss/extractor': 0.22.1(typescript@5.6.3)
+      '@pandacss/extractor': 0.22.1(typescript@5.7.3)
       '@pandacss/is-valid-prop': 0.22.1
       '@pandacss/logger': 0.22.1
       '@pandacss/shared': 0.22.1
@@ -17725,9 +17798,9 @@ snapshots:
       - jsdom
       - typescript
 
-  '@pandacss/postcss@0.22.1(typescript@5.6.3)':
+  '@pandacss/postcss@0.22.1(typescript@5.7.3)':
     dependencies:
-      '@pandacss/node': 0.22.1(typescript@5.6.3)
+      '@pandacss/node': 0.22.1(typescript@5.7.3)
       postcss: 8.4.47
     transitivePeerDependencies:
       - jsdom
@@ -17921,9 +17994,23 @@ snapshots:
     optionalDependencies:
       prisma: 6.0.0
 
+  '@prisma/client@6.4.1(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3)':
+    optionalDependencies:
+      prisma: 6.4.1(typescript@5.7.3)
+      typescript: 5.7.3
+
+  '@prisma/client@6.4.1(typescript@5.3.3)':
+    optionalDependencies:
+      typescript: 5.3.3
+    optional: true
+
   '@prisma/debug@6.0.0': {}
 
+  '@prisma/debug@6.4.1': {}
+
   '@prisma/engines-version@5.23.0-27.5dbef10bdbfb579e07d35cc85fb1518d357cb99e': {}
+
+  '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d': {}
 
   '@prisma/engines@6.0.0':
     dependencies:
@@ -17932,9 +18019,20 @@ snapshots:
       '@prisma/fetch-engine': 6.0.0
       '@prisma/get-platform': 6.0.0
 
+  '@prisma/engines@6.4.1':
+    dependencies:
+      '@prisma/debug': 6.4.1
+      '@prisma/engines-version': 6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d
+      '@prisma/fetch-engine': 6.4.1
+      '@prisma/get-platform': 6.4.1
+
   '@prisma/extension-accelerate@1.1.0(@prisma/client@6.0.0(prisma@6.0.0))':
     dependencies:
       '@prisma/client': 6.0.0(prisma@6.0.0)
+
+  '@prisma/extension-accelerate@1.1.0(@prisma/client@6.4.1(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3))':
+    dependencies:
+      '@prisma/client': 6.4.1(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3)
 
   '@prisma/fetch-engine@6.0.0':
     dependencies:
@@ -17942,9 +18040,19 @@ snapshots:
       '@prisma/engines-version': 5.23.0-27.5dbef10bdbfb579e07d35cc85fb1518d357cb99e
       '@prisma/get-platform': 6.0.0
 
+  '@prisma/fetch-engine@6.4.1':
+    dependencies:
+      '@prisma/debug': 6.4.1
+      '@prisma/engines-version': 6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d
+      '@prisma/get-platform': 6.4.1
+
   '@prisma/get-platform@6.0.0':
     dependencies:
       '@prisma/debug': 6.0.0
+
+  '@prisma/get-platform@6.4.1':
+    dependencies:
+      '@prisma/debug': 6.4.1
 
   '@protobufjs/aspromise@1.1.2':
     optional: true
@@ -18185,6 +18293,12 @@ snapshots:
       generic-pool: 3.9.0
       yallist: 4.0.0
 
+  '@redis/client@1.6.0':
+    dependencies:
+      cluster-key-slot: 1.1.2
+      generic-pool: 3.9.0
+      yallist: 4.0.0
+
   '@redis/graph@1.1.1(@redis/client@1.5.13)':
     dependencies:
       '@redis/client': 1.5.13
@@ -18331,10 +18445,10 @@ snapshots:
       '@shikijs/types': 1.22.0
       '@shikijs/vscode-textmate': 9.3.0
 
-  '@shikijs/twoslash@1.2.4(typescript@5.6.3)':
+  '@shikijs/twoslash@1.2.4(typescript@5.7.3)':
     dependencies:
       '@shikijs/core': 1.2.4
-      twoslash: 0.2.5(typescript@5.6.3)
+      twoslash: 0.2.5(typescript@5.7.3)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -19008,14 +19122,14 @@ snapshots:
       tiny-glob: 0.2.9
       vite: 5.3.1(@types/node@22.7.5)(sass@1.70.0)(terser@5.27.0)
 
-  '@sveltejs/package@2.3.5(svelte@4.2.19)(typescript@5.6.3)':
+  '@sveltejs/package@2.3.5(svelte@4.2.19)(typescript@5.7.3)':
     dependencies:
       chokidar: 4.0.1
       kleur: 4.1.5
       sade: 1.8.1
       semver: 7.6.3
       svelte: 4.2.19
-      svelte2tsx: 0.7.21(svelte@4.2.19)(typescript@5.6.3)
+      svelte2tsx: 0.7.21(svelte@4.2.19)(typescript@5.7.3)
     transitivePeerDependencies:
       - typescript
 
@@ -20004,9 +20118,9 @@ snapshots:
       typescript: 5.3.3
     optional: true
 
-  '@xata.io/client@0.28.0(typescript@5.6.3)':
+  '@xata.io/client@0.28.0(typescript@5.7.3)':
     dependencies:
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   '@xmldom/xmldom@0.8.10': {}
 
@@ -21916,14 +22030,14 @@ snapshots:
     dependencies:
       layout-base: 2.0.1
 
-  cosmiconfig@8.3.6(typescript@5.6.3):
+  cosmiconfig@8.3.6(typescript@5.7.3):
     dependencies:
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   create-require@1.1.1: {}
 
@@ -22397,13 +22511,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.27.5)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6):
+  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240117.0)(@libsql/client@0.6.0)(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.7.0)(@prisma/client@6.4.1(typescript@5.3.3))(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@types/react@18.2.78)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@9.6.0)(knex@2.5.1(better-sqlite3@9.6.0)(mysql2@3.9.7)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.27.5)(mysql2@3.9.7)(pg@8.11.3)(postgres@3.4.3)(react@18.3.1)(sqlite3@5.1.6):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240117.0
       '@libsql/client': 0.6.0
       '@neondatabase/serverless': 0.10.4
       '@opentelemetry/api': 1.7.0
-      '@prisma/client': 6.0.0(prisma@6.0.0)
+      '@prisma/client': 6.4.1(typescript@5.3.3)
       '@types/better-sqlite3': 7.6.9
       '@types/pg': 8.11.6
       '@types/react': 18.2.78
@@ -22596,6 +22710,13 @@ snapshots:
     dependencies:
       debug: 4.3.7(supports-color@8.1.1)
       esbuild: 0.19.12
+    transitivePeerDependencies:
+      - supports-color
+
+  esbuild-register@3.6.0(esbuild@0.21.5):
+    dependencies:
+      debug: 4.3.7(supports-color@8.1.1)
+      esbuild: 0.21.5
     transitivePeerDependencies:
       - supports-color
 
@@ -23197,12 +23318,12 @@ snapshots:
     dependencies:
       format: 0.2.2
 
-  fauna-shell@1.2.1(@swc/core@1.3.106)(@types/node@22.7.5)(encoding@0.1.13)(typescript@5.6.3):
+  fauna-shell@1.2.1(@swc/core@1.3.106)(@types/node@22.7.5)(encoding@0.1.13)(typescript@5.7.3):
     dependencies:
       '@inquirer/prompts': 3.3.2
-      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)
-      '@oclif/plugin-help': 5.2.20(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)
-      '@oclif/plugin-plugins': 2.4.7(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3)
+      '@oclif/core': 2.15.0(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)
+      '@oclif/plugin-help': 5.2.20(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)
+      '@oclif/plugin-plugins': 2.4.7(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3)
       chalk: 4.1.2
       cli-table: 0.3.11
       cli-ux: 4.9.3
@@ -23730,7 +23851,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-config@5.0.3(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.6.3):
+  graphql-config@5.0.3(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)(typescript@5.7.3):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.8.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.8.1)
@@ -23738,7 +23859,7 @@ snapshots:
       '@graphql-tools/merge': 9.0.1(graphql@16.8.1)
       '@graphql-tools/url-loader': 8.0.1(@types/node@22.7.5)(encoding@0.1.13)(graphql@16.8.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
-      cosmiconfig: 8.3.6(typescript@5.6.3)
+      cosmiconfig: 8.3.6(typescript@5.7.3)
       graphql: 16.8.1
       jiti: 1.21.0
       minimatch: 4.2.3
@@ -26289,7 +26410,7 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextra-theme-docs@3.0.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(nextra@3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  nextra-theme-docs@3.0.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(nextra@3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@headlessui/react': 2.1.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 2.1.0
@@ -26297,20 +26418,20 @@ snapshots:
       flexsearch: 0.7.43
       next: 14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0)
       next-themes: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      nextra: 3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+      nextra: 3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       scroll-into-view-if-needed: 3.1.0
       zod: 3.22.4
 
-  nextra@3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3):
+  nextra@3.0.15(@types/react@18.2.78)(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.5
       '@headlessui/react': 2.1.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mdx-js/mdx': 3.0.1
       '@mdx-js/react': 3.0.0(@types/react@18.2.78)(react@18.3.1)
       '@napi-rs/simple-git': 0.1.16
-      '@shikijs/twoslash': 1.2.4(typescript@5.6.3)
+      '@shikijs/twoslash': 1.2.4(typescript@5.7.3)
       '@theguild/remark-mermaid': 0.1.3(react@18.3.1)
       '@theguild/remark-npm2yarn': 0.3.2
       better-react-mathjax: 2.0.3(react@18.3.1)
@@ -26965,13 +27086,13 @@ snapshots:
       ts-node: 10.9.2(@types/node@20.12.7)(typescript@5.3.3)
     optional: true
 
-  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.3)):
+  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.7.3)):
     dependencies:
       lilconfig: 3.1.1
       yaml: 2.3.4
     optionalDependencies:
       postcss: 8.4.47
-      ts-node: 10.9.2(@types/node@20.12.7)(typescript@5.6.3)
+      ts-node: 10.9.2(@types/node@20.12.7)(typescript@5.7.3)
 
   postcss-merge-rules@6.1.1(postcss@8.4.47):
     dependencies:
@@ -27282,6 +27403,17 @@ snapshots:
       '@prisma/engines': 6.0.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  prisma@6.4.1(typescript@5.7.3):
+    dependencies:
+      '@prisma/engines': 6.4.1
+      esbuild: 0.21.5
+      esbuild-register: 3.6.0(esbuild@0.21.5)
+    optionalDependencies:
+      fsevents: 2.3.3
+      typescript: 5.7.3
+    transitivePeerDependencies:
+      - supports-color
 
   prismjs@1.29.0: {}
 
@@ -28751,7 +28883,7 @@ snapshots:
       - stylus
       - sugarss
 
-  svelte-check@4.0.4(svelte@4.2.19)(typescript@5.6.3):
+  svelte-check@4.0.4(svelte@4.2.19)(typescript@5.7.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 4.0.1
@@ -28759,7 +28891,7 @@ snapshots:
       picocolors: 1.0.0
       sade: 1.8.1
       svelte: 4.2.19
-      typescript: 5.6.3
+      typescript: 5.7.3
     transitivePeerDependencies:
       - picomatch
 
@@ -28794,12 +28926,12 @@ snapshots:
       sass: 1.70.0
       typescript: 5.4.5
 
-  svelte2tsx@0.7.21(svelte@4.2.19)(typescript@5.6.3):
+  svelte2tsx@0.7.21(svelte@4.2.19)(typescript@5.7.3):
     dependencies:
       dedent-js: 1.0.1
       pascal-case: 3.1.2
       svelte: 4.2.19
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   svelte@4.2.19:
     dependencies:
@@ -28838,7 +28970,7 @@ snapshots:
 
   tabbable@6.2.0: {}
 
-  tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.3)):
+  tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.7.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -28857,7 +28989,7 @@ snapshots:
       postcss: 8.4.47
       postcss-import: 15.1.0(postcss@8.4.47)
       postcss-js: 4.0.1(postcss@8.4.47)
-      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.3))
+      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.7.3))
       postcss-nested: 6.0.1(postcss@8.4.47)
       postcss-selector-parser: 6.0.16
       resolve: 1.22.8
@@ -29056,12 +29188,12 @@ snapshots:
 
   ts-dedent@2.2.0: {}
 
-  ts-evaluator@1.2.0(typescript@5.6.3):
+  ts-evaluator@1.2.0(typescript@5.7.3):
     dependencies:
       ansi-colors: 4.1.3
       crosspath: 2.0.0
       object-path: 0.11.8
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   ts-interface-checker@0.1.13: {}
 
@@ -29076,7 +29208,7 @@ snapshots:
       '@ts-morph/common': 0.20.0
       code-block-writer: 12.0.0
 
-  ts-node@10.9.2(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.6.3):
+  ts-node@10.9.2(@swc/core@1.3.106)(@types/node@22.7.5)(typescript@5.7.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -29090,7 +29222,7 @@ snapshots:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.6.3
+      typescript: 5.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
@@ -29115,7 +29247,7 @@ snapshots:
       yn: 3.1.1
     optional: true
 
-  ts-node@10.9.2(@types/node@20.12.7)(typescript@5.6.3):
+  ts-node@10.9.2(@types/node@20.12.7)(typescript@5.7.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
@@ -29129,16 +29261,16 @@ snapshots:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.6.3
+      typescript: 5.7.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optional: true
 
   ts-pattern@5.0.5: {}
 
-  tsconfck@2.1.2(typescript@5.6.3):
+  tsconfck@2.1.2(typescript@5.7.3):
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   tsconfck@3.1.0(typescript@5.4.5):
     optionalDependencies:
@@ -29192,11 +29324,11 @@ snapshots:
 
   twoslash-protocol@0.2.5: {}
 
-  twoslash@0.2.5(typescript@5.6.3):
+  twoslash@0.2.5(typescript@5.7.3):
     dependencies:
       '@typescript/vfs': 1.5.0
       twoslash-protocol: 0.2.5
-      typescript: 5.6.3
+      typescript: 5.7.3
     transitivePeerDependencies:
       - supports-color
 
@@ -29254,25 +29386,25 @@ snapshots:
       for-each: 0.3.3
       is-typed-array: 1.1.12
 
-  typedoc-plugin-markdown@4.0.0-next.53(typedoc@0.25.13(typescript@5.6.3)):
+  typedoc-plugin-markdown@4.0.0-next.53(typedoc@0.25.13(typescript@5.7.3)):
     dependencies:
-      typedoc: 0.25.13(typescript@5.6.3)
+      typedoc: 0.25.13(typescript@5.7.3)
 
-  typedoc-plugin-markdown@4.0.0-next.54(typedoc@0.25.13(typescript@5.6.3)):
+  typedoc-plugin-markdown@4.0.0-next.54(typedoc@0.25.13(typescript@5.7.3)):
     dependencies:
-      typedoc: 0.25.13(typescript@5.6.3)
+      typedoc: 0.25.13(typescript@5.7.3)
 
-  typedoc-plugin-mdn-links@3.3.2(typedoc@0.25.13(typescript@5.6.3)):
+  typedoc-plugin-mdn-links@3.3.2(typedoc@0.25.13(typescript@5.7.3)):
     dependencies:
-      typedoc: 0.25.13(typescript@5.6.3)
+      typedoc: 0.25.13(typescript@5.7.3)
 
-  typedoc@0.25.13(typescript@5.6.3):
+  typedoc@0.25.13(typescript@5.7.3):
     dependencies:
       lunr: 2.3.9
       marked: 4.3.0
       minimatch: 9.0.5
       shiki: 0.14.7
-      typescript: 5.6.3
+      typescript: 5.7.3
 
   typeorm-naming-strategies@4.1.0(typeorm@0.3.17(ioredis@5.4.1)(mssql@7.3.5(encoding@0.1.13))(mysql2@3.9.7)(pg@8.11.3)(redis@4.6.12)(sqlite3@5.1.6(encoding@0.1.13))(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.3.3))):
     dependencies:
@@ -29325,7 +29457,7 @@ snapshots:
 
   typescript@5.4.5: {}
 
-  typescript@5.6.3: {}
+  typescript@5.7.3: {}
 
   ua-parser-js@1.0.37: {}
 

@@ -22,6 +22,7 @@ on:
           - "@auth/qwik"
           - "@auth/solid-start"
           - "@auth/sveltekit"
+          - "@auth/redis-cache-adapter"
           - "@auth/azure-tables-adapter"
           - "@auth/d1-adapter"
           - "@auth/dgraph-adapter"
