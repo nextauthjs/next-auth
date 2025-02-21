@@ -34,6 +34,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "build": "pnpm clean && tsc",
+    "clean": "rm -rf index.* && rm ./test/prisma/dev.db*",
+    "init": "prisma migrate dev --name init --skip-seed --schema ./test/prisma/schema.prisma",
+    "test": "pnpm init && vitest run -c ../utils/vitest.config.ts"
+  },
   "dependencies": {
     "@auth/core": "workspace:*"
   },
@@ -41,7 +47,11 @@
     "@redis/client": "^1.6.0"
   },
   "devDependencies": {
+    "@auth/prisma-adapter": "2.7.4",
+    "@prisma/client": "^6.4.1",
+    "@prisma/extension-accelerate": "1.1.0",
     "@redis/client": "^1.6.0",
+    "prisma": "^6.4.1",
     "typescript": "^5.7.3"
   }
 }

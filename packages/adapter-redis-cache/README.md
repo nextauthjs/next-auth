@@ -44,4 +44,4 @@
 
 ## 📖 Documentation
 
-You may refer to the documentation available [here](https://authjs.dev/getting-started/adapters/).
+You may refer to the documentation available [here](https://authjs.dev/getting-started/database/).
