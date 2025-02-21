@@ -1,0 +1,47 @@
+{
+  "name": "@auth/redis-cache-adapter",
+  "version": "1.0.0",
+  "description": "Enhanced caching adapter for Auth.js, by using Redis",
+  "homepage": "https://authjs.dev/",
+  "author": "boul2gom <contact@boul2gom.com>",
+  "repository": "https://github.com/boul2gom/adapter-redis-cache",
+  "bugs": {
+    "url": "https://github.com/boul2gom/adapter-redis-cache"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "auth.js",
+    "redis",
+    "cache"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@redis/client": "^1.6.0"
+  },
+  "devDependencies": {
+    "@redis/client": "^1.6.0",
+    "typescript": "^5.7.3"
+  }
+}

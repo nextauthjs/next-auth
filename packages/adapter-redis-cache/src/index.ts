@@ -2,22 +2,21 @@
  * ## Installation
  *
  * ```bash
- * pnpm install @prisma/client @auth/redis-prisma-adapter
- * pnpm install prisma --save-dev
+ * pnpm install @auth/redis-cache-adapter
  * ```
  *
- * @module @auth/redis-prisma-adapter
+ * @module @auth/redis-cache-adapter
  */
 
-import { type PrismaClient } from "@prisma/client"
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
 import type {
   Adapter,
-  AdapterAccount, AdapterAuthenticator,
+  AdapterAccount,
+  AdapterAuthenticator,
   AdapterSession,
-  AdapterUser, VerificationToken,
+  AdapterUser,
+  VerificationToken,
 } from "@auth/core/adapters"
-import { RedisClientType, RedisModules, RedisFunctions, SetOptions, RedisScripts } from "@redis/client"
+import {RedisClientType, RedisFunctions, RedisModules, RedisScripts, SetOptions} from "@redis/client";
 
 const relation_fields: Record<string, string[]> = {
   User: ["accounts", "sessions", "Authenticator"],
@@ -26,27 +25,24 @@ const relation_fields: Record<string, string[]> = {
   Authenticator: ["user"]
 };
 
-export type PrismaType = PrismaClient | ReturnType<PrismaClient["$extends"]>
+export type AdapterType = Adapter
 export type RedisType = RedisClientType<RedisModules, RedisFunctions, RedisScripts>
 
 /**
- * Create an adapter for Prisma and Redis.
+ * Create an adapter that uses Redis for caching database.
  *
- * @param prisma_client - The Prisma client instance.
- * @param redis_client - The Redis client instance.
+ * @param adapter - The adapter to cache.
+ * @param redis - The Redis client instance.
  * @param redis_namespace - The namespace to use for Redis keys.
  * @param redis_expiry - The expiry time for Redis keys.
  * @returns The adapter.
  */
-export function RedisPrismaAdapter(
-  prisma_client: PrismaType,
-  redis_client: RedisType,
+export function RedisCacheAdapter(
+  adapter: AdapterType,
+  redis: RedisType,
   redis_namespace: string,
   redis_expiry: number,
 ): Adapter {
-  const prisma = prisma_client as PrismaClient
-  const redis = redis_client
-
   const keys_expiration = {
     expiration: {
       type: 'EX',
@@ -55,45 +51,49 @@ export function RedisPrismaAdapter(
   } as SetOptions;
 
   return {
-    createUser(user: AdapterUser): Promise<AdapterUser> {
-      const { id, ...data } = user
+    async createUser(user: AdapterUser): Promise<AdapterUser> {
+      const created_user = await adapter.createUser!(user);
 
-      return prisma.user.create({
-        data: strip_undefined(data),
-      }) as Promise<AdapterUser>;
+      const user_key = `${redis_namespace}:user:${created_user.id}`;
+      await redis.set(user_key, JSON.stringify(strip_relations("User", created_user)), keys_expiration);
+
+      if (created_user.email) {
+        const email_key = `${redis_namespace}:user:email:${created_user.email}`;
+        await redis.set(email_key, created_user.id, keys_expiration);
+      }
+
+      return created_user;
     },
-    getUser(id: string): Promise<AdapterUser | null> {
-      return redis.get(`${redis_namespace}:user:${id}`).then(async (user) => {
-        if (user) return JSON.parse(user) as AdapterUser
+    async getUser(id: string): Promise<AdapterUser | null> {
+      const user = await redis.get(`${redis_namespace}:user:${id}`);
+      if (user) return JSON.parse(user) as AdapterUser;
 
-        const data = await prisma.user.findUnique({ where: { id } })
-        if (data) {
-          await redis.set(`${redis_namespace}:user:${id}`, JSON.stringify(strip_relations("User", data)), keys_expiration)
-          return data
-        }
+      const data = await adapter.getUser!(id);
+      if (data) {
+        await redis.set(`${redis_namespace}:user:${id}`, JSON.stringify(strip_relations("User", data)), keys_expiration);
+        return data;
+      }
 
-        return null
-      }) as Promise<AdapterUser | null>;
+      return null;
     },
-    getUserByEmail(email: string): Promise<AdapterUser | null> {
+    async getUserByEmail(email: string): Promise<AdapterUser | null> {
       const email_key = `${redis_namespace}:user:email:${email}`;
 
-      return redis.get(email_key).then(async (user_id) => {
-        if (user_id) {
-          const user_key = `${redis_namespace}:user:${user_id}`;
-          const cached_user = await redis.get(user_key);
+      const user_id = await redis.get(email_key);
+      if (user_id) {
+        const user_key = `${redis_namespace}:user:${user_id}`;
+        const cached_user = await redis.get(user_key);
 
-          if (cached_user) return JSON.parse(cached_user) as AdapterUser;
-        }
+        if (cached_user) return JSON.parse(cached_user) as AdapterUser;
+      }
 
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return null;
+      const user = await adapter.getUserByEmail!(email);
+      if (!user) return null;
 
-        await redis.set(email_key, user.id, keys_expiration);
-        await redis.set(`${redis_namespace}:user:${user.id}`, JSON.stringify(strip_relations("User", user)), keys_expiration);
+      await redis.set(email_key, user.id, keys_expiration);
+      await redis.set(`${redis_namespace}:user:${user.id}`, JSON.stringify(strip_relations("User", user)), keys_expiration);
 
-        return user;
-      }) as Promise<AdapterUser | null>;
+      return user;
     },
     async getUserByAccount(provider_id: Pick<AdapterAccount, "provider" | "providerAccountId">): Promise<AdapterUser | null> {
       const { provider, providerAccountId: account_id } = provider_id
@@ -102,10 +102,7 @@ export function RedisPrismaAdapter(
       let account = await redis.get(account_key);
 
       if (!account) {
-        const fetched_account = await prisma.account.findUnique({
-          where: { provider_providerAccountId: { provider, providerAccountId: account_id } },
-          include: { user: true }
-        });
+        const fetched_account = await adapter.getAccount!(account_id, provider);
 
         if (!fetched_account) return null;
 
@@ -120,7 +117,7 @@ export function RedisPrismaAdapter(
       const user = await redis.get(user_key);
 
       if (!user) {
-        const fetched_user = await prisma.user.findUnique({ where: { id: user_id } });
+        const fetched_user = await adapter.getUser!(user_id);
 
         if (!fetched_user) return null;
 
@@ -131,33 +128,30 @@ export function RedisPrismaAdapter(
 
       return JSON.parse(user) as AdapterUser;
     },
-    updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, "id">): Promise<AdapterUser> {
-      const { id, ...data } = user
+    async updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, "id">): Promise<AdapterUser> {
+      const updated_user = await adapter.updateUser!(user);
 
-      return prisma.user.update({
-        where: { id },
-        data: strip_undefined(data),
-      }).then(async (updated_user) => {
-        const stripped_user = strip_relations("User", updated_user);
+      if (updated_user.email) {
+        const email_key = `${redis_namespace}:user:email:${updated_user.email}`;
+        await redis.set(email_key, updated_user.id, keys_expiration);
+      }
 
-        if (updated_user.email) {
-          const email_key = `${redis_namespace}:user:email:${updated_user.email}`;
-          await redis.set(email_key, updated_user.id, keys_expiration);
-        }
+      const user_key = `${redis_namespace}:user:${updated_user.id}`;
+      await redis.set(user_key, JSON.stringify(strip_relations("User", updated_user)), keys_expiration);
 
-        const user_key = `${redis_namespace}:user:${id}`;
-        await redis.set(user_key, JSON.stringify(stripped_user), keys_expiration);
-
-        return updated_user;
-      }) as Promise<AdapterUser>;
+      return updated_user;
     },
     deleteUser(user_id: string): Promise<void> | Promise<AdapterUser | null | undefined> {
-      return prisma.user.delete({ where: { id: user_id } }).then(async (deleted_user) => {
+      return Promise.resolve(adapter.deleteUser!(user_id)).then(async deleted_user => {
+        if (!deleted_user) return null;
+
         const user_key = `${redis_namespace}:user:${user_id}`;
         await redis.del(user_key);
 
-        const email_key = `${redis_namespace}:user:email:${deleted_user.email}`;
-        await redis.del(email_key);
+        if (deleted_user && deleted_user.email) {
+          const email_key = `${redis_namespace}:user:email:${deleted_user.email}`;
+          await redis.del(email_key);
+        }
 
         return deleted_user;
       }) as Promise<AdapterUser | null | undefined>;
@@ -166,26 +160,25 @@ export function RedisPrismaAdapter(
     linkAccount(account: AdapterAccount): Promise<void> | Promise<AdapterAccount | null | undefined> {
       const { provider, providerAccountId: account_id } = account
 
-      return prisma.account.create({
-        data: account,
-      }).then(async (created_account) => {
+      return Promise.resolve(adapter.linkAccount!(account)).then(async linked_account => {
+        if (!linked_account) return null;
+
         const account_key = `${redis_namespace}:account:${provider}:${account_id}`;
+        await redis.set(account_key, JSON.stringify(strip_relations("Account", linked_account)), keys_expiration);
 
-        await redis.set(account_key, JSON.stringify(strip_relations("Account", created_account)), keys_expiration);
-
-        return created_account;
+        return linked_account;
       }) as Promise<AdapterAccount | null | undefined>;
     },
     unlinkAccount(provider_id: Pick<AdapterAccount, "provider" | "providerAccountId">): Promise<void> | Promise<AdapterAccount | undefined> {
       const { provider, providerAccountId: account_id } = provider_id
 
-      return prisma.account.delete({
-        where: { provider_providerAccountId: { provider, providerAccountId: account_id } }
-      }).then(async (deleted_account) => {
+      return Promise.resolve(adapter.unlinkAccount!(provider_id)).then(async unlinked_account => {
+        if (!unlinked_account) return undefined;
+
         const account_key = `${redis_namespace}:account:${provider}:${account_id}`;
         await redis.del(account_key);
 
-        return deleted_account;
+        return unlinked_account;
       }) as Promise<AdapterAccount | undefined>;
     },
 
@@ -206,7 +199,7 @@ export function RedisPrismaAdapter(
           };
         }
 
-        const user_data = await prisma.user.findUnique({ where: { id: parsed_session.userId } });
+        const user_data = await adapter.getUser!(parsed_session.userId);
         if (!user_data) return null;
 
         await redis.set(user_key, JSON.stringify(strip_relations("User", user_data)), keys_expiration);
@@ -217,27 +210,21 @@ export function RedisPrismaAdapter(
         };
       }
 
-      const session_data = await prisma.session.findUnique({
-        where: { sessionToken: session_token },
-        include: { user: true },
-      });
-
+      const session_data = await adapter.getSessionAndUser!(session_token);
       if (!session_data) return null;
 
-      const { user, ...session } = session_data;
+      const { user, session } = session_data;
       const user_key = `${redis_namespace}:user:${user.id}`;
 
       await redis.set(session_key, JSON.stringify(session), keys_expiration);
       await redis.set(user_key, JSON.stringify(strip_relations("User", user)), keys_expiration);
 
-      return { session, user: user as AdapterUser };
+      return { session, user };
     },
     async createSession(session: { sessionToken: string; userId: string; expires: Date }): Promise<AdapterSession> {
       const session_token = session.sessionToken;
 
-      const created_session = await prisma.session.create(
-        strip_undefined(session)
-      );
+      const created_session = await adapter.createSession!(session);
 
       const session_key = `${redis_namespace}:session:${session_token}`;
       await redis.set(session_key, JSON.stringify(created_session), keys_expiration);
@@ -245,13 +232,8 @@ export function RedisPrismaAdapter(
       return created_session;
     },
     async updateSession(session: Partial<AdapterSession> & Pick<AdapterSession, "sessionToken">): Promise<AdapterSession | null | undefined> {
-      const {sessionToken: session_token, ...data} = session;
-      const update_data = strip_undefined(data);
-
-      const updated_session = await prisma.session.update({
-        where: {sessionToken: session_token},
-        data: update_data.data,
-      });
+      const updated_session = await adapter.updateSession!(session);
+      if (!updated_session) return null;
 
       const session_key = `${redis_namespace}:session:${updated_session.sessionToken}`;
       await redis.set(session_key, JSON.stringify(updated_session), keys_expiration);
@@ -259,9 +241,9 @@ export function RedisPrismaAdapter(
       return updated_session;
     },
     deleteSession(session_token: string): Promise<void> | Promise<AdapterSession | null | undefined> {
-      return prisma.session.delete({
-        where: { sessionToken: session_token },
-      }).then(async (deleted_session) => {
+      return Promise.resolve(adapter.deleteSession!(session_token)).then(async deleted_session => {
+        if (!deleted_session) return null;
+
         const session_key = `${redis_namespace}:session:${session_token}`;
         await redis.del(session_key);
 
@@ -271,36 +253,10 @@ export function RedisPrismaAdapter(
 
     // For verification tokens, we don't need to cache them in Redis
     async createVerificationToken(verification_token: VerificationToken): Promise<VerificationToken | null | undefined> {
-      const create_data = strip_undefined(verification_token);
-
-      const created_token = await prisma.verificationToken.create({
-        data: create_data.data,
-      });
-
-
-      const { id, ...stripped_token } = created_token;
-      return stripped_token;
+      return adapter.createVerificationToken!(verification_token);
     },
     async useVerificationToken(params: { identifier: string; token: string }): Promise<VerificationToken | null> {
-      const { identifier, token } = params;
-
-      try {
-        const verification_token = await prisma.verificationToken.delete({
-          where: { identifier_token: { identifier, token } },
-        });
-
-        const { id, ...stripped_token } = verification_token;
-        return stripped_token;
-      } catch (error: unknown) {
-        // If token already used/deleted, just return null
-        // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
-        if (
-          error instanceof PrismaClientKnownRequestError &&
-          error.code === "P2025"
-        ) return null;
-
-        throw error
-      }
+      return adapter.useVerificationToken!(params);
     },
 
     async getAccount(provider_account_id: AdapterAccount["providerAccountId"], provider: AdapterAccount["provider"]): Promise<AdapterAccount | null> {
@@ -308,11 +264,7 @@ export function RedisPrismaAdapter(
       let account = await redis.get(account_key);
 
       if (!account) {
-        const fetched_account = await prisma.account.findUnique({
-          where: { provider_providerAccountId: { provider, providerAccountId: provider_account_id } },
-          include: { user: true }
-        });
-
+        const fetched_account = await adapter.getAccount!(provider_account_id, provider);
         if (!fetched_account) return null;
 
         await redis.set(account_key, JSON.stringify(strip_relations("Account", fetched_account)), keys_expiration);
@@ -323,11 +275,7 @@ export function RedisPrismaAdapter(
     },
 
     async createAuthenticator(authenticator: AdapterAuthenticator): Promise<AdapterAuthenticator> {
-      const create_data = strip_undefined(authenticator);
-
-      const created_authenticator = await prisma.authenticator.create({
-        data: create_data.data,
-      });
+      const created_authenticator = await adapter.createAuthenticator!(authenticator);
 
       const authenticator_key = `${redis_namespace}:authenticator:${authenticator.credentialID}`;
       await redis.set(authenticator_key, JSON.stringify(strip_relations("Authenticator", created_authenticator)), keys_expiration);
@@ -339,10 +287,7 @@ export function RedisPrismaAdapter(
       let authenticator = await redis.get(authenticator_key);
 
       if (!authenticator) {
-        const fetched_authenticator = await prisma.authenticator.findUnique({
-          where: { credentialID: credential_id },
-        });
-
+        const fetched_authenticator = await adapter.getAuthenticator!(credential_id);
         if (!fetched_authenticator) return null;
 
         await redis.set(authenticator_key, JSON.stringify(strip_relations("Authenticator", fetched_authenticator)), keys_expiration);
@@ -352,20 +297,15 @@ export function RedisPrismaAdapter(
       return JSON.parse(authenticator) as AdapterAuthenticator;
     },
     async listAuthenticatorsByUserId(user_id: string): Promise<AdapterAuthenticator[]> {
-      return prisma.authenticator.findMany({
-        where: { userId: user_id },
-      });
+      return adapter.listAuthenticatorsByUserId!(user_id);
     },
     async updateAuthenticatorCounter(credential_id: AdapterAuthenticator["credentialID"], new_counter: AdapterAuthenticator["counter"]): Promise<AdapterAuthenticator> {
-      return prisma.authenticator.update({
-        where: { credentialID: credential_id },
-        data: { counter: new_counter },
-      });
+      return adapter.updateAuthenticatorCounter!(credential_id, new_counter);
     }
   }
 }
 
-/** @see https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/null-and-undefined */
+/** Remove undefined fields from the data object */
 function strip_undefined<T>(obj: T) {
   const data = {} as T
   for (const key in obj) if (obj[key] !== undefined) data[key] = obj[key]
@@ -380,5 +320,6 @@ function strip_relations<T extends Record<string, any>>(model_name: string, data
   for (const field of relation_fields[model_name]) {
     delete filtered_data[field];
   }
-  return filtered_data;
+
+  return strip_undefined(filtered_data).data;
 }

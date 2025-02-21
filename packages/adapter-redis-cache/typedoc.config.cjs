@@ -11,8 +11,8 @@ module.exports = {
     require.resolve("./../../docs/typedoc-nextauth.cjs"),
     "typedoc-plugin-markdown",
   ],
-  entryFileName: "../prisma-adapter.mdx",
-  entryModule: "@auth/prisma-adapter",
+  entryFileName: "../redis-cache-adapter.mdx",
+  entryModule: "@auth/redis-cache-adapter",
   includeVersion: true,
   readme: 'none'
 }
