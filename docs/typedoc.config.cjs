@@ -24,8 +24,9 @@ module.exports = {
   tsconfig: "./tsconfig.json",
   plugin: [
     "typedoc-plugin-markdown",
-    require.resolve("./typedoc-nextauth.cjs"),
+    require.resolve("./typedoc-nextauth.js"),
     "typedoc-plugin-mdn-links",
+    "typedoc-plugin-no-inherit",
   ],
   disableSources: true,
   excludeNotDocumented: true,
@@ -33,6 +34,7 @@ module.exports = {
   excludeInternal: true,
   excludePrivate: true,
   excludeProtected: true,
+  excludeReferences: true,
   cleanOutputDir: false,
   gitRevision: "main",
   githubPages: false,
