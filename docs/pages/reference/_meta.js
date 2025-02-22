@@ -10,11 +10,6 @@ export default {
   express: "@auth/express",
   qwik: "@auth/qwik",
   "solid-start": "@auth/solid-start",
-  warnings: "Warnings",
-  errors: {
-    title: "Errors",
-    href: "/reference/core/errors",
-  },
   "--- adapters": {
     type: "separator",
     title: "Adapters",
