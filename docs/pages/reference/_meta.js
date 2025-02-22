@@ -28,6 +28,7 @@ export default {
   "mikro-orm-adapter": "@auth/mikro-orm-adapter",
   "mongodb-adapter": "@auth/mongodb-adapter",
   "neo4j-adapter": "@auth/neo4j-adapter",
+  "neon-adapter": "@auth/neon-adapter",
   "pg-adapter": "@auth/pg-adapter",
   "pouchdb-adapter": "@auth/pouchdb-adapter",
   "sequelize-adapter": "@auth/sequelize-adapter",

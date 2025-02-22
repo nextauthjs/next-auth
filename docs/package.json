@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
     "lint:fix": "eslint ./{components,pages,utils} --fix",
-    "build:sitemap": "next-sitemap --config next-sitemap.config.cjs"
+    "build:sitemap": "next-sitemap --config next-sitemap.config.cjs",
+    "clean": "rm -rf .next build pages/reference/**/*.mdx pages/reference/*.mdx"
   },
   "repository": {
     "type": "git",
