@@ -15,7 +15,7 @@ import {
 } from "../../errors.js"
 
 import type { RequestInternal, SemverString } from "../../types.js"
-import type { WarningCode } from "./logger.js"
+import type { WarningCode } from "../../warnings.js"
 import { Adapter } from "../../adapters.js"
 import type { AuthConfig } from "../../index.js"
 

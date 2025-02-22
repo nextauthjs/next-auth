@@ -57,7 +57,7 @@ function parseOutput(app) {
     const replaceCodeBlockTitle = (match, p1, p2, p3) => `${p1}filename="${p3}"`
 
     page.contents = page.contents
-      .replace(calloutRegex, replaceCallout)
+      ?.replace(calloutRegex, replaceCallout)
       .replace(codeBlockRegex, replaceCodeBlockTitle)
   })
 }
@@ -82,7 +82,7 @@ function writeMetaJsFiles(app) {
     ) => {
       const pages = defaultValue
       navigationItems.forEach((item) => {
-        const pageKey = item.url ? path.parse(item.url).name : null
+        const pageKey = item.path ? path.parse(item.path).name : null
         if (pageKey) {
           pages[pageKey] = item.title
           if (item?.children && item?.children?.length > 0) {
@@ -101,15 +101,19 @@ function writeMetaJsFiles(app) {
 
       const metaJString = `
 export default ${JSON.stringify(pages, null, 2)}`
+
       if (new RegExp(".*docs/pages/reference$").test(outputDirectory)) return
+
       fs.writeFileSync(path.join(outputDirectory, "_meta.js"), metaJString)
     }
 
     /**
      * Recursively write _meta.js files for each page based on output.navigation
      */
-    writeMetaJs(output.navigation, output.outputDirectory, {
-      overview: "Overview",
-    })
+    if (output.navigation) {
+      writeMetaJs(output.navigation, output.outputDirectory, {
+        overview: "Overview",
+      })
+    }
   })
 }
