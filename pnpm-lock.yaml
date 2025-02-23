@@ -249,7 +249,7 @@ importers:
         version: 3.8.3(@algolia/client-search@5.20.0)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
       '@inkeep/widgets':
         specifier: ^0.2.289
-        version: 0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        version: 0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
       '@next/third-parties':
         specifier: ^14.2.15
         version: 14.2.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)
@@ -315,8 +315,8 @@ importers:
         specifier: ^0.27.6
         version: 0.27.8(typescript@5.6.3)
       typedoc-plugin-markdown:
-        specifier: 4.4.2
-        version: 4.4.2(typedoc@0.27.8(typescript@5.6.3))
+        specifier: 4.3.3
+        version: 4.3.3(typedoc@0.27.8(typescript@5.6.3))
       typedoc-plugin-mdn-links:
         specifier: 4.0.11
         version: 4.0.11(typedoc@0.27.8(typescript@5.6.3))
@@ -12859,8 +12859,8 @@ packages:
     peerDependencies:
       typedoc: 0.25.x
 
-  typedoc-plugin-markdown@4.4.2:
-    resolution: {integrity: sha512-kJVkU2Wd+AXQpyL6DlYXXRrfNrHrEIUgiABWH8Z+2Lz5Sq6an4dQ/hfvP75bbokjNDUskOdFlEEm/0fSVyC7eg==}
+  typedoc-plugin-markdown@4.3.3:
+    resolution: {integrity: sha512-kESCcNRzOcFJATLML2FoCfaTF9c0ujmbZ+UXsJvmNlFLS3v8tDKfDifreJXvXWa9d8gUcetZqOqFcZ/7+Ba34Q==}
     engines: {node: '>= 18'}
     peerDependencies:
       typedoc: 0.27.x
@@ -14043,7 +14043,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.6)':
+  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.2)':
     dependencies:
       '@zag-js/accordion': 0.20.0
       '@zag-js/anatomy': 0.20.0
@@ -14054,7 +14054,7 @@ snapshots:
       '@zag-js/color-utils': 0.20.0
       '@zag-js/combobox': 0.20.0
       '@zag-js/date-picker': 0.20.0
-      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.6)
+      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.2)
       '@zag-js/dialog': 0.20.0
       '@zag-js/editable': 0.20.0
       '@zag-js/hover-card': 0.20.0
@@ -14080,7 +14080,7 @@ snapshots:
     transitivePeerDependencies:
       - '@internationalized/date'
 
-  '@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@zag-js/accordion': 0.19.1
       '@zag-js/anatomy': 0.19.1
@@ -14092,7 +14092,7 @@ snapshots:
       '@zag-js/combobox': 0.19.1
       '@zag-js/core': 0.19.1
       '@zag-js/date-picker': 0.19.1
-      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.6)
+      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.2)
       '@zag-js/dialog': 0.19.1
       '@zag-js/editable': 0.19.1
       '@zag-js/hover-card': 0.19.1
@@ -16888,11 +16888,11 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.44
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
@@ -16904,9 +16904,9 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
     transitivePeerDependencies:
@@ -16914,10 +16914,10 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
       colorjs.io: 0.4.5
@@ -16932,14 +16932,14 @@ snapshots:
 
   '@inkeep/styled-system@0.0.46': {}
 
-  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
       '@apollo/client': 3.9.5(@types/react@18.2.78)(graphql-ws@5.14.3(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/color-mode': 0.0.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.46
       '@types/lodash.isequal': 4.5.8
@@ -20277,9 +20277,9 @@ snapshots:
     dependencies:
       '@internationalized/date': 3.5.2
 
-  '@zag-js/date-utils@0.19.1(@internationalized/date@3.5.6)':
+  '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.2)':
     dependencies:
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.5.2
 
   '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.6)':
     dependencies:
@@ -29336,7 +29336,7 @@ snapshots:
     dependencies:
       typedoc: 0.25.13(typescript@5.6.3)
 
-  typedoc-plugin-markdown@4.4.2(typedoc@0.27.8(typescript@5.6.3)):
+  typedoc-plugin-markdown@4.3.3(typedoc@0.27.8(typescript@5.6.3)):
     dependencies:
       typedoc: 0.27.8(typescript@5.6.3)
 

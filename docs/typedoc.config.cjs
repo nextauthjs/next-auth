@@ -76,8 +76,5 @@ module.exports = {
   expandObjects: true,
   parametersFormat: "table",
   indexFormat: "table",
-  textContentMappings: {
-    "label.packages": "Integrations",
-  },
   useCodeBlocks: true,
 }
