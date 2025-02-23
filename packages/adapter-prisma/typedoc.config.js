@@ -3,6 +3,7 @@ export default {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "@auth/prisma-adapter",
+  entryFileName: "../prisma-adapter.mdx",
   includeVersion: true,
   readme: 'none',
 };
