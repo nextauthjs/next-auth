@@ -32,7 +32,6 @@ module.exports = {
   excludeNotDocumented: true,
   excludeExternals: true,
   excludeInternal: true,
-  excludePrivate: true,
   excludeProtected: true,
   excludeReferences: true,
   cleanOutputDir: false,
@@ -65,9 +64,6 @@ module.exports = {
     "SetSignature",
   ],
   name: "API Reference",
-  sluggerConfiguration: {
-    lowercase: true,
-  },
 
   // typedoc-plugin-markdown options
   outputFileStrategy: "modules",
