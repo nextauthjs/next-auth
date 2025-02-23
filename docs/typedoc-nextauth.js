@@ -103,6 +103,9 @@ function writeMetaJsFiles(app) {
 export default ${JSON.stringify(pages, null, 2)}`
 
       if (new RegExp(".*docs/pages/reference$").test(outputDirectory)) return
+
+      if (new RegExp(".*docs/pages/reference/overview$").test(outputDirectory))
+        return
       fs.writeFileSync(path.join(outputDirectory, "_meta.js"), metaJString)
     }
 
@@ -114,7 +117,5 @@ export default ${JSON.stringify(pages, null, 2)}`
         overview: "Overview",
       })
     }
-
-    console.log({ output })
   })
 }
