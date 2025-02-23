@@ -8,7 +8,7 @@ module.exports = {
   entryPointStrategy: "expand",
   tsconfig: "./tsconfig.json",
   entryModule: "next-auth",
-  entryFileName: "../nextjs/overview.mdx",
+  entryFileName: "../nextjs.mdx",
   includeVersion: true,
   readme: 'none'
 }
