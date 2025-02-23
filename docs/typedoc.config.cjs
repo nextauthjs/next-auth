@@ -65,6 +65,9 @@ module.exports = {
     "SetSignature",
   ],
   name: "API Reference",
+  sluggerConfiguration: {
+    lowercase: true,
+  },
 
   // typedoc-plugin-markdown options
   outputFileStrategy: "modules",

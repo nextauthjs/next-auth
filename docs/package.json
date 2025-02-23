@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "typedoc": "typedoc",
-    "dev": "TYPEDOC_SKIP_ADAPTERS=1 typedoc & next dev",
+    "dev": "pnpm clean && TYPEDOC_SKIP_ADAPTERS=1 typedoc & next dev",
     "dev:adapters": "typedoc & next dev",
-    "build": "typedoc && next build",
+    "build": "pnpm clean && typedoc && next build",
     "start": "next start",
     "lint": "eslint ./{components,pages,utils}",
     "lint:fix": "eslint ./{components,pages,utils} --fix",
