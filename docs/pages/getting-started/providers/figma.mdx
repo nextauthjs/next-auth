@@ -1,0 +1,134 @@
+import { Code } from "@/components/Code"
+import { Callout } from "nextra/components"
+
+<img align="right" src="/img/providers/figma.svg" height="64" width="64" />
+
+# Figma Provider
+
+## Resources
+
+- [Using OAuth 2 on Figma](https://www.figma.com/developers/api#oauth2)
+- [User Type](https://www.figma.com/developers/api#users-types)
+- [Scopes](https://www.figma.com/developers/api#authentication-scopes)
+- [Migrate](https://www.figma.com/developers/api#oauth_migration_guide)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/figma
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/figma
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/figma
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+<Code>
+  <Code.Next>
+
+```bash filename=".env.local"
+AUTH_FIGMA_ID
+AUTH_FIGMA_SECRET
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash filename=".env"
+AUTH_FIGMA_ID
+AUTH_FIGMA_SECRET
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash filename=".env"
+AUTH_FIGMA_ID
+AUTH_FIGMA_SECRET
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```bash filename=".env"
+AUTH_FIGMA_ID
+AUTH_FIGMA_SECRET
+```
+
+  </Code.Express>
+</Code>
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="@/auth.ts"
+import NextAuth from "next-auth"
+import Figma from "next-auth/providers/figma"
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Figma],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Figma from "@auth/qwik/providers/figma"
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Figma],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Figma from "@auth/sveltekit/providers/figma"
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Figma],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Figma from "@auth/express/providers/figma"
+app.use("/auth/*", ExpressAuth({ providers: [Figma] }))
+```
+
+  </Code.Express>
+</Code>
+
+<Callout type="warning">
+  The URL must be accessed via the user's browser and not an embedded webview
+  inside your application. Webview access to the Figma OAuth flow is not
+  supported and may stop working for some or all users without an API version
+  update.
+</Callout>
