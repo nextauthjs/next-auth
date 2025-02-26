@@ -106,7 +106,8 @@ export async function init({
     provider,
     cookies: merge(
       cookie.defaultCookies(
-        config.useSecureCookies ?? url.protocol === "https:"
+        config.useSecureCookies ?? url.protocol === "https:",
+        config.useStrictCookies ?? false
       ),
       config.cookies
     ),
