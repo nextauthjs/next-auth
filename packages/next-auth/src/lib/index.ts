@@ -171,12 +171,11 @@ export function initAuth(
           const auth = await authResponse.json()
 
           for (const cookie of authResponse.headers.getSetCookie())
-            if("setHeader" in response)
-              response.setHeader("set-cookie", cookie);
+            if ("setHeader" in response)
+              response.setHeader("set-cookie", cookie)
             else if ("headers" in response)
-              response.headers.append("set-cookie", cookie);
-            else
-              response.appendHeader("set-cookie", cookie);
+              response.headers.append("set-cookie", cookie)
+            else response.appendHeader("set-cookie", cookie)
           return auth satisfies Session | null
         }
       )
@@ -223,12 +222,10 @@ export function initAuth(
       const auth = await authResponse.json()
 
       for (const cookie of authResponse.headers.getSetCookie())
-        if("setHeader" in response)
-          response.setHeader("set-cookie", cookie);
+        if ("setHeader" in response) response.setHeader("set-cookie", cookie)
         else if ("headers" in response)
-          response.headers.append("set-cookie", cookie);
-        else
-          response.appendHeader("set-cookie", cookie);
+          response.headers.append("set-cookie", cookie)
+        else response.appendHeader("set-cookie", cookie)
 
       return auth satisfies Session | null
     })
@@ -288,12 +285,11 @@ async function handleAuth(
 
   // Preserve cookies from the session response
   for (const cookie of sessionResponse.headers.getSetCookie())
-    if("setHeader" in response)
-      finalResponse.setHeader("set-cookie", cookie);
-    else if ("headers" in response)
-      finalResponse.headers.append("set-cookie", cookie);
-    else
-      finalResponse.appendHeader("set-cookie", cookie);
+    if ("setHeader" in finalResponse)
+      finalResponse.setHeader("set-cookie", cookie)
+    else if ("headers" in finalResponse)
+      finalResponse.headers.append("set-cookie", cookie)
+    else finalResponse.appendHeader("set-cookie", cookie)
 
   return finalResponse
 }
