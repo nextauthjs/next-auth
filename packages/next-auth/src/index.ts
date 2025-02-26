@@ -236,6 +236,9 @@ export interface NextAuthResult {
   auth: ((
     ...args: [NextApiRequest, NextApiResponse]
   ) => Promise<Session | null>) &
+    ((
+      ...args: [{ req: NextApiRequest; res: NextApiResponse }]
+    ) => Promise<Session | null>) &
     ((...args: []) => Promise<Session | null>) &
     ((...args: [GetServerSidePropsContext]) => Promise<Session | null>) &
     ((
