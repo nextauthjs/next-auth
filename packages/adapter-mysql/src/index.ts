@@ -263,9 +263,16 @@ const mysqlAdapter = (client: Pool): Adapter => {
       await client.query(sql, [providerAccountId, provider]);
     },
     async deleteUser(userId: string) {
-      await client.query(`delete from users where id = ?`, [userId]);
-      await client.query(`delete from sessions where userId = ?`, [userId]);
-      await client.query(`delete from accounts where userId = ?`, [userId]);
+      await client.beginTransaction();
+      try {
+        await client.query(`delete from ${userTable} where id = ?`, [userId]);
+        await client.query(`delete from sessions where userId = ?`, [userId]);
+        await client.query(`delete from accounts where userId = ?`, [userId]);
+        await client.commit();
+      } catch (error) {
+        await client.rollback();
+        throw error;
+      }
       return null;
     },
   };
