@@ -7,13 +7,22 @@ import path from "path"
 
 import type { DgraphClientParams } from "../src"
 
+let jwtSecret;
+try {
+  jwtSecret = fs.readFileSync(path.join(process.cwd(), "/test/hs512.key"), {
+    encoding: "utf8",
+  });
+  console.log("Loaded JWT secret from file", jwtSecret);
+} catch (error) {
+  console.error("Failed to load JWT secret from file:", error);
+  process.exit(1);
+}
+
 const params: DgraphClientParams = {
   endpoint: "http://localhost:8080/graphql",
   authToken: "test",
-  jwtAlgorithm: "RS256",
-  jwtSecret: fs.readFileSync(path.join(process.cwd(), "/test/private.key"), {
-    encoding: "utf8",
-  }),
+  jwtAlgorithm: "HS512",
+  jwtSecret: jwtSecret,
 }
 
 /** TODO: Add test to `dgraphClient` */
