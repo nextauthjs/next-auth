@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/next-auth"><img src="https://img.shields.io/npm/v/next-auth/beta?style=flat-square&label=latest&color=purple" alt="npm beta release" /></a>
   <a href="https://www.npmtrends.com/next-auth"><img src="https://img.shields.io/npm/dm/next-auth?style=flat-square&color=cyan" alt="Downloads" /></a>
-  <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="Github Stars" /></a>
+  <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="GitHub Stars" /></a>
   <img src="https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=fff&style=flat-square" alt="TypeScript" />
 </p>
 
