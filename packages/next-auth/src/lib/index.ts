@@ -2,7 +2,7 @@ import { Auth, createActionURL, type AuthConfig } from "@auth/core"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { headers } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { reqWithEnvURL } from "./env.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
@@ -13,7 +13,7 @@ import type {
 } from "next"
 import type { AppRouteHandlerFn } from "./types.js"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
-import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
+import type { NextFetchEvent, NextMiddleware } from "next/server"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
@@ -117,6 +117,20 @@ function isReqWrapper(arg: any): arg is NextAuthMiddleware | AppRouteHandlerFn {
   return typeof arg === "function"
 }
 
+/**
+ * Creates a Request object from Headers, primarily for server-side contexts
+ * where we need to reconstruct request information.
+ */
+function createRequestFromHeaders(headers: Headers): NextRequest {
+  const url = headers.get("x-url") ||
+    `${headers.get("x-forwarded-proto") || "http"}://${headers.get("host")}`;
+
+  // this constructor will properly parse and set cookies field from given headers
+  return new NextRequest(url, {
+    headers: new Headers(headers)
+  })
+}
+
 export function initAuth(
   config:
     | NextAuthConfig
@@ -128,10 +142,11 @@ export function initAuth(
       if (!args.length) {
         // React Server Components
         const _headers = await headers()
-        const _config = await config(undefined) // Review: Should we pass headers() here instead?
+        const _request = createRequestFromHeaders(_headers)
+        const _config = await config(_request)
         onLazyLoad?.(_config)
 
-        return getSession(_headers, _config).then((r) => r.json())
+        return getSession(_request.headers, _config).then((r) => r.json())
       }
 
       if (args[0] instanceof Request) {
@@ -183,9 +198,10 @@ export function initAuth(
   return (...args: WithAuthArgs) => {
     if (!args.length) {
       // React Server Components
-      return Promise.resolve(headers()).then((h: Headers) =>
-        getSession(h, config).then((r) => r.json())
-      )
+      return Promise.resolve(headers()).then((h: Headers) =>{
+        const request = createRequestFromHeaders(h)
+        return getSession(request.headers, config).then((r) => r.json())
+      })
     }
     if (args[0] instanceof Request) {
       // middleware.ts inline
