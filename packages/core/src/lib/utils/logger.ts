@@ -1,12 +1,5 @@
-import { AuthError } from "../../errors.js"
+import { AuthError, WarningCode } from "../../errors.js"
 import type { AuthConfig } from "../../index.js"
-
-export type WarningCode =
-  | "debug-enabled"
-  | "csrf-disabled"
-  | "experimental-webauthn"
-  | "env-url-basepath-redundant"
-  | "env-url-basepath-mismatch"
 
 /**
  * Override any of the methods, and the rest will use the default logger.
@@ -47,7 +40,7 @@ const defaultLogger: LoggerInstance = {
     }
   },
   warn(code) {
-    const url = `https://warnings.authjs.dev#${code}`
+    const url = `https://warnings.authjs.dev`
     console.warn(`${yellow}[auth][warn][${code}]${reset}`, `Read more: ${url}`)
   },
   debug(message, metadata) {
