@@ -677,8 +677,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       jose:
-        specifier: ^5.9.6
-        version: 5.9.6
+        specifier: ^6.0.6
+        version: 6.0.6
       nodemailer:
         specifier: ^6.8.0
         version: 6.9.8
@@ -9122,11 +9122,14 @@ packages:
   joi@17.12.0:
     resolution: {integrity: sha512-HSLsmSmXz+PV9PYoi3p7cgIbj06WnEBNT28n+bbBNcPZXZFqCzzvGqpTBPujx/Z0nh1+KNQPDrNgdmQ8dq0qYw==}
 
-  jose@4.15.4:
-    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+  jose@4.15.9:
+    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
 
-  jose@5.9.6:
-    resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
+  jose@5.10.0:
+    resolution: {integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==}
+
+  jose@6.0.6:
+    resolution: {integrity: sha512-FFF9x3KcdRJgQo74X8e6I4D1h3Wtd27fEo0suijveKFc+HFz6M5gonqxFPnDos9ulJFRqMNqWI6NexiHQPSnfQ==}
 
   js-base64@3.7.7:
     resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
@@ -16657,7 +16660,7 @@ snapshots:
       graphql-request: 6.1.0(encoding@0.1.13)(graphql@16.8.1)
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
-      jose: 5.9.6
+      jose: 5.10.0
       js-yaml: 4.1.0
       json-stable-stringify: 1.1.1
       lodash: 4.17.21
@@ -24604,9 +24607,11 @@ snapshots:
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
 
-  jose@4.15.4: {}
+  jose@4.15.9: {}
 
-  jose@5.9.6: {}
+  jose@5.10.0: {}
+
+  jose@6.0.6: {}
 
   js-base64@3.7.7:
     optional: true
@@ -24734,7 +24739,7 @@ snapshots:
       '@types/express': 4.17.21
       '@types/jsonwebtoken': 9.0.5
       debug: 4.3.7(supports-color@8.1.1)
-      jose: 4.15.4
+      jose: 4.15.9
       limiter: 1.1.5
       lru-memoizer: 2.2.0
     transitivePeerDependencies:
