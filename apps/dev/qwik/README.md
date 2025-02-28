@@ -58,7 +58,7 @@ pnpm preview # or `pnpm preview`
 
 ## Production
 
-The production build will generate client and server modules by running both client and server build commands. The build command will use Typescript to run a type check on the source code.
+The production build will generate client and server modules by running both client and server build commands. The build command will use TypeScript to run a type check on the source code.
 
 ```shell
 pnpm build # or `pnpm build`
