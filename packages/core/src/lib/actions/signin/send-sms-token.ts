@@ -1,4 +1,4 @@
-import { createHash, randomString, toRequest } from "../../utils/web.js"
+import { createHash, randomNumber, toRequest } from "../../utils/web.js"
 import { AccessDenied } from "../../../errors.js"
 
 import type {
@@ -6,20 +6,21 @@ import type {
   InternalOptions,
   RequestInternal,
 } from "../../../types.js"
+import { AdapterUser } from "../../../adapters.js"
 
 /**
  * Starts an e-mail login flow, by generating a token,
  * and sending it to the user's e-mail (with the help of a DB adapter).
  * At the end, it returns a redirect to the `verify-request` page.
  */
-export async function sendToken(
+export async function sendSmsToken(
   request: RequestInternal,
-  options: InternalOptions<"email">
+  options: InternalOptions<"sms">
 ) {
   const { body } = request
   const { provider, callbacks, adapter } = options
   const normalizer = provider.normalizeIdentifier ?? defaultNormalizer
-  const email = normalizer(body?.email)
+  const phone_number = normalizer(body?.phone_number)
 
   const captchaVerified =
     (await provider?.verifyCaptchaToken?.(body?.captcha_token)) ?? true
@@ -27,13 +28,14 @@ export async function sendToken(
     throw new AccessDenied("Captcha verification failed.")
   }
 
-  const defaultUser = { id: crypto.randomUUID(), email, emailVerified: null }
-  const user = (await adapter!.getUserByEmail(email)) ?? defaultUser
+  const defaultUser = { id: crypto.randomUUID(), phone_number }
+  const user =
+    (await adapter!.getUserByPhoneNumber(phone_number)) ?? defaultUser
 
   const account = {
-    providerAccountId: email,
+    providerAccountId: phone_number,
     userId: user.id,
-    type: "email",
+    type: "sms",
     provider: provider.id,
   } satisfies Account
 
@@ -59,11 +61,17 @@ export async function sendToken(
 
   const { callbackUrl, theme } = options
   const token =
-    (await provider.generateVerificationToken?.()) ?? randomString(32)
+    (await provider.generateVerificationToken?.({
+      identifier: phone_number,
+      user: user as AdapterUser,
+      provider,
+      theme,
+      request: toRequest(request),
+    })) ?? randomNumber(6)
 
-  const ONE_DAY_IN_SECONDS = 86400
+  const QUARTER_HOUR_IN_SECONDS = 3600
   const expires = new Date(
-    Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
+    Date.now() + (provider.maxAge ?? QUARTER_HOUR_IN_SECONDS) * 1000
   )
 
   const secret = provider.secret ?? options.secret
@@ -71,13 +79,13 @@ export async function sendToken(
   const baseUrl = new URL(options.basePath, options.url.origin)
 
   const sendRequest = provider.sendVerificationRequest({
-    identifier: email,
+    identifier: phone_number,
     token,
     expires,
     url: `${baseUrl}/callback/${provider.id}?${new URLSearchParams({
       callbackUrl,
       token,
-      email,
+      phone_number,
     })}`,
     provider,
     theme,
@@ -85,7 +93,7 @@ export async function sendToken(
   })
 
   const createToken = adapter!.createVerificationToken?.({
-    identifier: email,
+    identifier: phone_number,
     token: await createHash(`${token}${secret}`),
     expires,
   })
@@ -96,18 +104,17 @@ export async function sendToken(
     redirect: `${baseUrl}/verify-request?${new URLSearchParams({
       provider: provider.id,
       type: provider.type,
-      email: email,
+      phone_number: phone_number,
     })}`,
   }
 }
 
-function defaultNormalizer(email?: string) {
-  if (!email) throw new Error("Missing email from request body.")
-  // Get the first two elements only,
-  // separated by `@` from user input.
-  let [local, domain] = email.toLowerCase().trim().split("@")
-  // The part before "@" can contain a ","
-  // but we remove it on the domain part
-  domain = domain.split(",")[0]
-  return `${local}@${domain}`
+function defaultNormalizer(phone_number?: string) {
+  if (!phone_number) throw new Error("Missing phone_number from request body.")
+  if (!/^\+\d{11}$/.test(phone_number)) {
+    throw new Error(
+      "Invalid phone number format, it should be like +XXXXXXXXXXXX"
+    )
+  }
+  return phone_number
 }
