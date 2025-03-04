@@ -20,6 +20,7 @@ html[class~="dark"]
     img[src$="okta.svg"],
     img[src$="prisma.svg"],
     img[src$="threads.svg"],
+    img[src$="twitter.svg"],
     img[src$="wikimedia.svg"]
   ) {
   filter: invert(1);
