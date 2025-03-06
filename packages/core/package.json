@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.37.4",
+  "version": "0.38.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -68,8 +68,8 @@
   "license": "ISC",
   "dependencies": {
     "@panva/hkdf": "^1.2.1",
-    "jose": "^5.9.6",
-    "oauth4webapi": "^3.1.4",
+    "jose": "^6.0.6",
+    "oauth4webapi": "^3.3.0",
     "preact": "10.24.3",
     "preact-render-to-string": "6.5.11"
   },

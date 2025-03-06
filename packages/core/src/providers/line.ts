@@ -94,5 +94,6 @@ export default function LINE<P extends LineProfile>(
     },
     style: { bg: "#00C300", text: "#fff" },
     options,
+    checks: ["state"],
   }
 }
