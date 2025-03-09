@@ -54,8 +54,8 @@
     "set-cookie-parser": "^2.7.0"
   },
   "peerDependencies": {
-    "@simplewebauthn/browser": "^9.0.1",
-    "@simplewebauthn/server": "^9.0.3",
+    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/server": "^10.0.1",
     "@sveltejs/kit": "^1.0.0 || ^2.0.0",
     "nodemailer": "^6.6.5",
     "svelte": "^3.54.0 || ^4.0.0 || ^5.0.0-0"
