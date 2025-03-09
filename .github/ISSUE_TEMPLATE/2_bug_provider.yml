@@ -74,6 +74,7 @@ body:
         - "Netlify"
         - "NetSuite"
         - "Nextcloud"
+        - "NotificationAPI"
         - "Notion"
         - "Okta"
         - "OneLogin"
