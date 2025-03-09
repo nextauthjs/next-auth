@@ -63,7 +63,7 @@ export interface FronteggProfile {
  *
  * Log into the [Frontegg portal](https://portal.frontegg.com)
  *
- * Authentication > Login method > Hosted login > Add your callback url here <{{APP_URL}}/api/auth/callback/frontegg>
+ * Authentication > Login method > Hosted login > Add your callback url here
  *
  * Then, create a `.env.local` file in the project root add the following entries:
  *
