@@ -2,19 +2,18 @@
  * <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16}}>
  *  <p>Official <a href="https://kysely.dev/">Kysely</a> adapter for Auth.js / NextAuth.js.</p>
  *  <a href="https://kysely.dev/">
- *   <img style={{display: "block"}} src="/img/adapters/kysely.svg" width="38" />
+ *   <img style={{display: "block"}} src="https://authjs.dev/img/adapters/kysely.svg" width="30" />
  *  </a>
  * </div>
  *
  * ## Installation
  *
  * ```bash npm2yarn
- * npm install kysely @auth/kysely-adapter
+ * npm install @auth/kysely-adapter kysely
  * ```
  *
  * @module @auth/kysely-adapter
  */
-
 import { Kysely, SqliteAdapter } from "kysely"
 
 import {
@@ -205,6 +204,7 @@ export function KyselyAdapter(db: Kysely<Database>): Adapter {
  * requires. When used with `kysely-codegen`, the `Codegen` type can be passed as
  * the second generic argument. The generated types will be used, and
  * `KyselyAuth` will only verify that the correct fields exist.
+ * @noInheritDoc
  */
 export class KyselyAuth<DB extends T, T = Database> extends Kysely<DB> {}
 
