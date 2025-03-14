@@ -1,4 +1,4 @@
-import Surreal, { ExperimentalSurrealHTTP } from "surrealdb.js"
+import { Surreal } from "surrealdb"
 import { runBasicTests } from "utils/adapter"
 
 import { config } from "./common"
@@ -6,10 +6,11 @@ import { config } from "./common"
 const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
   const db = new Surreal()
   try {
-    await db.connect("http://0.0.0.0:8000/rpc", {
-      namespace: "test",
-      database: "test",
+    const db = new Surreal()
+    await db.connect("ws://0.0.0.0:8000", {
       auth: {
+        namespace: "test",
+        database: "test",
         username: "test",
         password: "test",
       },
@@ -21,25 +22,3 @@ const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
 })
 
 runBasicTests(config(clientPromise))
-
-// const clientPromiseRest = new Promise<ExperimentalSurrealHTTP<typeof fetch>>(
-//   async (resolve, reject) => {
-//     try {
-//       const db = new ExperimentalSurrealHTTP("http://0.0.0.0:8000", {
-//         fetch,
-//         auth: {
-//           user: "test",
-//           pass: "test",
-//         },
-//         ns: "test",
-//         db: "test",
-//       })
-//       resolve(db)
-//     } catch (e) {
-//       reject(e)
-//     }
-//   }
-// )
-
-// TODO: Revisit and fix this test - currently updateUser and deleteUser are failing.
-// runBasicTests(config(clientPromiseRest))
