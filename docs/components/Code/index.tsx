@@ -51,12 +51,11 @@ const getIndexFrameworkFromUrl = (
   const paramValue = params.get("framework")
   if (!paramValue) return null
 
-  const pascalCase = paramValue.replace(
-    /(^|-)([a-z])/g,
-    (_, _separator, letter) => letter.toUpperCase()
-  )
+  const decodedValue = decodeURI(paramValue)
 
-  const index = Object.keys(frameworks).findIndex((key) => key === pascalCase)
+  const index = Object.values(frameworks).findIndex(
+    (value) => value === decodedValue
+  )
   return index === -1 ? null : index
 }
 
@@ -75,26 +74,33 @@ const getIndexFrameworkFromStorage = (
 }
 
 const updateFrameworkStorage = (
-  frameworkKey: string,
+  frameworkURI: string,
   frameworks: Record<string, string>,
   isAllFrameworks: boolean
 ): void => {
-  const index = Object.keys(frameworks).findIndex((key) => key === frameworkKey)
+  const index = Object.values(frameworks).findIndex(
+    (value) => encodeURI(value) === frameworkURI
+  )
   if (index === -1) return
 
   const storageKey = isAllFrameworks ? AUTHJS_TAB_KEY_ALL : AUTHJS_TAB_KEY
   window.localStorage.setItem(storageKey, index.toString())
 
   // Update other storage if framework exists in other object
-  const otherFrameworksKeys = Object.keys(
+  const otherFrameworksValues = Object.values(
     isAllFrameworks ? baseFrameworks : allFrameworks
   )
   const otherStorageKey = isAllFrameworks ? AUTHJS_TAB_KEY : AUTHJS_TAB_KEY_ALL
 
-  const existsInOther = otherFrameworksKeys.includes(frameworkKey)
+  const encodedFrameworksValues = otherFrameworksValues.map((value) =>
+    encodeURI(value)
+  )
+  const existsInOther = encodedFrameworksValues.some(
+    (encodedFramework) => encodedFramework === frameworkURI
+  )
   if (existsInOther) {
-    const otherIndex = otherFrameworksKeys.findIndex(
-      (key) => key === frameworkKey
+    const otherIndex = otherFrameworksValues.findIndex(
+      (encodedFramework) => encodedFramework === frameworkURI
     )
     window.localStorage.setItem(otherStorageKey, otherIndex.toString())
     // see https://github.com/shuding/nextra/blob/7ae958f02922e608151411042f658480b75164a6/packages/nextra/src/client/components/tabs/index.client.tsx#L106
@@ -120,12 +126,11 @@ export function Code({ children }: ChildrenProps) {
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
 
-  const updateFrameworkInUrl = (frameworkKey: string): void => {
+  const updateFrameworkInUrl = (frameworkURI: string): void => {
+    if (frameworkURI === "undefined") return
+
     const params = new URLSearchParams(searchParams?.toString())
-    const kebabCaseValue = frameworkKey
-      .replace(/([a-z])([A-Z])/g, "$1-$2")
-      .toLowerCase()
-    params.set("framework", kebabCaseValue)
+    params.set("framework", frameworkURI)
 
     router.push(`${router.pathname}?${params.toString()}`, undefined, {
       scroll: false,
@@ -137,19 +142,17 @@ export function Code({ children }: ChildrenProps) {
     const { textContent } = event.target as unknown as HTMLDivElement
     if (!textContent) return
 
-    const frameworkKey = findFrameworkKey(textContent, renderedFrameworks)
-    if (frameworkKey) {
-      updateFrameworkInUrl(frameworkKey)
-      updateFrameworkStorage(frameworkKey, renderedFrameworks, withNextJsPages)
+    const frameworkURI = encodeURI(textContent)
+    updateFrameworkInUrl(frameworkURI)
+    updateFrameworkStorage(frameworkURI, renderedFrameworks, withNextJsPages)
 
-      // Focus and scroll to maintain position when code blocks above are expanded
-      const element = event.target as HTMLButtonElement
-      const rect = element.getBoundingClientRect()
-      requestAnimationFrame(() => {
-        element.focus()
-        window.scrollBy(0, element.getBoundingClientRect().top - rect.top)
-      })
-    }
+    // Focus and scroll to maintain position when code blocks above are expanded
+    const element = event.target as HTMLButtonElement
+    const rect = element.getBoundingClientRect()
+    requestAnimationFrame(() => {
+      element.focus()
+      window.scrollBy(0, element.getBoundingClientRect().top - rect.top)
+    })
   }
 
   useEffect(() => {
@@ -164,7 +167,7 @@ export function Code({ children }: ChildrenProps) {
 
     if (indexFrameworkFromStorage === null) {
       updateFrameworkStorage(
-        Object.keys(renderedFrameworks)[indexFrameworkFromUrl ?? 0],
+        encodeURI(renderedFrameworks[indexFrameworkFromUrl ?? 0]),
         renderedFrameworks,
         withNextJsPages
       )
@@ -172,7 +175,7 @@ export function Code({ children }: ChildrenProps) {
 
     if (!indexFrameworkFromUrl) {
       const index = indexFrameworkFromStorage ?? 0
-      updateFrameworkInUrl(Object.keys(renderedFrameworks)[index])
+      updateFrameworkInUrl(encodeURI(renderedFrameworks[index]))
     }
   }, [router.pathname, renderedFrameworks, withNextJsPages])
 
