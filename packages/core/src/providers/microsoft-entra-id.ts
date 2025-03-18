@@ -472,7 +472,9 @@ export default function MicrosoftEntraID(
       }
 
       return {
-        ...profile,
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
         image: image ?? null,
       }
     },
