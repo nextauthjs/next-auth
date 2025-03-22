@@ -49,12 +49,16 @@ export interface SupabaseAdapterOptions {
    * The secret to grant access to the database
    **/
   secret: string
+  /**
+   * The schema to use for the database
+   **/
+  schema?: string
 }
 
 export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
-  const { url, secret } = options
-  const supabase = createClient<Database, "next_auth">(url, secret, {
-    db: { schema: "next_auth" },
+  const { url, secret, schema = "next_auth" } = options
+  const supabase = createClient<Database, string>(url, secret, {
+    db: { schema },
     global: { headers: { "X-Client-Info": "@auth/supabase-adapter" } },
     auth: { persistSession: false },
   })
@@ -232,7 +236,7 @@ export function SupabaseAdapter(options: SupabaseAdapterOptions): Adapter {
 }
 
 interface Database {
-  next_auth: {
+  [schema: string]: {
     Tables: {
       accounts: {
         Row: {
