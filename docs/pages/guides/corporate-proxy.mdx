@@ -8,6 +8,8 @@ Auth.js libraries use the `fetch` API to communicate with OAuth providers. If yo
 
 You can provide a custom `fetch` function by passing it as an option to the provider.
 
+# Using Undici Library
+
 Here, we use the `undici` library to make requests through a proxy server, by passing a `dispatcher` to the `fetch` implementation by `undici`.
 
 <Code>
@@ -22,6 +24,35 @@ const dispatcher = new ProxyAgent("my.proxy.server")
 function proxy(...args: Parameters<typeof fetch>): ReturnType<typeof fetch> {
   // @ts-expect-error `undici` has a `duplex` option
   return undici(args[0], { ...args[1], dispatcher })
+}
+
+export const { handlers, auth } = NextAuth({
+  providers: [GitHub({ [customFetch]: proxy })],
+})
+```
+
+  </Code.Next>
+</Code>
+
+# Using HttpsProxyAgent
+
+On Edge Runtimes or with proxy restrictions,  the `undici` library may not work. Using a simpler approach with HttpsProxyAgent by passing a `proxyAgent` to the `fetch` implementation.
+
+<Code>
+  <Code.Next>
+
+```tsx filename="auth.ts"
+import NextAuth, { customFetch } from "next-auth"
+import GitHub from "next-auth/providers/github"
+const { HttpsProxyAgent } = require('https-proxy-agent');
+
+const proxyAgent = new HttpsProxyAgent("my.proxy.server");
+async function proxy(url: string, options: any): Promise<Response> {
+  const response = (await fetch(url, {
+    ...options,
+    agent: proxyAgent,
+  })) as unknown as Response;
+  return response;
 }
 
 export const { handlers, auth } = NextAuth({
