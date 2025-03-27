@@ -84,7 +84,7 @@ export async function signIn<Redirect extends boolean = true>(
     ...signInParams
   } = rest
 
-  const baseUrl = base ?? ""
+  const baseUrl = `${base}/auth`
 
   const signInUrl = `${baseUrl}/${
     provider === "credentials" ? "callback" : "signin"
@@ -150,7 +150,7 @@ export async function signOut<R extends boolean = true>(
     redirectTo = options?.callbackUrl ?? window.location.href,
   } = options ?? {}
 
-  const baseUrl = base ?? ""
+  const baseUrl = `${base}/auth`
   const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
     headers: {
