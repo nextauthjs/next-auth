@@ -206,5 +206,6 @@ export async function getSession(
 }
 
 function getBasePath(req: e.Request) {
-  return req.baseUrl.split(req.params[0])[0].replace(/\/$/, "")
+  const params = req.params.splat ?? req.params[0];
+  return req.baseUrl.split(params)[0].replace(/\/$/, "")
 }
