@@ -49,7 +49,7 @@ export async function handleOAuth(
   cookies: RequestInternal["cookies"],
   options: InternalOptions<"oauth" | "oidc">
 ) {
-  const { logger, provider, legacy } = options
+  const { logger, provider } = options
 
   let as: o.AuthorizationServer
 
@@ -131,19 +131,11 @@ export async function handleOAuth(
 
   let codeGrantParams: URLSearchParams
   try {
-    // In legacy mode, we can skip state validation to be more compatible with v4
-    const stateCheck =
-      legacy && !provider.checks.includes("state")
-        ? o.skipStateCheck
-        : provider.checks.includes("state")
-          ? state
-          : o.skipStateCheck
-
     codeGrantParams = o.validateAuthResponse(
       as,
       client,
       new URLSearchParams(params),
-      stateCheck
+      provider.checks.includes("state") ? state : o.skipStateCheck
     )
   } catch (err) {
     if (err instanceof o.AuthorizationResponseError) {
@@ -175,8 +167,7 @@ export async function handleOAuth(
       // TODO: move away from allowing insecure HTTP requests
       [o.allowInsecureRequests]: true,
       [o.customFetch]: (...args) => {
-        // In legacy mode or if PKCE is not in the checks, remove the code_verifier
-        if (legacy || !provider.checks.includes("pkce")) {
+        if (!provider.checks.includes("pkce")) {
           args[1].body.delete("code_verifier")
         }
         return (provider[customFetch] ?? fetch)(...args)
