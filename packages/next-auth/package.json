@@ -54,6 +54,11 @@
       "import": "./webauthn.js",
       "default": "./webauthn.js"
     },
+    "./legacy": {
+      "types": "./legacy/index.d.ts",
+      "import": "./legacy/index.js",
+      "default": "./legacy/index.js"
+    },
     "./package.json": "./package.json"
   },
   "keywords": [
@@ -86,7 +91,8 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@auth/core": "workspace:*"
+    "@auth/core": "workspace:*",
+    "cookie": "^0.7.0"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
@@ -108,6 +114,7 @@
   },
   "devDependencies": {
     "@types/react": "18.0.37",
+    "@types/cookie": "^0.6.0",
     "dotenv": "^10.0.0",
     "next": "15.0.0-rc.1",
     "nodemailer": "^6.9.3",
