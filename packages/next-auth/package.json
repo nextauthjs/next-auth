@@ -92,7 +92,9 @@
   "license": "ISC",
   "dependencies": {
     "@auth/core": "workspace:*",
-    "cookie": "^0.7.0"
+    "@panva/hkdf": "^1.2.1",
+    "cookie": "^0.7.0",
+    "jose": "^6.0.6"
   },
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
@@ -113,8 +115,8 @@
     }
   },
   "devDependencies": {
-    "@types/react": "18.0.37",
     "@types/cookie": "^0.6.0",
+    "@types/react": "18.0.37",
     "dotenv": "^10.0.0",
     "next": "15.0.0-rc.1",
     "nodemailer": "^6.9.3",
