@@ -14,7 +14,7 @@
     "solid-start-vercel": "^0.2.9",
     "tailwindcss": "^3.2.4",
     "typescript": "5.2.2",
-    "vite": "^4.5.6"
+    "vite": "^4.5.12"
   },
   "dependencies": {
     "@auth/solid-start": "latest",
