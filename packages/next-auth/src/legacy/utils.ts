@@ -1,4 +1,4 @@
-import { NextApiRequest } from "next"
+import { NextApiRequest, NextApiResponse } from "next"
 import { serialize } from "cookie"
 
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
@@ -12,8 +12,6 @@ export function reqWithEnvURL(req: NextApiRequest): Request {
 
   // Base URL from request
   const baseUrl = `${protocol}://${host}`
-
-  console.log({ path })
 
   // Override with environment URL if defined
   const url = authUrl
@@ -67,15 +65,30 @@ export async function getBody(
   }
 }
 
-export function setCookie(res: any, cookie: any) {
+export function setCookie(
+  res: NextApiResponse,
+  cookie: string | Record<string, unknown>
+): void {
   // Preserve any existing cookies that have already been set in the same session
-  let setCookieHeader = res.getHeader("Set-Cookie") ?? []
-  // If not an array (i.e. a string with a single cookie) convert it into an array
-  if (!Array.isArray(setCookieHeader)) {
-    setCookieHeader = [setCookieHeader]
+
+  let cookieValue: string
+
+  // Handle the case where cookie is a string (already formatted)
+  if (typeof cookie === "string") {
+    cookieValue = cookie
   }
-  const { name, value, options } = cookie
-  const cookieHeader = serialize(name, value, options)
-  setCookieHeader.push(cookieHeader)
-  res.setHeader("Set-Cookie", setCookieHeader)
+  // Handle the case where cookie is an object with name, value, options
+  else if (typeof cookie === "object") {
+    const { name, value, options } = cookie
+    if (!name || !value) {
+      console.warn("Invalid cookie", cookie)
+      return
+    }
+    cookieValue = serialize(name as string, value as string, options as any)
+  } else {
+    console.warn("Invalid cookie format", cookie)
+    return
+  }
+
+  res.setHeader("Set-Cookie", [cookieValue])
 }

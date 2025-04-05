@@ -44,6 +44,7 @@ const options: NextAuthOptions = {
     },
   },
   basePath: "/api/auth",
+  legacy: true,
   session: { strategy: "jwt" },
 }
 

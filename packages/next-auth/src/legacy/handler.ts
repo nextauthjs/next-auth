@@ -15,7 +15,6 @@ async function getDerivedEncryptionKey(ikm: string | Buffer, _salt: string) {
   const salt = _salt.includes(".session-token") ? "" : _salt
   const prefix = "NextAuth.js Generated Encryption Key"
   const info = `${prefix}${salt ? ` (${salt})` : ""}`
-  // @ts-expect-error -- TypeScript doesn't recognize the Buffer type
   return await hkdf("sha256", ikm, salt, info, 32)
 }
 
@@ -77,8 +76,12 @@ async function NextAuthApiHandler(
   res.status(response.status)
 
   // Set headers
-  response.headers.forEach((cookie) => {
-    setCookie(res, cookie)
+  response.headers.forEach((value, key) => {
+    if (key.toLowerCase() === "set-cookie") {
+      setCookie(res, value)
+    } else {
+      res.setHeader(key, value)
+    }
   })
 
   // Handle redirects
@@ -108,7 +111,6 @@ async function NextAuthApiHandler(
 function NextAuth(
   ...args: [NextAuthOptions] | Parameters<typeof NextAuthApiHandler>
 ) {
-  console.log({ args })
   if (args.length === 1) {
     return async (req: NextApiRequest, res: NextApiResponse) => {
       if ("params" in req) {
