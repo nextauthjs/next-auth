@@ -154,7 +154,7 @@ export async function session(
           : sessionToken,
         options: {
           ...options.cookies.sessionToken.options,
-          expires: newExpires,
+          expires: newAdapterSession ? newAdapterSession.expires : newExpires,
         },
       })
 
