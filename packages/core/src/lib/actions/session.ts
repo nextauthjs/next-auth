@@ -1,7 +1,7 @@
 import { JWTSessionError, SessionTokenError } from "../../errors.js"
 import { fromDate } from "../utils/date.js"
 
-import type { Adapter } from "../../adapters.js"
+import type { Adapter, AdapterSession } from "../../adapters.js"
 import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
 
@@ -119,10 +119,14 @@ export async function session(
         sessionUpdateAge * 1000
 
       const newExpires = fromDate(sessionMaxAge)
+
+      let newAdapterSession: AdapterSession | null | undefined = null
+
       // Trigger update of session expiry date and write to database, only
-      // if the session was last updated more than {sessionUpdateAge} ago
+      // if the session was last updated more than {sessionUpdateAge} ago.
+      // Use new `AdapterSession` if returned.
       if (sessionIsDueToBeUpdatedDate <= Date.now()) {
-        await updateSession({
+        newAdapterSession = await updateSession({
           sessionToken: sessionToken,
           expires: newExpires,
         })
@@ -133,7 +137,7 @@ export async function session(
         // TODO: user already passed below,
         // remove from session object in https://github.com/nextauthjs/next-auth/pull/9702
         // @ts-expect-error
-        session: { ...session, user },
+        session: { ...(newAdapterSession ? newAdapterSession : session), user },
         user,
         newSession,
         ...(isUpdate ? { trigger: "update" } : {}),
@@ -145,7 +149,9 @@ export async function session(
       // Set cookie again to update expiry
       response.cookies?.push({
         name: options.cookies.sessionToken.name,
-        value: sessionToken,
+        value: newAdapterSession
+          ? newAdapterSession.sessionToken
+          : sessionToken,
         options: {
           ...options.cookies.sessionToken.options,
           expires: newExpires,
