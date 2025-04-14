@@ -36,7 +36,7 @@ export const { handlers, auth } = NextAuth({
 
 # Using HttpsProxyAgent
 
-On Edge Runtimes or with proxy restrictions,  the `undici` library may not work. Using a simpler approach with HttpsProxyAgent by passing a `proxyAgent` to the `fetch` implementation.
+On Edge Runtimes or with proxy restrictions, the `undici` library may not work. Using a simpler approach with HttpsProxyAgent by passing a `proxyAgent` to the `fetch` implementation.
 
 <Code>
   <Code.Next>
@@ -44,15 +44,15 @@ On Edge Runtimes or with proxy restrictions,  the `undici` library may not work.
 ```tsx filename="auth.ts"
 import NextAuth, { customFetch } from "next-auth"
 import GitHub from "next-auth/providers/github"
-const { HttpsProxyAgent } = require('https-proxy-agent');
+const { HttpsProxyAgent } = require("https-proxy-agent")
 
-const proxyAgent = new HttpsProxyAgent("my.proxy.server");
+const proxyAgent = new HttpsProxyAgent("my.proxy.server")
 async function proxy(url: string, options: any): Promise<Response> {
   const response = (await fetch(url, {
     ...options,
     agent: proxyAgent,
-  })) as unknown as Response;
-  return response;
+  })) as unknown as Response
+  return response
 }
 
 export const { handlers, auth } = NextAuth({
