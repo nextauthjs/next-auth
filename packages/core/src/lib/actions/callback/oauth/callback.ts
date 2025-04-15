@@ -201,7 +201,7 @@ export async function handleOAuth(
                 providerId: provider.id,
                 ...responseJson,
             };
-            throw new OAuthCallbackError("OAuth Provider returned an error", cause);
+            throw new OAuthCallbackError(`OAuth Provider returned an error: ${responseJson.error}`, cause);
         }
         const { tid } = decodeJwt(responseJson.id_token);
         if (typeof tid === "string") {
