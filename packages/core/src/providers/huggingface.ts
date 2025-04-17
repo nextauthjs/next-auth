@@ -229,7 +229,6 @@ export default function Huggingface(
     },
     wellKnown: "https://huggingface.co/.well-known/openid-configuration",
     checks: ["state", "pkce"],
-    client: { token_endpoint_auth_method: "client_secret_basic" },
     profile(profile) {
       return {
         id: profile.sub,
