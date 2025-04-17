@@ -163,7 +163,7 @@ export interface HuggingfaceProfile {
  *       authorization: { 
  *        params: { 
  *          scope: "openid profile email", // specify the scopes you need 
- *          //  orgIds: "your_org_id" // If your oauth app needs access to a specific organization of the user
+ *          //  orgIds: "unique_org_id" // If your oauth app needs access to a specific organization of the user
  *        } 
  *       },
  *     }),
