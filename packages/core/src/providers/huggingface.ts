@@ -185,6 +185,9 @@ export interface HuggingfaceProfile {
  * - `webhooks`: Can manage webhooks on behalf of the user.
  * 
  * You need to enable them first in your OAuth app settings.
+ * 
+ * /!\ By default, the `profile` and `email` scopes are enabled in NextAuth. So you need to enable
+ * the `email` scope in your OAuth app settings or you will get a scope error.
  *
  * ### Resources
  *
@@ -221,22 +224,8 @@ export default function Huggingface(
     name: "Hugging Face",
     type: "oidc",
     issuer: "https://huggingface.co",
-    authorization: {
-      url: "https://huggingface.co/oauth/authorize",
-      params: { 
-        scope: "openid profile" 
-      },
-    },
-    wellKnown: "https://huggingface.co/.well-known/openid-configuration",
     checks: ["state", "pkce"],
-    profile(profile) {
-      return {
-        id: profile.sub,
-        name: profile.name ?? profile.preferred_username,
-        email: profile.email,
-        image: profile.picture,
-      }
-    },
+
     style: {
       bg: "#FFD21E",
       text: "#000",
