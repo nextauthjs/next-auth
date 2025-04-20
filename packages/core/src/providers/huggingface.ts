@@ -18,43 +18,43 @@ export interface HuggingfaceProfile {
   sub: string
   /**
    * Full name of the user.
-   * 
+   *
    * Needs 'profile' scope
-  */
+   */
   name?: string
   /**
    * Username of the user.
-   * 
+   *
    * Need 'profile' scope
    */
   preferred_username?: string
   /**
    * URL of the user's avatar.
-   * 
+   *
    * Need 'profile' scope
    */
   profile?: string
   /**
    * URL of the user's profile picture.
-   * 
+   *
    * Need 'profile' scope
    */
   picture?: string
   /**
    * Need 'profile' scope
-   * 
+   *
    * Website of the user.
    */
   website?: string
   /**
    * Need 'email' scope
-   * 
+   *
    * Email address of the user.
    */
   email?: string
   /**
    * Need 'email' scope
-   * 
+   *
    * Whether the user's email address is verified. Should always be true, Hugging Face enforces
    * email verification for users to grant access to OAuth apps.
    */
@@ -65,7 +65,7 @@ export interface HuggingfaceProfile {
   isPro: boolean
   /**
    * Whether the user has a payment method set up.
-   * 
+   *
    * Needs the `read-billing` scope.
    */
   canPay?: boolean
@@ -95,33 +95,33 @@ export interface HuggingfaceProfile {
     isEnterprise: boolean
     /**
      * Whether the organization has a payment method set up.
-     * 
+     *
      * Access to the organization needs to be granted to the oauth app for this field to be present.
      */
     canPay?: boolean
     /**
      * The role of the user in the organization.
-     * 
+     *
      * Access to the organization needs to be granted to the oauth app for this field to be present.
      */
     roleInOrg?: "admin" | "write" | "read" | "contributor"
     /**
      * User needs to re-authenticate to access the organization.
-     * 
+     *
      * Access to the organization needs to be granted to the oauth app for this field to be present.
      */
     pendingSSO?: boolean
     /**
      * User needs to enable MFA to access the organization.
-     * 
+     *
      * Access to the organization needs to be granted to the oauth app for this field to be present.
      */
     missingMFA?: boolean
     /**
      * Resource groups are a feature of enterprise organizations.
-     * 
+     *
      * They allow granular access control to resources within the organization.
-     * 
+     *
      * Access to the organization needs to be granted to the oauth app for this field to be present.
      */
     resourceGroups?: Array<{
@@ -137,7 +137,6 @@ export interface HuggingfaceProfile {
     }>
   }>
 }
-
 
 /**
  * Add HuggingFace login to your page.
@@ -160,19 +159,19 @@ export interface HuggingfaceProfile {
  *     HuggingFace({
  *       clientId: HUGGINGFACE_CLIENT_ID,
  *       clientSecret: HUGGINGFACE_CLIENT_SECRET,
- *       authorization: { 
- *        params: { 
- *          scope: "openid profile email", // specify the scopes you need 
+ *       authorization: {
+ *        params: {
+ *          scope: "openid profile email", // specify the scopes you need
  *          //  orgIds: "unique_org_id" // If your oauth app needs access to a specific organization of the user
- *        } 
+ *        }
  *       },
  *     }),
  *   ],
  * })
  * ```
- * 
+ *
  * The following scopes are available:
- * 
+ *
  * - `openid`: Grants access to the user's OpenID Connect profile.
  * - `profile`: Grants access to the user's profile information.
  * - `email`: Grants access to the user's email address.
@@ -183,9 +182,9 @@ export interface HuggingfaceProfile {
  * - `read-billing`: Know if the user has a payment method set up.
  * - `inference-api`: Can make calls to Inference providers on behalf of the user.
  * - `webhooks`: Can manage webhooks on behalf of the user.
- * 
+ *
  * You need to enable them first in your OAuth app settings.
- * 
+ *
  * /!\ By default, the `profile` and `email` scopes are enabled in NextAuth. So you need to enable
  * the `email` scope in your OAuth app settings or you will get a scope error.
  *
