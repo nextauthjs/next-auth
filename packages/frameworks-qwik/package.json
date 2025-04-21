@@ -1,6 +1,6 @@
 {
   "name": "@auth/qwik",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Authentication for Qwik.",
   "license": "ISC",
   "author": "gioboa <giorgiob.boa@gmail.com>",

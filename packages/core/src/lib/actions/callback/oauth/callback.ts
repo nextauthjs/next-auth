@@ -190,13 +190,23 @@ export async function handleOAuth(
       case "microsoft-entra-id":
       case "azure-ad": {
         /**
-         * These providers need the authorization server metadata to be re-processed
-         * based on the `id_token`'s `tid` claim
-         * @see https://github.com/MicrosoftDocs/azure-docs/issues/113944
+         * These providers return errors in the response body and
+         * need the authorization server metadata to be re-processed
+         * based on the `id_token`'s `tid` claim.
+         * @see: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#error-response-1
          */
-        const { tid } = decodeJwt(
-          (await codeGrantResponse.clone().json()).id_token
-        )
+        const responseJson = await codeGrantResponse.clone().json()
+        if (responseJson.error) {
+          const cause = {
+            providerId: provider.id,
+            ...responseJson,
+          }
+          throw new OAuthCallbackError(
+            `OAuth Provider returned an error: ${responseJson.error}`,
+            cause
+          )
+        }
+        const { tid } = decodeJwt(responseJson.id_token)
         if (typeof tid === "string") {
           const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
           const tenantId = as.issuer?.match(tenantRe)?.[1] ?? "common"

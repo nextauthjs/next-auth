@@ -79,6 +79,7 @@
     "fusionauth": "FusionAuth",
     "gitlab": "GitLab",
     "hubspot": "HubSpot",
+    "huggingface": "Hugging Face",
     "identity-server4": "IdentityServer4",
     "instagram": "Instagram",
     "kakao": "Kakao",
