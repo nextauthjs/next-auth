@@ -1,6 +1,6 @@
 {
   "name": "@auth/hasura-adapter",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Hasura adapter for Auth.js.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
