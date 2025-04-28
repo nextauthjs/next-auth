@@ -24,7 +24,14 @@ export async function session(
 
   const response: ResponseInternal<Session | null> = {
     body: null,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(!isUpdate && {
+        "Cache-Control": "private, no-cache, no-store",
+        Expires: "0",
+        Pragma: "no-cache",
+      }),
+    },
     cookies,
   }
 

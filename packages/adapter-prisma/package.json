@@ -1,6 +1,6 @@
 {
   "name": "@auth/prisma-adapter",
-  "version": "2.7.4",
+  "version": "2.9.0",
   "description": "Prisma adapter for Auth.js",
   "homepage": "https://authjs.dev/reference/adapter/prisma",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -37,7 +37,7 @@
     "access": "public"
   },
   "scripts": {
-    "clean": "rm ./prisma/dev.db* || echo 'File deleted' && rm -rf *.js *.d.ts*",
+    "clean": "rm ./prisma/dev.db* || echo 'File deleted' && rm -rf index.js *.d.ts*",
     "init:default": "prisma migrate dev --name init --skip-seed",
     "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
     "test:default": "pnpm init:default && vitest run -c ../utils/vitest.config.ts",

@@ -56,7 +56,12 @@ export default function renderPage(params: RenderPageParams) {
     csrf(skip: boolean, options: InternalOptions, cookies: Cookie[]) {
       if (!skip) {
         return {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "private, no-cache, no-store",
+            Expires: "0",
+            Pragma: "no-cache",
+          },
           body: { csrfToken: options.csrfToken },
           cookies,
         }

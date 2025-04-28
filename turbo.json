@@ -70,7 +70,14 @@
         "@auth/qwik#build"
       ],
       "persistent": true,
-      "cache": false
+      "cache": false,
+      "outputs": [
+        ".next/**/*",
+        "build/**/*",
+        "!.next/cache/**",
+        "docs/reference/**/*.mdx",
+        "docs/reference/*.mdx"
+      ]
     },
     "docs#build": {
       "inputs": [
@@ -117,9 +124,11 @@
       ],
       "outputs": [
         ".next/**/*",
+        "build/**/*",
         "!.next/cache/**",
-        "docs/reference/**",
-        "!docs/reference/_meta.js"
+        "docs/reference/**/*.mdx",
+        "docs/reference/**/*.js",
+        "docs/reference/*.mdx"
       ]
     }
   }
