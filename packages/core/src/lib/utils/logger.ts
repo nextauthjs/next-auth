@@ -39,6 +39,17 @@ const defaultLogger: LoggerInstance = {
     } else if (error.stack) {
       console.error(error.stack.replace(/.*/, "").substring(1))
     }
+
+    Object.keys(error).map((key) => {
+      const alreadyProcessedKeys = ["name", "message", "type", "stack", "cause"]
+      if (!alreadyProcessedKeys.includes(key)) {
+        // @ts-ignore
+        const value = error[key]
+        if (typeof value === "string") {
+          this.debug(`${red}[auth][${key}]${reset}:`, value)
+        }
+      }
+    })
   },
   warn(code) {
     const url = `https://warnings.authjs.dev`
