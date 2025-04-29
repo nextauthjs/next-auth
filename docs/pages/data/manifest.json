@@ -149,7 +149,8 @@
     "mattermost",
     "nextcloud",
     "okta",
-    "ory-hydra",
+    "hydra",
+    "ory",
     "osso",
     "passage",
     "ping-id"
