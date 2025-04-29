@@ -24,8 +24,7 @@ import type {
 // )
 
 const ALLOWED_COOKIE_SIZE = 4096
-// Based on commented out section above
-const ESTIMATED_EMPTY_COOKIE_SIZE = 160
+const ESTIMATED_EMPTY_COOKIE_SIZE = 512
 const CHUNK_SIZE = ALLOWED_COOKIE_SIZE - ESTIMATED_EMPTY_COOKIE_SIZE
 
 // REVIEW: Is there any way to defer two types of strings?
