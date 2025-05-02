@@ -107,6 +107,9 @@ export default function MicrosoftEntraID(
 
   config.issuer ??= "https://login.microsoftonline.com/common/v2.0"
 
+  // https://authjs.dev/guides/corporate-proxy
+  const fetchFunction = config[customFetch] || fetch;
+
   return {
     id: "microsoft-entra-id",
     name: "Microsoft Entra ID",
@@ -114,7 +117,7 @@ export default function MicrosoftEntraID(
     authorization: { params: { scope: "openid profile email User.Read" } },
     async profile(profile, tokens) {
       // https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples
-      const response = await fetch(
+      const response = await fetchFunction(
         `https://graph.microsoft.com/v1.0/me/photos/${profilePhotoSize}x${profilePhotoSize}/$value`,
         { headers: { Authorization: `Bearer ${tokens.access_token}` } }
       )
@@ -142,14 +145,14 @@ export default function MicrosoftEntraID(
     async [customFetch](...args) {
       const url = new URL(args[0] instanceof Request ? args[0].url : args[0])
       if (url.pathname.endsWith(".well-known/openid-configuration")) {
-        const response = await fetch(...args)
+        const response = await fetchFunction(...args)
         const json = await response.clone().json()
         const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
         const tenantId = config.issuer?.match(tenantRe)?.[1] ?? "common"
         const issuer = json.issuer.replace("{tenantid}", tenantId)
         return Response.json({ ...json, issuer })
       }
-      return fetch(...args)
+      return fetchFunction(...args)
     },
     [conformInternal]: true,
     options: config,
