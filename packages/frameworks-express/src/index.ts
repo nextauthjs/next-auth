@@ -206,5 +206,5 @@ export async function getSession(
 }
 
 function getBasePath(req: e.Request) {
-  return req.baseUrl.split(req.params[0])[0].replace(/\/$/, "")
+  return req.baseUrl.split(req.params.path[0])[0].replace(/\/$/, "")
 }
