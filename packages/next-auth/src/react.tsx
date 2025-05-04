@@ -180,8 +180,7 @@ export async function getSession(params?: GetSessionParams) {
     params
   )
   if (params?.broadcast ?? true) {
-    const broadcastChannel = getNewBroadcastChannel()
-    broadcastChannel.postMessage({
+    broadcast().postMessage({
       event: "session",
       data: { trigger: "getSession" },
     })
