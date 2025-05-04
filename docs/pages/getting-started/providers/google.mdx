@@ -111,7 +111,7 @@ Alternatively, you can also pass options in the `params` object of `authorizatio
 
 If you need access to the RefreshToken or AccessToken for a Google account and you are not using a database to persist user accounts, this may be something you need to do.
 
-```ts filename="app/api/auth/[...nextauth]/route.ts"
+```ts filename="@/auth.ts"
 import Google from "next-auth/providers/google"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
