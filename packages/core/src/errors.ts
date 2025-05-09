@@ -41,9 +41,6 @@ type ErrorType =
  * @noInheritDoc
  */
 export class AuthError extends Error {
-  /** The error type. Used to identify the error in the logs.
-   * @internal
-   */
   type: ErrorType
   /**
    * Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page.
