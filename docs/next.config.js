@@ -72,7 +72,7 @@ export default withNextra({
       {
         source: "/:path(.*)",
         has: [{ type: "host", value: "warnings.authjs.dev" }],
-        destination: "https://authjs.dev/reference/warnings/:path*",
+        destination: "https://authjs.dev/reference/core/types#warningcode",
         permanent: true,
       },
       {
