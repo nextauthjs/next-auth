@@ -1,6 +1,6 @@
 {
   "name": "@auth/solid-start",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "Authentication for SolidStart.",
   "license": "ISC",
   "author": "OrJDev <orjdeveloper@gmail.com>",

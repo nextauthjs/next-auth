@@ -14,12 +14,16 @@ html[class~="dark"]
     img[src$="boxyhq-saml.svg"],
     img[src$="eveonline.svg"],
     img[src$="github.svg"],
-    img[src$="hasura.svg"],
     img[src$="mailchimp.svg"],
     img[src$="medium.svg"],
     img[src$="okta.svg"],
+    img[src$="patreon.svg"],
+    img[src$="ping-id.svg"],
     img[src$="prisma.svg"],
+    img[src$="resend.svg"],
+    img[src$="roblox.svg"],
     img[src$="threads.svg"],
+    img[src$="twitter.svg"],
     img[src$="wikimedia.svg"]
   ) {
   filter: invert(1);

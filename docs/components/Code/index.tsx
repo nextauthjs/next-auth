@@ -9,6 +9,7 @@ interface ChildrenProps {
 }
 
 const AUTHJS_TAB_KEY = "authjs.codeTab.framework"
+const AUTHJS_TAB_KEY_ALL = "authjs.codeTab.framework.all"
 
 Code.Next = NextCode
 Code.NextClient = NextClientCode
@@ -34,53 +35,149 @@ const allFrameworks = {
   [ExpressCode.name]: "Express",
 }
 
-/**
- * Replace all non-alphabetic characters with a hyphen
- *
- * @param url - URL to parse
- * @returns - A string parsed from the URL
- */
-const parseParams = (url: string): string => {
-  let parsedUrl = url.toLowerCase().replaceAll(/[^a-zA-z]+/g, "-")
-  return parsedUrl.endsWith("-") ? parsedUrl.slice(0, -1) : parsedUrl
+const findFrameworkKey = (
+  text: string,
+  frameworks: Record<string, string>
+): string | null => {
+  const entry = Object.entries(frameworks).find(([_, value]) => value === text)
+  return entry ? entry[0] : null
+}
+
+const getIndexFrameworkFromUrl = (
+  url: string,
+  frameworks: Record<string, string>
+): number | null => {
+  const params = new URLSearchParams(url)
+  const paramValue = params.get("framework")
+  if (!paramValue) return null
+
+  const decodedValue = decodeURI(paramValue)
+
+  const index = Object.values(frameworks).findIndex(
+    (value) => value === decodedValue
+  )
+  return index === -1 ? null : index
+}
+
+const getIndexFrameworkFromStorage = (
+  frameworks: Record<string, string>,
+  isAllFrameworks: boolean
+): number | null => {
+  const storageKey = isAllFrameworks ? AUTHJS_TAB_KEY_ALL : AUTHJS_TAB_KEY
+  const storedIndex = window.localStorage.getItem(storageKey)
+
+  if (!storedIndex) {
+    return null
+  }
+
+  return parseInt(storedIndex) % Object.keys(frameworks).length
+}
+
+const updateFrameworkStorage = (
+  frameworkURI: string,
+  frameworks: Record<string, string>,
+  isAllFrameworks: boolean
+): void => {
+  const index = Object.values(frameworks).findIndex(
+    (value) => encodeURI(value) === frameworkURI
+  )
+  if (index === -1) return
+
+  const storageKey = isAllFrameworks ? AUTHJS_TAB_KEY_ALL : AUTHJS_TAB_KEY
+  window.localStorage.setItem(storageKey, index.toString())
+
+  // Update other storage if framework exists in other object
+  const otherFrameworksValues = Object.values(
+    isAllFrameworks ? baseFrameworks : allFrameworks
+  )
+  const otherStorageKey = isAllFrameworks ? AUTHJS_TAB_KEY : AUTHJS_TAB_KEY_ALL
+
+  const encodedFrameworksValues = otherFrameworksValues.map((value) =>
+    encodeURI(value)
+  )
+  const existsInOther = encodedFrameworksValues.some(
+    (encodedFramework) => encodedFramework === frameworkURI
+  )
+  if (existsInOther) {
+    const otherIndex = otherFrameworksValues.findIndex(
+      (encodedFramework) => encodedFramework === frameworkURI
+    )
+    window.localStorage.setItem(otherStorageKey, otherIndex.toString())
+    // see https://github.com/shuding/nextra/blob/7ae958f02922e608151411042f658480b75164a6/packages/nextra/src/client/components/tabs/index.client.tsx#L106
+    window.dispatchEvent(
+      new StorageEvent("storage", {
+        key: otherStorageKey,
+        newValue: otherIndex.toString(),
+      })
+    )
+  }
 }
 
 export function Code({ children }: ChildrenProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const childs = Children.toArray(children)
+  const childElements = Children.toArray(children)
   const { project } = useThemeConfig()
 
-  const withNextJsPages = childs.some(
+  const withNextJsPages = childElements.some(
     // @ts-expect-error: Hacky dynamic child wrangling
     (p) => p && p.type.name === NextClientCode.name
   )
 
   const renderedFrameworks = withNextJsPages ? allFrameworks : baseFrameworks
 
-  const updateFrameworkStorage = (value: string): void => {
+  const updateFrameworkInUrl = (frameworkURI: string): void => {
+    if (frameworkURI === "undefined") return
+
     const params = new URLSearchParams(searchParams?.toString())
-    params.set("framework", value)
-    router.push(`${router.pathname}?${params.toString()}`)
+    params.set("framework", frameworkURI)
+
+    router.push(`${router.pathname}?${params.toString()}`, undefined, {
+      scroll: false,
+    })
   }
 
   const handleClickFramework = (event: MouseEvent<HTMLDivElement>) => {
     if (!(event.target instanceof HTMLButtonElement)) return
     const { textContent } = event.target as unknown as HTMLDivElement
-    updateFrameworkStorage(parseParams(textContent!))
+    if (!textContent) return
+
+    const frameworkURI = encodeURI(textContent)
+    updateFrameworkInUrl(frameworkURI)
+    updateFrameworkStorage(frameworkURI, renderedFrameworks, withNextJsPages)
+
+    // Focus and scroll to maintain position when code blocks above are expanded
+    const element = event.target as HTMLButtonElement
+    const rect = element.getBoundingClientRect()
+    requestAnimationFrame(() => {
+      element.focus()
+      window.scrollBy(0, element.getBoundingClientRect().top - rect.top)
+    })
   }
 
   useEffect(() => {
-    const length = Object.keys(renderedFrameworks).length
-    const getFrameworkStorage = window.localStorage.getItem(AUTHJS_TAB_KEY)
-    const indexFramework = parseInt(getFrameworkStorage ?? "0") % length
-    if (!getFrameworkStorage) {
-      window.localStorage.setItem(AUTHJS_TAB_KEY, "0")
-    }
-    updateFrameworkStorage(
-      parseParams(Object.values(renderedFrameworks)[indexFramework])
+    const indexFrameworkFromStorage = getIndexFrameworkFromStorage(
+      renderedFrameworks,
+      withNextJsPages
     )
-  }, [router.pathname, renderedFrameworks])
+    const indexFrameworkFromUrl = getIndexFrameworkFromUrl(
+      router.asPath,
+      renderedFrameworks
+    )
+
+    if (indexFrameworkFromStorage === null) {
+      updateFrameworkStorage(
+        encodeURI(renderedFrameworks[indexFrameworkFromUrl ?? 0]),
+        renderedFrameworks,
+        withNextJsPages
+      )
+    }
+
+    if (!indexFrameworkFromUrl) {
+      const index = indexFrameworkFromStorage ?? 0
+      updateFrameworkInUrl(encodeURI(renderedFrameworks[index]))
+    }
+  }, [router.pathname, renderedFrameworks, withNextJsPages])
 
   return (
     <div
@@ -88,12 +185,12 @@ export function Code({ children }: ChildrenProps) {
       onClick={handleClickFramework}
     >
       <Tabs
-        storageKey={AUTHJS_TAB_KEY}
+        storageKey={withNextJsPages ? AUTHJS_TAB_KEY_ALL : AUTHJS_TAB_KEY}
         items={Object.values(renderedFrameworks)}
       >
         {Object.keys(renderedFrameworks).map((f) => {
           // @ts-expect-error: Hacky dynamic child wrangling
-          const child = childs.find((c) => c?.type?.name === f)
+          const child = childElements.find((c) => c?.type?.name === f)
 
           // @ts-expect-error: Hacky dynamic child wrangling
           return Object.keys(child?.props ?? {}).length ? (
