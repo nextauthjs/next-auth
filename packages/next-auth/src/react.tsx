@@ -76,7 +76,12 @@ function getNewBroadcastChannel() {
       postMessage: () => {},
       addEventListener: () => {},
       removeEventListener: () => {},
-    }
+      name: "next-auth",
+      onmessage: null,
+      onmessageerror: null,
+      close: () => {},
+      dispatchEvent: () => false,
+    } satisfies BroadcastChannel
   }
 
   return new BroadcastChannel("next-auth")
