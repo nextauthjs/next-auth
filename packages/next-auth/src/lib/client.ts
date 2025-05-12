@@ -146,12 +146,15 @@ export async function fetchData<T = any>(
   try {
     const options: RequestInit = {
       headers: {
-        "Content-Type": "application/json",
         ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
       },
     }
 
     if (req?.body) {
+      options.headers = {
+        "Content-Type": "application/json",
+        ...options.headers
+      }
       options.body = JSON.stringify(req.body)
       options.method = "POST"
     }
