@@ -377,7 +377,7 @@ export async function verifyRegister(
   }
 
   // Build a new authenticator
-  const authenticator = {
+  const authenticator: Authenticator = {
     providerAccountId: account.providerAccountId,
     counter: verification.registrationInfo.counter,
     credentialID: toBase64(verification.registrationInfo.credentialID),
@@ -390,6 +390,7 @@ export async function verifyRegister(
       (data as RegistrationResponseJSON).response
         .transports as AuthenticatorTransport[]
     ),
+    credentialAAGUID: verification.registrationInfo.aaguid,
   }
 
   // Return created stuff
