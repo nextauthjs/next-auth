@@ -468,7 +468,7 @@ export function SessionProvider(props: SessionProviderProps) {
   }, [])
 
   React.useEffect(() => {
-    const { refetchOnWindowFocus = true } = props
+    const refetchOnWindowFocus = props.refetchOnWindowFocus ?? true
     // Listen for when the page is visible, if the user switches tabs
     // and makes our tab visible again, re-fetch the session, but only if
     // this feature is not disabled.
@@ -496,6 +496,31 @@ export function SessionProvider(props: SessionProviderProps) {
     }
   }, [refetchInterval, shouldRefetch])
 
+  const update = React.useCallback(
+    async (data: any) => {
+      if (loading) return
+      setLoading(true)
+      const newSession = await fetchData<Session>(
+        "session",
+        __NEXTAUTH,
+        logger,
+        typeof data === "undefined"
+          ? undefined
+          : { body: { csrfToken: await getCsrfToken(), data } }
+      )
+      setLoading(false)
+      if (newSession) {
+        setSession(newSession)
+        broadcast().postMessage({
+          event: "session",
+          data: { trigger: "getSession" },
+        })
+      }
+      return newSession
+    },
+    [loading]
+  )
+
   const value: any = React.useMemo(
     () => ({
       data: session,
@@ -504,29 +529,9 @@ export function SessionProvider(props: SessionProviderProps) {
         : session
           ? "authenticated"
           : "unauthenticated",
-      async update(data: any) {
-        if (loading) return
-        setLoading(true)
-        const newSession = await fetchData<Session>(
-          "session",
-          __NEXTAUTH,
-          logger,
-          typeof data === "undefined"
-            ? undefined
-            : { body: { csrfToken: await getCsrfToken(), data } }
-        )
-        setLoading(false)
-        if (newSession) {
-          setSession(newSession)
-          broadcast().postMessage({
-            event: "session",
-            data: { trigger: "getSession" },
-          })
-        }
-        return newSession
-      },
+      update,
     }),
-    [session, loading]
+    [session, loading, update]
   )
 
   return (
