@@ -32,6 +32,8 @@ AUTH_SURREAL_DB
 AUTH_SURREAL_USER
 AUTH_SURREAL_PW
 AUTH_SURREAL_SCOPE
+SURREAL_NS (required when using RootAuth or NamespaceAuth)
+SURREAL_DB (required when using RootAuth or NamespaceAuth)
 ```
 
 ### Configuration
@@ -108,16 +110,31 @@ The SurrealDB adapter does not handle connections automatically, so you will hav
 ### Utils File
 
 ```ts filename="./lib/surrealdb_utils.ts"
-import { Surreal, ConnectionStatus, type AnyAuth } from "surrealdb"
+import type { ConnectOptions, AnyAuth } from "surrealdb"
+import { Surreal, ConnectionStatus } from "surrealdb"
 
 /**
- * Maintains a single instance of surrealdb
+ * Maintains a single instance of surrealdb.
+ * Automatically reconnects unless options.reconnect is set to false manually.
  */
 export class MySurreal {
   // A single instantiation of a surreal connection
   private _surrealdb: Surreal | undefined
+  private _url: string | URL
+  private _opts: ConnectOptions | undefined
 
-  async surrealdb(url: string | URL, auth: AnyAuth | string): Promise<Surreal> {
+  constructor(
+    url: Parameters<InstanceType<typeof Surreal>["connect"]>[0],
+    opts?: ConnectOptions
+  ) {
+    this._url = url
+    if (opts && opts.reconnect === undefined) {
+      opts.reconnect = true
+    }
+    this._opts = opts
+  }
+
+  async surrealdb(): Promise<Surreal> {
     // Init Surreal
     if (!this._surrealdb) {
       this._surrealdb = new Surreal()
@@ -128,18 +145,12 @@ export class MySurreal {
     } else if (this._surrealdb.status == ConnectionStatus.Disconnected) {
       try {
         // Connect as a database user
-        await this._surrealdb.connect(url, {
-          auth,
-        })
+        await this._surrealdb.connect(this._url, this._opts)
         if (process.env.NODE_ENV === "development") {
-          let str = `${this._surrealdb.status}`
-          if (typeof auth !== "string") {
-            if ("username" in auth) str += ` as ${auth.username}`
-            if ("database" in auth && "namespace" in auth)
-              str += ` for ${auth.namespace} ${auth.database}`
-            else if ("namespace" in auth) str += ` for ${auth.namespace}`
-            else if ("database" in auth) str += ` for ${auth.database}`
-          }
+          const str = this.toConnectionString(
+            this._surrealdb.status,
+            this._opts
+          )
           console.info(str)
         }
       } catch (error) {
@@ -149,9 +160,26 @@ export class MySurreal {
     }
     return this._surrealdb
   }
-}
 
-export const surrealdb = new MySurreal()
+  private toConnectionString(status: ConnectionStatus, opts?: ConnectOptions) {
+    let str = `${status}`
+    const auth = opts?.auth
+
+    if (auth && typeof auth !== "string") {
+      if ("username" in auth) {
+        str += ` as ${auth.username}`
+      }
+      if ("database" in auth && "namespace" in auth) {
+        str += ` for ${auth.namespace} ${auth.database}`
+      } else if ("namespace" in auth) {
+        str += ` for ${auth.namespace}`
+      } else if ("database" in auth) {
+        str += ` for ${auth.database}`
+      }
+    }
+    return str
+  }
+}
 
 /**
  * Converts environment variables to an AnyAuth type
@@ -198,82 +226,42 @@ export function toAnyAuth({
   }
   return auth
 }
-
-/**
- * Handles a disconnection with the database with exponential backoff
- * @param surreal - the single instance of surreal
- * @param url - the database url
- * @param auth - auth credentials
- * @param {number} [reconnectDelay = 1000] - initial delay amount
- * @param {number} [max_retries = 5] - maximum number of retries
- * @param {number} [retry = 0]  - current retry
- */
-export async function handleDisconnect(
-  surreal: MySurreal,
-  url: string | URL,
-  auth: AnyAuth,
-  reconnectDelay: number = 1000,
-  max_retries: number = 5,
-  retry: number = 0
-) {
-  if (retry >= max_retries) {
-    console.error("Shutting down.")
-    process.exit(1) // Graceful exit or handle gracefully in a production environment.
-  }
-
-  retry++
-  console.log(`Reconnect in ${reconnectDelay}ms...`)
-  setTimeout(async () => {
-    try {
-      await surreal.surrealdb(url, auth)
-      console.log("reconnected")
-    } catch (err) {
-      console.error("Reconnection attempt failed")
-      handleDisconnect(
-        surreal,
-        url,
-        auth,
-        retry,
-        max_retries,
-        reconnectDelay * 2
-      ) // Recursively try to reconnect.
-    }
-  }, reconnectDelay)
-}
 ```
 
 ### Authorization
 
-The clientPromise provides a connection to the database.
+The clientPromise provides a connection to the database. You could use any connect option you wish. For quick setup, use the DatabaseAuth method. For best security, we recommend creating a Record Access method if you know how to properly setup access table permissions.
 
 ```ts filename="./lib/surrealdb.ts"
 import { type Surreal } from "surrealdb"
-import { surrealdb, toAnyAuth } from "../lib/surrealdb"
 import { handleDisconnect, MySurreal, toAnyAuth } from "./lib/surrealdb_utils"
 
 const clientPromise = new Promise<Surreal>(async (resolve, reject) => {
   try {
     const {
-      AUTH_SURREAL_URL: url,
-      AUTH_SURREAL_NS: namespace,
-      AUTH_SURREAL_DB: database,
-      AUTH_SURREAL_USER: username,
-      AUTH_SURREAL_PW: password,
-      AUTH_SURREAL_SCOPE: scope,
+      AUTH_SURREAL_URL: auth_url,
+      AUTH_SURREAL_NS: auth_ns,
+      AUTH_SURREAL_DB: auth_db,
+      AUTH_SURREAL_USER: auth_user,
+      AUTH_SURREAL_PW: auth_pw,
+      AUTH_SURREAL_SCOPE: auth_scope,
+      SURREAL_NS: namespace,
+      SURREAL_DB: database,
     } = process.env
-    if (!url) throw new Error('required auth url')
+    if (!auth_url) throw new Error("required auth_url")
     const auth = toAnyAuth({
+      namespace: auth_ns,
+      database: auth_db,
+      username: auth_user,
+      password: auth_pw,
+      scope: auth_scope,
+    })
+    const surreal = new MySurreal(auth_url, {
       namespace,
       database,
-      username,
-      password,
-      scope,
+      auth,
     })
-    const surreal = new MySurreal()
-    const db = await surreal.surrealdb(url, auth)
-    db.emitter.subscribe("disconnected", async () => {
-      handleDisconnect(surreal, url, auth)
-    })
+    const db = await surreal.surrealdb()
     resolve(db)
   } catch (e) {
     reject(e)

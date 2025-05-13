@@ -6,20 +6,40 @@ import {
   docToAccount,
   docToSession,
   docToVerificationToken,
+  docToAuthenticator,
 } from "../src/index"
 import type {
   UserDoc,
   AccountDoc,
   SessionDoc,
   VerificationTokenDoc,
+  AuthenticatorDoc,
 } from "../src/index"
-import { randomUUID } from "utils/adapter"
 
 export const config = (clientPromise: Promise<Surreal>) => ({
   adapter: SurrealDBAdapter(clientPromise),
+  testWebAuthnMethods: true,
   db: {
+    // Generates a guid like surrealdb
     id() {
-      return randomUUID()
+      const length = 20
+      const charset =
+        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      const charsetLength = charset.length
+      const result: string[] = []
+      const byteRange = 256 // [0, 255)
+      const maxUsable = Math.floor(byteRange / charsetLength) * charsetLength
+
+      while (result.length < length) {
+        const randomBytes = new Uint8Array(length - result.length)
+        crypto.getRandomValues(randomBytes)
+        for (let i = 0; i < randomBytes.length && result.length < length; i++) {
+          if (randomBytes[i] < maxUsable) {
+            result.push(charset[randomBytes[i] % charsetLength])
+          }
+        }
+      }
+      return result.join("")
     },
     connect: async () => {
       const surreal = await clientPromise
@@ -28,6 +48,7 @@ export const config = (clientPromise: Promise<Surreal>) => ({
         surreal.delete("session"),
         surreal.delete("verification_token"),
         surreal.delete("user"),
+        surreal.delete("authenticator"),
       ])
     },
     disconnect: async () => {
@@ -38,6 +59,7 @@ export const config = (clientPromise: Promise<Surreal>) => ({
           surreal.delete("session"),
           surreal.delete("verification_token"),
           surreal.delete("user"),
+          surreal.delete("authenticator"),
         ])
       } catch (e) {
         console.error(e)
@@ -88,6 +110,16 @@ export const config = (clientPromise: Promise<Surreal>) => ({
           verificationToken as Omit<VerificationTokenDoc, "id">
         )
       }
+      return null
+    },
+    async authenticator(credentialID: string) {
+      const surreal = await clientPromise
+      const [authenticators] = await surreal.query<[AuthenticatorDoc[]]>(
+        `SELECT * FROM authenticator WHERE credentialID = $credentialID`,
+        { credentialID }
+      )
+      const authenticator = authenticators.at(0)
+      if (authenticator) return docToAuthenticator(authenticator)
       return null
     },
   },

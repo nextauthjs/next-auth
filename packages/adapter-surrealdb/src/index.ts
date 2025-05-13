@@ -20,6 +20,7 @@ import type {
   AdapterUser,
   AdapterAccount,
   AdapterAccountType,
+  AdapterAuthenticator,
   AdapterSession,
   VerificationToken,
 } from "@auth/core/adapters"
@@ -28,12 +29,11 @@ type Document<T = RecordId<string>> = {
   id: T
   [key: string]: unknown
 }
-export type UserDoc = Document & {
+export type UserDoc = Document<RecordId<"user">> & {
   email: string
   emailVerified?: string | Date
 }
-export type AccountDoc<T = RecordId<"user">> = {
-  id: RecordId<"account">
+export type AccountDoc<T = RecordId<"user">> = Document<RecordId<"account">> & {
   userId: T
   refresh_token?: string
   access_token?: string
@@ -42,17 +42,23 @@ export type AccountDoc<T = RecordId<"user">> = {
   providerAccountId: string
   expires_at?: number
 }
-export type SessionDoc<T = RecordId<"session">> = Document & {
+export type SessionDoc<T = RecordId<"user">> = Document<RecordId<"session">> & {
   userId: T
   expires: string | Date
   sessionToken: string
 }
-export type VerificationTokenDoc = {
-  id: RecordId<"verification_token">
+export type VerificationTokenDoc = Document<RecordId<"verification_token">> & {
   identifier: string
   expires: Date
   token: string
 }
+export type AuthenticatorDoc<T = RecordId<"user">> = Document<
+  RecordId<"authenticator">
+> &
+  AdapterAuthenticator & {
+    userId: T
+    counter: number
+  }
 
 /** @internal */
 // Convert DB object to AdapterUser
@@ -70,7 +76,20 @@ export const docToUser = (doc: UserDoc): AdapterUser => ({
 export const docToAccount = (doc: AccountDoc): AdapterAccount => ({
   ...doc,
   id: doc.id.id.toString(),
-  userId: doc?.userId ? doc.userId.id.toString() : "",
+  userId: doc.userId instanceof RecordId ? doc.userId.id.toString() : "",
+})
+
+/** @internal */
+// Convert DB object to AdapterAccount
+export const docToAuthenticator = (
+  doc: AuthenticatorDoc
+): AdapterAuthenticator => ({
+  ...doc,
+  id: doc.id.id.toString(),
+  userId:
+    doc.userId instanceof RecordId
+      ? doc.userId.id.toString()
+      : doc.userId.id.id.toString(),
 })
 
 /** @internal */
@@ -114,6 +133,15 @@ const userToDoc = (user: Partial<AdapterUser>): Partial<UserDoc> => ({
 const accountToDoc = (account: AdapterAccount): Omit<AccountDoc, "id"> => ({
   ...account,
   userId: new RecordId("user", account.userId.replace("user:", "")),
+})
+
+/** @internal */
+// Convert AdapterAuthenticator to DB object
+const authenticatorToDoc = (
+  authenticator: AdapterAuthenticator
+): Partial<AuthenticatorDoc> => ({
+  ...authenticator,
+  userId: new RecordId("user", authenticator.userId.replace("user:", "")),
 })
 
 /** @internal */
@@ -447,6 +475,89 @@ export function SurrealDBAdapter(
         }
       } catch {}
       throw new Error("Verification Token not used")
+    },
+    async getAccount(
+      providerAccountId: AdapterAccount["providerAccountId"],
+      provider: AdapterAccount["provider"]
+    ) {
+      const surreal = await client
+      try {
+        const [accountsDoc] = await surreal.query<[AccountDoc[]]>(
+          `SELECT * FROM account WHERE providerAccountId = $pid AND provider = $provider LIMIT 1`,
+          {
+            pid: providerAccountId,
+            provider,
+          }
+        )
+        if (accountsDoc.length) {
+          return docToAccount(accountsDoc[0])
+        }
+      } catch {}
+      return null
+    },
+    async createAuthenticator(authenticator: AdapterAuthenticator) {
+      try {
+        const surreal = await client
+        const authenticatorDoc = await surreal.create<
+          AuthenticatorDoc,
+          Omit<AuthenticatorDoc, "id">
+        >("authenticator", authenticatorToDoc(authenticator))
+        if (authenticatorDoc.length) {
+          return docToAuthenticator(authenticatorDoc[0])
+        }
+      } catch {}
+      throw new Error("Authenticator not created")
+    },
+    async getAuthenticator(credentialId: AdapterAuthenticator["credentialID"]) {
+      const surreal = await client
+      try {
+        const [authenticatorDoc] = await surreal.query<[AuthenticatorDoc[]]>(
+          `SELECT * FROM authenticator WHERE credentialID = $cid LIMIT 1`,
+          {
+            cid: credentialId,
+          }
+        )
+        if (authenticatorDoc.length) {
+          return docToAuthenticator(authenticatorDoc[0])
+        }
+      } catch {}
+      return null
+    },
+    async listAuthenticatorsByUserId(userId: AdapterAuthenticator["userId"]) {
+      const surreal = await client
+      try {
+        const [authenticatorDocs] = await surreal.query<[AuthenticatorDoc[]]>(
+          `SELECT * FROM authenticator WHERE userId = $userId LIMIT 1`,
+          {
+            userId,
+          }
+        )
+
+        return authenticatorDocs.map((v) => docToAuthenticator(v))
+      } catch {}
+      return null
+    },
+    async updateAuthenticatorCounter(
+      credentialId: AdapterAuthenticator["credentialID"],
+      newCounter: AdapterAuthenticator["counter"]
+    ) {
+      try {
+        if (!credentialId) throw new Error("credential id is required")
+        const surreal = await client
+        const [authenticatorDoc] = await surreal.query<[AuthenticatorDoc]>(
+          `UPDATE ONLY authenticator MERGE $doc WHERE credentialID = $cid`,
+          {
+            cid: credentialId,
+            doc: {
+              counter: newCounter,
+            },
+          }
+        )
+        return docToAuthenticator(authenticatorDoc)
+      } catch {}
+      throw Error(
+        `Unable to update authenticator with credential ${credentialId}`
+      )
     },
   }
 }
