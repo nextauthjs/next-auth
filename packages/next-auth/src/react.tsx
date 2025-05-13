@@ -513,13 +513,16 @@ export function SessionProvider(props: SessionProviderProps) {
       async update(data: any) {
         if (loading) return
         setLoading(true)
+        const csrfToken = await getCsrfToken()
+        // If the body property is not defined, a GET request will be sent instead of a POST. 
+        // As a result, the trigger property in the JWT callback won't be set, 
+        // making it impossible to know if the user data should be re-fetched
+        // (when the session data updates are handled inside the JWT callback)
         const newSession = await fetchData<Session>(
           "session",
           __NEXTAUTH,
           logger,
-          typeof data === "undefined"
-            ? undefined
-            : { body: { csrfToken: await getCsrfToken(), data } }
+          { body: { csrfToken, data: typeof data === "undefined" ? undefined : data } }
         )
         setLoading(false)
         if (newSession) {
