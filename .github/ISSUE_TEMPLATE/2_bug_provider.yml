@@ -71,6 +71,7 @@ body:
         - "Mail.ru"
         - "Mastodon"
         - "Medium"
+        - "Microsoft Entra ID"
         - "Naver"
         - "Netlify"
         - "NetSuite"
