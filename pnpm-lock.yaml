@@ -249,7 +249,7 @@ importers:
         version: 3.8.3(@algolia/client-search@5.20.0)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
       '@inkeep/widgets':
         specifier: ^0.2.289
-        version: 0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        version: 0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
       '@next/third-parties':
         specifier: ^14.2.15
         version: 14.2.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)
@@ -606,9 +606,9 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
-      surrealdb.js:
-        specifier: ^0.11.0
-        version: 0.11.0
+      surrealdb:
+        specifier: ^1.3.0
+        version: 1.3.2(tslib@2.8.1)(typescript@5.6.3)(ws@8.18.1)
 
   packages/adapter-typeorm:
     dependencies:
@@ -4189,6 +4189,7 @@ packages:
   '@playwright/test@1.41.2':
     resolution: {integrity: sha512-qQB9h7KbibJzrDpkXkYvsmiDJK14FULCCZgEcoe2AvFAS64oCirWTwzTlAYEbKaRxWs5TFesE1Na6izMv3HfGg==}
     engines: {node: '>=16'}
+    deprecated: Please update to the latest version of Playwright to test up-to-date browsers.
     hasBin: true
 
   '@polka/url@1.0.0-next.24':
@@ -9207,6 +9208,11 @@ packages:
     peerDependencies:
       ws: '*'
 
+  isows@1.0.6:
+    resolution: {integrity: sha512-lPHCayd40oW98/I0uvgaHKWCSvkzY27LjWLbtzOm64yQ+G3Q5npjjbdppU65iZXkK1Zt+kH9pfegli0AYfwYYw==}
+    peerDependencies:
+      ws: '*'
+
   istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
@@ -12547,9 +12553,12 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  surrealdb.js@0.11.0:
-    resolution: {integrity: sha512-x/Qd0UYyNilwY27JZlWgP8NsCdBzDtextRzP9oIm7xO27qsZvE5Rh4wnYN0xD68zgRAE4W8Jsufbm+hKbaGsTg==}
-    deprecated: Please visit https://www.npmjs.com/package/surrealdb for the updated SurrealDB SDK.
+  surrealdb@1.3.2:
+    resolution: {integrity: sha512-mL7nij33iuon3IQP72F46fgX3p2LAxFCWCBDbZB7IohZ13RTEwJVNq7nZeP1eMSceQUpKzS6OHIWOuF9LYAkNw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      tslib: ^2.6.3
+      typescript: ^5.0.0
 
   svelte-check@2.10.2:
     resolution: {integrity: sha512-h1Tuiir0m8J5yqN+Vx6qgKKk1L871e6a9o7rMwVWfu8Qs6Wg7x2R+wcxS3SO3VpW5JCxCat90rxPsZMYgz+HaQ==}
@@ -13343,12 +13352,6 @@ packages:
     resolution: {integrity: sha512-4luGP9LMYszMRZwsvyUd9MrxgEGZdZuZgpVQHEEX0lCYFESasVRvZd0EYpCkOIbJKHMuv0LskpXc/8Un+MJzEQ==}
     hasBin: true
 
-  unws@0.2.4:
-    resolution: {integrity: sha512-/N1ajiqrSp0A/26/LBg7r10fOcPtGXCqJRJ61sijUFoGZMr6ESWGYn7i0cwr7fR7eEECY5HsitqtjGHDZLAu2w==}
-    engines: {node: '>=16.14.0'}
-    peerDependencies:
-      ws: '*'
-
   update-browserslist-db@1.0.13:
     resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
     hasBin: true
@@ -13435,6 +13438,10 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+
+  uuidv7@1.0.2:
+    resolution: {integrity: sha512-8JQkH4ooXnm1JCIhqTMbtmdnYEn6oKukBxHn1Ic9878jMkL7daTI7anTExfY18VRCX7tcdn5quzvCb6EWrR8PA==}
     hasBin: true
 
   uvu@0.5.6:
@@ -14206,7 +14213,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.6)':
+  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.2)':
     dependencies:
       '@zag-js/accordion': 0.20.0
       '@zag-js/anatomy': 0.20.0
@@ -14217,7 +14224,7 @@ snapshots:
       '@zag-js/color-utils': 0.20.0
       '@zag-js/combobox': 0.20.0
       '@zag-js/date-picker': 0.20.0
-      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.6)
+      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.2)
       '@zag-js/dialog': 0.20.0
       '@zag-js/editable': 0.20.0
       '@zag-js/hover-card': 0.20.0
@@ -14243,7 +14250,7 @@ snapshots:
     transitivePeerDependencies:
       - '@internationalized/date'
 
-  '@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@zag-js/accordion': 0.19.1
       '@zag-js/anatomy': 0.19.1
@@ -14255,7 +14262,7 @@ snapshots:
       '@zag-js/combobox': 0.19.1
       '@zag-js/core': 0.19.1
       '@zag-js/date-picker': 0.19.1
-      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.6)
+      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.2)
       '@zag-js/dialog': 0.19.1
       '@zag-js/editable': 0.19.1
       '@zag-js/hover-card': 0.19.1
@@ -17134,11 +17141,11 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.44
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
@@ -17150,9 +17157,9 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
     transitivePeerDependencies:
@@ -17160,10 +17167,10 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
+  '@inkeep/preset@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
       colorjs.io: 0.4.5
@@ -17178,14 +17185,14 @@ snapshots:
 
   '@inkeep/styled-system@0.0.46': {}
 
-  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
       '@apollo/client': 3.9.5(@types/react@18.2.78)(graphql-ws@5.14.3(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/color-mode': 0.0.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.46
       '@types/lodash.isequal': 4.5.8
@@ -20532,9 +20539,9 @@ snapshots:
     dependencies:
       '@internationalized/date': 3.5.2
 
-  '@zag-js/date-utils@0.19.1(@internationalized/date@3.5.6)':
+  '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.2)':
     dependencies:
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.5.2
 
   '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.6)':
     dependencies:
@@ -24823,6 +24830,10 @@ snapshots:
     dependencies:
       ws: 8.18.0
 
+  isows@1.0.6(ws@8.18.1):
+    dependencies:
+      ws: 8.18.1
+
   istanbul-lib-coverage@3.2.2: {}
 
   istanbul-lib-report@3.0.1:
@@ -29091,14 +29102,14 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  surrealdb.js@0.11.0:
+  surrealdb@1.3.2(tslib@2.8.1)(typescript@5.6.3)(ws@8.18.1):
     dependencies:
-      unws: 0.2.4(ws@8.18.0)
-      ws: 8.18.0
-      zod: 3.22.4
+      isows: 1.0.6(ws@8.18.1)
+      tslib: 2.8.1
+      typescript: 5.6.3
+      uuidv7: 1.0.2
     transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
+      - ws
 
   svelte-check@2.10.2(@babel/core@7.23.9)(postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.12.7)(typescript@5.3.3)))(postcss@8.4.47)(pug@3.0.2)(sass@1.70.0)(svelte@4.2.19):
     dependencies:
@@ -29937,10 +29948,6 @@ snapshots:
       consola: 3.2.3
       pathe: 1.1.2
 
-  unws@0.2.4(ws@8.18.0):
-    dependencies:
-      ws: 8.18.0
-
   update-browserslist-db@1.0.13(browserslist@4.23.0):
     dependencies:
       browserslist: 4.23.0
@@ -30011,6 +30018,8 @@ snapshots:
   uuid@8.3.2: {}
 
   uuid@9.0.1: {}
+
+  uuidv7@1.0.2: {}
 
   uvu@0.5.6:
     dependencies:
@@ -30449,8 +30458,7 @@ snapshots:
 
   ws@8.18.0: {}
 
-  ws@8.18.1:
-    optional: true
+  ws@8.18.1: {}
 
   xml2js@0.5.0:
     dependencies:
