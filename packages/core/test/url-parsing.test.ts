@@ -70,6 +70,12 @@ describe("parse the action and provider id", () => {
       providerId: "auth0",
       basePath: "/auth",
     },
+    {
+      path: "/auth/signin/undefined",
+      action: "signin",
+      providerId: undefined,
+      basePath: "/auth",
+    },
   ])("$path", ({ path, error, basePath, action, providerId }) => {
     if (action || providerId) {
       const parsed = parseActionAndProviderId(path, basePath)
@@ -82,11 +88,3 @@ describe("parse the action and provider id", () => {
     }
   })
 })
-
-it("should return undefined for providerId if it is empty", () => {
-  const path = "/auth/signin/undefined";
-  const basePath = "/auth";
-  const parsed = parseActionAndProviderId(path, basePath);
-  expect(parsed.action).toBe("signin");
-  expect(parsed.providerId).toBeUndefined();
-});
