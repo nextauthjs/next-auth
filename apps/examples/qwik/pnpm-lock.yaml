@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@auth/qwik':
-        specifier: 0.7.1
+        specifier: latest
         version: 0.7.1
       '@builder.io/qwik':
         specifier: ^1.5.7
