@@ -106,7 +106,8 @@ export async function init({
     provider,
     cookies: merge(
       cookie.defaultCookies(
-        config.useSecureCookies ?? url.protocol === "https:"
+        config.useSecureCookies ?? url.protocol === "https:",
+        config.legacy
       ),
       config.cookies
     ),
@@ -139,6 +140,8 @@ export async function init({
     experimental: {
       ...config.experimental,
     },
+    // Add legacy flag to options
+    legacy: config.legacy ?? false,
   }
 
   // Init cookies
