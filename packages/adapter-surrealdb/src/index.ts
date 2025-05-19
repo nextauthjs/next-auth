@@ -76,7 +76,7 @@ export const docToUser = (doc: UserDoc): AdapterUser => ({
 export const docToAccount = (doc: AccountDoc): AdapterAccount => ({
   ...doc,
   id: doc.id.id.toString(),
-  userId: doc.userId instanceof RecordId ? doc.userId.id.toString() : "",
+  userId: doc.userId.id.toString(),
 })
 
 /** @internal */
