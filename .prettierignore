@@ -1,3 +1,4 @@
+.prettierignore
 .cache-loader
 .DS_Store
 .pnpm-debug.log
@@ -11,6 +12,7 @@ pnpm-lock.yaml
 .github/actions/issue-validator/index.mjs
 *.d.ts
 *.d.ts.map
+**/*.sh
 
 .svelte-kit
 .next
