@@ -3,6 +3,7 @@ import NextAuth from "next-auth"
 // import Apple from "next-auth/providers/apple"
 // import Auth0 from "next-auth/providers/auth0"
 // import Authentik from "next-auth/providers/authentik"
+// import AuthKit from "next-auth/providers/authkit"
 // import AzureAD from "next-auth/providers/azure-ad"
 // import AzureB2C from "next-auth/providers/azure-ad-b2c"
 // import Battlenet from "next-auth/providers/battlenet"
@@ -72,6 +73,7 @@ export const config = {
     // Apple,
     // Auth0,
     // Authentik,
+    // AuthKit,
     // AzureAD,
     // AzureB2C,
     // Battlenet,
