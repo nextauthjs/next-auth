@@ -55,7 +55,7 @@ export type VerificationTokenDoc = Document<RecordId<"verification_token">> & {
 export type AuthenticatorDoc<T = RecordId<"user">> = Document<
   RecordId<"authenticator">
 > &
-  AdapterAuthenticator & {
+  Omit<AdapterAuthenticator, "userId"> & {
     userId: T
     counter: number
   }
@@ -85,11 +85,7 @@ export const docToAuthenticator = (
   doc: AuthenticatorDoc
 ): AdapterAuthenticator => ({
   ...doc,
-  id: doc.id.id.toString(),
-  userId:
-    doc.userId instanceof RecordId
-      ? doc.userId.id.toString()
-      : doc.userId.id.id.toString(),
+  userId: doc.userId.id.toString(),
 })
 
 /** @internal */
@@ -111,13 +107,11 @@ export const docToSession = (
 /** @internal */
 // Convert DB object to Verification Token
 export const docToVerificationToken = (
-  doc: Omit<VerificationTokenDoc, "id">
+  doc: VerificationTokenDoc
 ): VerificationToken => ({
-  ...doc,
-  expires:
-    typeof doc?.expires === "string"
-      ? new Date(Date.parse(doc.expires))
-      : (doc?.expires ?? null),
+  identifier: doc.identifier,
+  expires: doc.expires,
+  token: doc.token,
 })
 
 /** @internal */
@@ -441,7 +435,7 @@ export function SurrealDBAdapter(
             verificationTokenDocs[0]
           if (verificationTokenDoc.id) delete verificationTokenDoc.id
           return docToVerificationToken(
-            verificationTokenDoc as Omit<VerificationTokenDoc, "id">
+            verificationTokenDoc as VerificationTokenDoc
           )
         }
       } catch {}
@@ -467,7 +461,7 @@ export function SurrealDBAdapter(
             const verificationTokenDoc: Partial<VerificationTokenDoc> = vt
             if (verificationTokenDoc.id) delete verificationTokenDoc.id
             return docToVerificationToken(
-              verificationTokenDoc as Omit<VerificationTokenDoc, "id">
+              verificationTokenDoc as VerificationTokenDoc
             )
           }
         } else {
@@ -535,7 +529,7 @@ export function SurrealDBAdapter(
 
         return authenticatorDocs.map((v) => docToAuthenticator(v))
       } catch {}
-      return null
+      throw new Error("Verification Token not found")
     },
     async updateAuthenticatorCounter(
       credentialId: AdapterAuthenticator["credentialID"],
