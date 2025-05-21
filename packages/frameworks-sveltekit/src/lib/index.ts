@@ -119,7 +119,7 @@
  * export const actions: Actions = { default: signOut }
  * ```
  *
- * These routes are customizeable with the `signInPage` and `signOutPage` props on the respective comopnents.
+ * These routes are customizeable with the `signInPage` and `signOutPage` props on the respective components.
  *
  * ### Client-Side
  *
