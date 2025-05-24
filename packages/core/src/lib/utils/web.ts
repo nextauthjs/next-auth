@@ -114,6 +114,24 @@ export function randomString(size: number) {
   return Array.from(bytes).reduce(r, "")
 }
 
+/** Web compatible method to create a random number of a given length */
+export function randomNumber(size: number) {
+  if (size <= 0) {
+    throw new Error("Size must be a positive integer.")
+  }
+
+  // Generate an array of random bytes
+  const bytes = crypto.getRandomValues(new Uint8Array(size))
+
+  // Convert the bytes to a single number
+  let result = 0
+  for (let i = 0; i < size; i++) {
+    result = (result << 8) + bytes[i]
+  }
+
+  return result.toString()
+}
+
 /** @internal Parse the action and provider id from a URL pathname. */
 export function parseActionAndProviderId(
   pathname: string,
