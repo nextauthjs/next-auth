@@ -67,21 +67,27 @@ export const __NEXTAUTH: AuthClientConfig = {
   _getSession: () => {},
 }
 
+// https://github.com/nextauthjs/next-auth/pull/10762
 let broadcastChannel: BroadcastChannel | null = null
 
 function getNewBroadcastChannel() {
-  return new BroadcastChannel("next-auth")
-}
-
-function broadcast() {
   if (typeof BroadcastChannel === "undefined") {
     return {
       postMessage: () => {},
       addEventListener: () => {},
       removeEventListener: () => {},
-    }
+      name: "next-auth",
+      onmessage: null,
+      onmessageerror: null,
+      close: () => {},
+      dispatchEvent: () => false,
+    } satisfies BroadcastChannel
   }
 
+  return new BroadcastChannel("next-auth")
+}
+
+function broadcast() {
   if (broadcastChannel === null) {
     broadcastChannel = getNewBroadcastChannel()
   }
@@ -180,8 +186,8 @@ export async function getSession(params?: GetSessionParams) {
     params
   )
   if (params?.broadcast ?? true) {
-    const broadcastChannel = getNewBroadcastChannel()
-    broadcastChannel.postMessage({
+    // https://github.com/nextauthjs/next-auth/pull/11470
+    getNewBroadcastChannel().postMessage({
       event: "session",
       data: { trigger: "getSession" },
     })

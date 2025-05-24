@@ -162,5 +162,8 @@ export function parseActionAndProviderId(
   )
     throw new UnknownAction(`Cannot parse action at ${pathname}`)
 
-  return { action, providerId }
+  return {
+    action,
+    providerId: providerId == "undefined" ? undefined : providerId,
+  }
 }

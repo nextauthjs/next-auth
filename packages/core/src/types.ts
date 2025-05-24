@@ -58,6 +58,7 @@ import { AuthConfig } from "./index.js"
 import type { JWTOptions } from "./jwt.js"
 import type { Cookie } from "./lib/utils/cookie.js"
 import type { LoggerInstance } from "./lib/utils/logger.js"
+import type { WarningCode } from "./warnings.js"
 import type {
   CredentialsConfig,
   EmailConfig,
@@ -74,7 +75,7 @@ import { AnonymousConfig } from "./providers/anonymous.js"
 
 export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
 export type { AuthConfig } from "./index.js"
-export type { LoggerInstance }
+export type { LoggerInstance, WarningCode }
 export type Awaitable<T> = T | PromiseLike<T>
 export type Awaited<T> = T extends Promise<infer U> ? U : T
 
@@ -410,7 +411,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   provider: InternalProvider<TProviderType>
   csrfToken?: string
   /**
-   * `true` if the [Double-submit CSRF check](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf) was succesful
+   * `true` if the [Double-submit CSRF check](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf) was successful
    * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
    */
   csrfTokenVerified?: boolean
