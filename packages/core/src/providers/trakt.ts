@@ -63,7 +63,7 @@ export interface TraktUser extends Record<string, any> {
  *
  * :::danger
  *
- * - Trakt does not allow hotlinking images. Even the authenticated user's profie picture.
+ * - Trakt does not allow hotlinking images. Even the authenticated user's profile picture.
  * - Trakt does not supply the authenticated user's email.
  *
  * :::
