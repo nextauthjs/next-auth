@@ -133,21 +133,12 @@ export interface TwitterProfile {
  * - [Twitter App documentation](https://developer.x.com/en/apps)
  *
  * ## OAuth 2
- * Twitter supports OAuth 2, which is currently opt-in. To enable it, simply add version: "2.0" to your Provider configuration:
  * ```ts
  * Twitter({
  *   clientId: process.env.TWITTER_ID,
  *   clientSecret: process.env.TWITTER_SECRET,
- *   version: "2.0", // opt-in to Twitter OAuth 2.0
  * })
  * ```
- * Keep in mind that although this change is easy, it changes how and with which of Twitter APIs you can interact with. Read the official Twitter OAuth 2 documentation for more details.
- *
- * ### Notes
- *
- * Twitter is currently the only built-in provider using the OAuth 1.0 spec.
- * This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/core/adapters).
- *
  * :::tip
  *
  * You must enable the "Request email address from users" option in your app permissions if you want to obtain the users email address.
