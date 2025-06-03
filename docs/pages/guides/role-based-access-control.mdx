@@ -20,10 +20,7 @@ export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
-        return {
-          role: profile.role ?? "user",
-          // ...
-        }
+        return { role: profile.role ?? "user", ...profile }
       },
     }),
   ],
@@ -42,10 +39,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
     providers: [
       Google({
         profile(profile) {
-          return {
-            role: profile.role ?? "user",
-            // ...
-          }
+          return { role: profile.role ?? "user", ...profile }
         },
       })
     ],
@@ -64,10 +58,7 @@ export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
-        return {
-          role: profile.role ?? "user",
-          // ...
-        }
+        return { role: profile.role ?? "user", ...profile }
       },
     }),
   ],
@@ -103,10 +94,7 @@ export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
-        return {
-          role: profile.role ?? "user",
-          // ...
-        }
+        return { role: profile.role ?? "user", ...profile }
       },
     }),
   ],
@@ -135,10 +123,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
     providers: [
       Google({
         profile(profile) {
-          return {
-            role: profile.role ?? "user",
-            // ...
-          }
+          return { role: profile.role ?? "user", ...profile }
         },
       })
     ],
@@ -167,10 +152,7 @@ export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
-        return {
-          role: profile.role ?? "user",
-          // ...
-        }
+        return { role: profile.role ?? "user", ...profile }
       },
     }),
   ],
@@ -231,10 +213,7 @@ export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
-        return {
-          role: profile.role ?? "user",
-          // ...
-        }
+        return { role: profile.role ?? "user", ...profile }
       },
     }),
   ],
@@ -284,10 +263,7 @@ export const { handle, auth } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
-        return {
-          role: profile.role ?? "user",
-          // ...
-        }
+        return { role: profile.role ?? "user", ...profile }
       },
     }),
   ],
