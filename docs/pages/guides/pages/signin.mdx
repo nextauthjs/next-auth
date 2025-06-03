@@ -5,7 +5,7 @@ import { Screenshot } from "@/components/Screenshot"
 
 To add a custom sign-in page, you'll need to define the path to your page in the [`pages`](/reference/core/types#pagesoptions) object in your Auth.js configuration. Make sure a route / page actually exists at the path you're defining here!
 
-In additionally, we'll have to export a map of `provider.id` and `provider.name` to easily consume in our custom page if we want to dynamically render the correct buttons, based on what we've defined in our `auth.ts` configuration. Because you can pass your providers to the `providers` array as both a function, or the result of calling that function, this example `providerMap` handles both cases.
+Additionally, we'll have to export a map of `provider.id` and `provider.name` to easily consume in our custom page if we want to dynamically render the correct buttons, based on what we've defined in our `auth.ts` configuration. Because you can pass your providers to the `providers` array as both a function, or the result of calling that function, this example `providerMap` handles both cases.
 
 <Code>
 <Code.Next>
@@ -133,6 +133,8 @@ import { redirect } from "next/navigation"
 import { signIn, auth, providerMap } from "@/auth.ts"
 import { AuthError } from "next-auth"
 
+const SIGNIN_ERROR_URL = "/error"
+
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined }
 }) {
@@ -163,6 +165,7 @@ export default async function SignInPage(props: {
       </form>
       {Object.values(providerMap).map((provider) => (
         <form
+          key={provider.id}
           action={async () => {
             "use server"
             try {
