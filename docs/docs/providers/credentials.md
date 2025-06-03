@@ -129,7 +129,7 @@ providers: [
       "2fa-key": { label: "2FA Key" },
     },
   }),
-  /* ... additional providers ... /*/
+  /* ... additional providers (eg. github, google, facebook..etc) ... /*/
 ]
 ```
 
