@@ -48,7 +48,7 @@ export function setEnvDefaults(
     envObject.CF_PAGES ??
     envObject.NODE_ENV !== "production"
   )
-  config.providers = config.providers.map((provider) => {
+  config.providers = (config.providers ?? []).map((provider) => {
     const { id } = typeof provider === "function" ? provider({}) : provider
     const ID = id.toUpperCase().replace(/-/g, "_")
     const clientId = envObject[`AUTH_${ID}_ID`]
