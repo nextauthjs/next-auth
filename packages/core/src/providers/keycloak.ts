@@ -8,7 +8,7 @@
  *
  * @module providers/keycloak
  */
-import type { OAuthConfig, OAuthUserConfig } from "./index.js"
+import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 export interface KeycloakProfile extends Record<string, any> {
   exp: number
@@ -99,8 +99,8 @@ export interface KeycloakProfile extends Record<string, any> {
  * :::
  */
 export default function Keycloak<P extends KeycloakProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
+  options: OIDCUserConfig<P>
+): OIDCConfig<P> {
   return {
     id: "keycloak",
     name: "Keycloak",
