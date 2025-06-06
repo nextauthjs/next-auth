@@ -1,5 +1,5 @@
 /**
- * <div class="provider" style={{backgroundColor: "#000", display: "flex", justifyContent: "space-between", color: "#fff", padding: 16}}>
+ * <div class="provider" style={{backgroundColor: "#fff", display: "flex", justifyContent: "space-between", color: "#000", padding: 16}}>
  * <span>Built-in <b>Epic Games</b> integration.</span>
  * <a href="https://store.epicgames.com/">
  *   <img style={{display: "block"}} src="https://authjs.dev/img/providers/epicgames.svg" height="48" width="48"/>
@@ -91,39 +91,14 @@ export default function EpicGamesProvider<P extends EpicGamesProfile>(
     authorization: {
       url: "https://www.epicgames.com/id/authorize",
       params: {
-        scope: "profile friends_list country",
+        scope: "profile", // profile | friends_list | country | presence
         response_type: "code",
+        token_endpoint_auth_method: "client_secret_basic"
       },
     },
 
     token: {
       url: "https://api.epicgames.dev/epic/oauth/v2/token",
-      async request(context) {
-        const basicAuth = Buffer.from(
-          `${context.provider.clientId}:${context.provider.clientSecret}`
-        ).toString("base64")
-
-        const res = await fetch(
-          "https://api.epicgames.dev/epic/oauth/v2/token",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Basic ${basicAuth}`,
-            },
-            body: new URLSearchParams({
-              grant_type: "authorization_code",
-              code: context.params.code!,
-              redirect_uri: context.provider.callbackUrl,
-            }),
-          }
-        )
-
-        const tokens = await res.json()
-        if (!res.ok) throw new Error(JSON.stringify(tokens))
-
-        return { tokens }
-      },
     },
 
     userinfo: "https://api.epicgames.dev/epic/oauth/v2/userInfo",
@@ -136,7 +111,7 @@ export default function EpicGamesProvider<P extends EpicGamesProfile>(
     },
 
     checks: ["state"],
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
+    // clientId: options.clientId,
+    // clientSecret: options.clientSecret,
   }
 }
