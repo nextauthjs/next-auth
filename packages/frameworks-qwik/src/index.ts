@@ -110,12 +110,7 @@
  */
 
 import type { AuthConfig } from "@auth/core"
-import {
-  Auth,
-  isAuthAction,
-  skipCSRFCheck,
-  customFetch as _customFetch,
-} from "@auth/core"
+import { Auth, isAuthAction, skipCSRFCheck, customFetch } from "@auth/core"
 import { AuthAction, Session } from "@auth/core/types"
 import { implicit$FirstArg, type QRL } from "@builder.io/qwik"
 import {
@@ -129,8 +124,7 @@ import { EnvGetter } from "@builder.io/qwik-city/middleware/request-handler"
 import { isServer } from "@builder.io/qwik/build"
 import { parseString, splitCookiesString } from "set-cookie-parser"
 
-export const customFetch = isServer ? _customFetch : undefined
-
+export { customFetch }
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export type {
@@ -155,7 +149,6 @@ export function QwikAuthQrl(
       { providerId, redirectTo: _redirectTo, options, authorizationParams },
       req
     ) => {
-      if (!isServer) return
       const { redirectTo = _redirectTo ?? defaultRedirectTo(req), ...rest } =
         options ?? {}
 
@@ -199,7 +192,6 @@ export function QwikAuthQrl(
 
   const useSignOut = globalAction$(
     async ({ redirectTo }, req) => {
-      if (!isServer) return
       redirectTo ??= defaultRedirectTo(req)
       const authOpts = await authOptions(req)
       setEnvDefaults(req.env, authOpts)
@@ -269,7 +261,6 @@ async function authAction(
   path: string,
   authOptions: QwikAuthConfig
 ) {
-  if (!isServer) return
   const request = new Request(new URL(path, req.request.url), {
     method: req.request.method,
     headers: req.request.headers,
@@ -346,7 +337,6 @@ async function getSessionData(
 }
 
 export const setEnvDefaults = (env: EnvGetter, config: AuthConfig) => {
-  if (!isServer) return
   config.basePath = "/auth"
   if (!config.secret?.length) {
     config.secret = []

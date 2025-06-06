@@ -404,7 +404,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   provider: InternalProvider<TProviderType>
   csrfToken?: string
   /**
-   * `true` if the [Double-submit CSRF check](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf) was successful
+   * `true` if the [Double-submit CSRF check](https://owasp.org/www-chapter-london/assets/slides/David_Johansson-Double_Defeat_of_Double-Submit_Cookie.pdf) was succesful
    * or [`skipCSRFCheck`](https://authjs.dev/reference/core#skipcsrfcheck) was enabled.
    */
   csrfTokenVerified?: boolean

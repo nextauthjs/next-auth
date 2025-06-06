@@ -41,6 +41,9 @@ type ErrorType =
  * @noInheritDoc
  */
 export class AuthError extends Error {
+  /** The error type. Used to identify the error in the logs.
+   * @internal
+   */
   type: ErrorType
   /**
    * Determines on which page an error should be handled. Typically `signIn` errors can be handled in-page.
@@ -49,6 +52,7 @@ export class AuthError extends Error {
    */
   kind?: "signIn" | "error"
 
+  /** @internal */
   cause?: Record<string, unknown> & { err?: Error }
 
   /** @internal */
@@ -104,6 +108,7 @@ export class SignInError extends AuthError {
  * @noInheritDoc
  */
 export class AdapterError extends AuthError {
+  /** @internal */
   static type = "AdapterError"
 }
 
@@ -113,6 +118,7 @@ export class AdapterError extends AuthError {
  * @noInheritDoc
  */
 export class AccessDenied extends AuthError {
+  /** @internal */
   static type = "AccessDenied"
 }
 
@@ -157,6 +163,7 @@ export class AccessDenied extends AuthError {
  * @noInheritDoc
  */
 export class CallbackRouteError extends AuthError {
+  /** @internal */
   static type = "CallbackRouteError"
 }
 
@@ -170,6 +177,7 @@ export class CallbackRouteError extends AuthError {
  * @noInheritDoc
  */
 export class ErrorPageLoop extends AuthError {
+  /** @internal */
   static type = "ErrorPageLoop"
 }
 
@@ -183,6 +191,7 @@ export class ErrorPageLoop extends AuthError {
  * @noInheritDoc
  */
 export class EventError extends AuthError {
+  /** @internal */
   static type = "EventError"
 }
 
@@ -198,6 +207,7 @@ export class EventError extends AuthError {
  * @noInheritDoc
  */
 export class InvalidCallbackUrl extends AuthError {
+  /** @internal */
   static type = "InvalidCallbackUrl"
 }
 
@@ -209,6 +219,7 @@ export class InvalidCallbackUrl extends AuthError {
  * @noInheritDoc
  */
 export class CredentialsSignin extends SignInError {
+  /** @internal */
   static type = "CredentialsSignin"
   /**
    * The error code that is set in the `code` query parameter of the redirect URL.
@@ -232,6 +243,7 @@ export class CredentialsSignin extends SignInError {
  * @noInheritDoc
  */
 export class InvalidEndpoints extends AuthError {
+  /** @internal */
   static type = "InvalidEndpoints"
 }
 
@@ -243,6 +255,7 @@ export class InvalidEndpoints extends AuthError {
  * @noInheritDoc
  */
 export class InvalidCheck extends AuthError {
+  /** @internal */
   static type = "InvalidCheck"
 }
 
@@ -259,6 +272,7 @@ export class InvalidCheck extends AuthError {
  * @noInheritDoc
  */
 export class JWTSessionError extends AuthError {
+  /** @internal */
   static type = "JWTSessionError"
 }
 
@@ -271,6 +285,7 @@ export class JWTSessionError extends AuthError {
  * @noInheritDoc
  */
 export class MissingAdapter extends AuthError {
+  /** @internal */
   static type = "MissingAdapter"
 }
 
@@ -283,6 +298,7 @@ export class MissingAdapter extends AuthError {
  * @noInheritDoc
  */
 export class MissingAdapterMethods extends AuthError {
+  /** @internal */
   static type = "MissingAdapterMethods"
 }
 
@@ -294,6 +310,7 @@ export class MissingAdapterMethods extends AuthError {
  * @noInheritDoc
  */
 export class MissingAuthorize extends AuthError {
+  /** @internal */
   static type = "MissingAuthorize"
 }
 
@@ -312,6 +329,7 @@ export class MissingAuthorize extends AuthError {
  * @noInheritDoc
  */
 export class MissingSecret extends AuthError {
+  /** @internal */
   static type = "MissingSecret"
 }
 
@@ -329,6 +347,7 @@ export class MissingSecret extends AuthError {
  * @noInheritDoc
  */
 export class OAuthAccountNotLinked extends SignInError {
+  /** @internal */
   static type = "OAuthAccountNotLinked"
 }
 
@@ -340,6 +359,7 @@ export class OAuthAccountNotLinked extends SignInError {
  * @noInheritDoc
  */
 export class OAuthCallbackError extends SignInError {
+  /** @internal */
   static type = "OAuthCallbackError"
 }
 
@@ -350,6 +370,7 @@ export class OAuthCallbackError extends SignInError {
  * @noInheritDoc
  */
 export class OAuthProfileParseError extends AuthError {
+  /** @internal */
   static type = "OAuthProfileParseError"
 }
 
@@ -362,6 +383,7 @@ export class OAuthProfileParseError extends AuthError {
  * @noInheritDoc
  */
 export class SessionTokenError extends AuthError {
+  /** @internal */
   static type = "SessionTokenError"
 }
 
@@ -382,6 +404,7 @@ export class SessionTokenError extends AuthError {
  * @noInheritDoc
  */
 export class OAuthSignInError extends SignInError {
+  /** @internal */
   static type = "OAuthSignInError"
 }
 
@@ -397,6 +420,7 @@ export class OAuthSignInError extends SignInError {
  * @noInheritDoc
  */
 export class EmailSignInError extends SignInError {
+  /** @internal */
   static type = "EmailSignInError"
 }
 
@@ -411,6 +435,7 @@ export class EmailSignInError extends SignInError {
  * @noInheritDoc
  */
 export class SignOutError extends AuthError {
+  /** @internal */
   static type = "SignOutError"
 }
 
@@ -421,6 +446,7 @@ export class SignOutError extends AuthError {
  * @noInheritDoc
  */
 export class UnknownAction extends AuthError {
+  /** @internal */
   static type = "UnknownAction"
 }
 
@@ -431,6 +457,7 @@ export class UnknownAction extends AuthError {
  * @noInheritDoc
  */
 export class UnsupportedStrategy extends AuthError {
+  /** @internal */
   static type = "UnsupportedStrategy"
 }
 
@@ -439,6 +466,7 @@ export class UnsupportedStrategy extends AuthError {
  * @noInheritDoc
  */
 export class InvalidProvider extends AuthError {
+  /** @internal */
   static type = "InvalidProvider"
 }
 
@@ -455,6 +483,7 @@ export class InvalidProvider extends AuthError {
  * @noInheritDoc
  */
 export class UntrustedHost extends AuthError {
+  /** @internal */
   static type = "UntrustedHost"
 }
 
@@ -465,6 +494,7 @@ export class UntrustedHost extends AuthError {
  * @noInheritDoc
  */
 export class Verification extends AuthError {
+  /** @internal */
   static type = "Verification"
 }
 
@@ -480,6 +510,7 @@ export class Verification extends AuthError {
  * @noInheritDoc
  */
 export class MissingCSRF extends SignInError {
+  /** @internal */
   static type = "MissingCSRF"
 }
 
@@ -510,6 +541,7 @@ export function isClientError(error: Error): error is AuthError {
  * @noInheritDoc
  */
 export class DuplicateConditionalUI extends AuthError {
+  /** @internal */
   static type = "DuplicateConditionalUI"
 }
 
@@ -520,6 +552,7 @@ export class DuplicateConditionalUI extends AuthError {
  * @noInheritDoc
  */
 export class MissingWebAuthnAutocomplete extends AuthError {
+  /** @internal */
   static type = "MissingWebAuthnAutocomplete"
 }
 
@@ -528,6 +561,7 @@ export class MissingWebAuthnAutocomplete extends AuthError {
  * @noInheritDoc
  */
 export class WebAuthnVerificationError extends AuthError {
+  /** @internal */
   static type = "WebAuthnVerificationError"
 }
 
@@ -539,6 +573,7 @@ export class WebAuthnVerificationError extends AuthError {
  * @noInheritDoc
  */
 export class AccountNotLinked extends SignInError {
+  /** @internal */
   static type = "AccountNotLinked"
 }
 
@@ -547,5 +582,6 @@ export class AccountNotLinked extends SignInError {
  * @noInheritDoc
  */
 export class ExperimentalFeatureNotEnabled extends AuthError {
+  /** @internal */
   static type = "ExperimentalFeatureNotEnabled"
 }
