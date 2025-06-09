@@ -41,6 +41,8 @@ AUTH_MAILGUN_KEY=abc
 
 If you name your environment variable `AUTH_MAILGUN_KEY`, the provider will pick it up automatically and your Auth.js configuration object can be simpler. If you'd like to rename it to something else, however, you'll have to manually pass it into the provider in your Auth.js configuration.
 
+3. If you are using the EU Mailgun server, you will need to include `region: "EU"` in the provider options. If you are using the US Mailgun server you can remove this option.
+
 <Code>
 <Code.Next>
 
@@ -53,8 +55,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Mailgun({
       // If your environment variable is named differently than default
-      apiKey: import.meta.env.AUTH_MAILGUN_KEY,
-      from: "no-reply@company.com"
+      apiKey: process.env.AUTH_MAILGUN_KEY,
+      from: "no-reply@company.com",
+      region: "EU",  // Optional
     }),
   ],
 })
@@ -74,6 +77,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
         // If your environment variable is named differently than default
         apiKey: import.meta.env.AUTH_MAILGUN_KEY,
         from: "no-reply@company.com",
+        region: "EU", // Optional
       }),
     ],
   })
@@ -95,6 +99,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       // If your environment variable is named differently than default
       apiKey: env.AUTH_MAILGUN_KEY,
       from: "no-reply@company.com",
+      region: "EU",  // Optional
     }),
   ],
 })
