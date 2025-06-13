@@ -103,7 +103,7 @@ See the table below for a summary of the changes. Below that are `diff` examples
 
 #### Details
 
-<Tabs items={["Server Component (App)", "Client Component (App)", "Middleware", "API Routes (Pages)", "getServerSideProps (Pages)"]}>
+<Tabs items={["Server Component (App)", "Client Component (App)", "Middleware", "Route  Handlers","API Routes (Pages)", "getServerSideProps (Pages)"]}>
 
 <Tabs.Tab>
 
@@ -124,21 +124,31 @@ export default async function Page() {
 </Tabs.Tab>
 <Tabs.Tab>
 
-Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions. Don't forget, client components that attempt to access the session via context will need to be wrapped in a `<SessionProvider />`.
+Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. If you access the session context via `useSession()`, make sure your component is wrapped in a `<SessionProvider />`. It’s recommended to pass the `session` prop to `<SessionProvider />` using the value returned by the `auth()` function in a Server Component.
 
-```ts filename="components/clientComponent.tsx"
-'use client';
+```ts
+import { auth } from "@/auth"
+import { SessionProvider } from "next-auth/react"
 
-import { useSession, SessionProvider } from 'next-auth/react';
-
-const ClientComponent = () => {
-  const session = useSession();
-
+const SessionLayout = async () => {
+  const session = await auth()
   return (
-    <SessionProvider>
-      <p>Welcome {session?.user?.name}</p>
+    <SessionProvider session={session}>
+      <ClientComponent />
     </SessionProvider>
   )
+}
+```
+
+```ts filename="components/clientComponent.tsx"
+"use client";
+
+import { useSession } from "next-auth/react";
+
+const ClientComponent = () => {
+  const { data: session } = useSession();
+
+  return <p>Welcome {session?.user?.name}</p>
 }
 ```
 
@@ -166,6 +176,31 @@ export const config = {
 ```
 
 Check out additional [Middleware docs](/getting-started/session-management/protecting#nextjs-middleware) for more details.
+
+</Tabs.Tab>
+<Tabs.Tab>
+
+As of `NextAuth.js v5`, you can use the `auth()` function inside [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) to access the session.
+
+Import the `auth()` function from your authentication configuration file (commonly `auth.ts`) and use it directly in your route logic.
+
+```ts
+import { auth } from "@/auth"
+import { NextRequest, NextResponse } from "next/server"
+
+export const GET = async (request: NextRequest) => {
+  const session = await auth()
+
+  if (!session) {
+    return NextResponse.json(
+      { message: "Unauthenticated. Please log in." },
+      { status: 401 }
+    )
+  }
+
+  return NextResponse.json({ message: "Success" })
+}
+```
 
 </Tabs.Tab>
 <Tabs.Tab>
@@ -225,8 +260,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 </Tabs.Tab>
 </Tabs>
-
-## Adapters
 
 ### Adapter packages
 
