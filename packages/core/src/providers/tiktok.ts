@@ -154,7 +154,7 @@ export interface TiktokProfile {
  * ### Resources
  *  - [TikTok app console](https://developers.tiktok.com/)
  *  - [TikTok login kit documentation](https://developers.tiktok.com/doc/login-kit-web/)
- *  - [Avaliable Scopes](https://developers.tiktok.com/doc/tiktok-api-scopes/)
+ *  - [Available Scopes](https://developers.tiktok.com/doc/tiktok-api-scopes/)
  *  - [Sandbox for testing](https://developers.tiktok.com/blog/introducing-sandbox)
  *
  *
