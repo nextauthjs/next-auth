@@ -84,8 +84,12 @@ import type {
   AppRouteHandlerFnContext,
 } from "./lib/types.js"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
-import type { NextRequest } from "next/server"
-import type { NextAuthConfig, NextAuthRequest } from "./lib/index.js"
+import type { NextRequest, NextMiddleware } from "next/server"
+import type {
+  NextAuthConfig,
+  NextAuthRequest,
+  NextAuthMiddleware,
+} from "./lib/index.js"
 export { AuthError, CredentialsSignin } from "@auth/core/errors"
 
 export { customFetch }
@@ -245,7 +249,8 @@ export interface NextAuthResult {
           ctx: AppRouteHandlerFnContext
         ) => ReturnType<AppRouteHandlerFn>,
       ]
-    ) => AppRouteHandlerFn)
+    ) => AppRouteHandlerFn) &
+    ((...args: [NextAuthMiddleware]) => NextMiddleware)
   /**
    * Sign in with a provider. If no provider is specified, the user will be redirected to the sign in page.
    *
