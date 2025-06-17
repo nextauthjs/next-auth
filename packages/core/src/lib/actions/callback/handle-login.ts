@@ -32,7 +32,11 @@ export async function handleLoginOrRegister(
   // Input validation
   if (!_account?.providerAccountId || !_account.type)
     throw new Error("Missing or invalid provider account")
-  if (!["email", "oauth", "oidc", "webauthn"].includes(_account.type))
+  if (
+    !["email", "sms", "anonymous", "oauth", "oidc", "webauthn"].includes(
+      _account.type
+    )
+  )
     throw new Error("Provider not supported")
 
   const {
@@ -57,6 +61,8 @@ export async function handleLoginOrRegister(
     getUser,
     getUserByAccount,
     getUserByEmail,
+    getUserByPhoneNumber,
+    getUserByAnonymousId,
     linkAccount,
     createSession,
     getSessionAndUser,
@@ -111,6 +117,83 @@ export async function handleLoginOrRegister(
     } else {
       // Create user account if there isn't one for the email address already
       user = await createUser({ ...profile, emailVerified: new Date() })
+      await events.createUser?.({ user })
+      isNewUser = true
+    }
+
+    // Create new session
+    session = useJwtSession
+      ? {}
+      : await createSession({
+          sessionToken: generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
+
+    return { session, user, isNewUser }
+  } else if (account.type === "sms") {
+    // If signing in with an email, check if an account with the same email address exists already
+    const userByPhoneNumber = await getUserByPhoneNumber(profile.phoneNumber!)
+    if (userByPhoneNumber) {
+      // If they are not already signed in as the same user, this flow will
+      // sign them out of the current session and sign them in as the new user
+      if (user?.id !== userByPhoneNumber.id && !useJwtSession && sessionToken) {
+        // Delete existing session if they are currently signed in as another user.
+        // This will switch user accounts for the session in cases where the user was
+        // already logged in with a different account.
+        await deleteSession(sessionToken)
+      }
+
+      // Update emailVerified property on the user object
+      user = await updateUser({
+        id: userByPhoneNumber.id,
+        phoneNumberVerified: new Date(),
+      })
+      await events.updateUser?.({ user })
+    } else {
+      // Create user account if there isn't one for the email address already
+      user = await createUser({ ...profile, phoneNumberVerified: new Date() })
+      await events.createUser?.({ user })
+      isNewUser = true
+    }
+
+    // Create new session
+    session = useJwtSession
+      ? {}
+      : await createSession({
+          sessionToken: generateSessionToken(),
+          userId: user.id,
+          expires: fromDate(options.session.maxAge),
+        })
+
+    return { session, user, isNewUser }
+  } else if (account.type === "anonymous") {
+    // If signing in as anonymous, check if an account already exists
+    const userByAnonymousId = await getUserByAnonymousId(profile.anonymousId!)
+    if (userByAnonymousId) {
+      // If they are not already signed in as the same user, this flow will
+      // sign them out of the current session and sign them in as the new user
+      if (user?.id !== userByAnonymousId.id && !useJwtSession && sessionToken) {
+        // Delete existing session if they are currently signed in as another user.
+        // This will switch user accounts for the session in cases where the user was
+        // already logged in with a different account.
+        await deleteSession(sessionToken)
+      }
+
+      // Update emailVerified property on the user object
+      user = await updateUser({
+        id: userByAnonymousId.id,
+        anonymousId: profile.anonymousId,
+        anonymousIdVerified: new Date(),
+      })
+      await events.updateUser?.({ user })
+    } else {
+      // Create user account if there isn't one for the anonymousId already
+      user = await createUser({
+        ...profile,
+        anonymousId: profile.anonymousId,
+        anonymousIdVerified: new Date(),
+      })
       await events.createUser?.({ user })
       isNewUser = true
     }
