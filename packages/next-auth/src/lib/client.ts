@@ -161,8 +161,12 @@ export async function fetchData<T = any>(
     if (!res.ok) throw data
     return data
   } catch (error) {
-    logger.error(new ClientFetchError((error as Error).message, error as any))
-    return null
+    const wrappedError = new ClientFetchError(
+      (error as Error).message,
+      error as any
+    )
+    logger.error(wrappedError)
+    throw wrappedError
   }
 }
 
