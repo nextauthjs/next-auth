@@ -138,7 +138,7 @@ export interface NextAuthResult {
    * A universal method to interact with NextAuth.js in your Next.js app.
    * After initializing NextAuth.js in `auth.ts`, use this method in Middleware, Server Components, Route Handlers (`app/`), and Edge or Node.js API Routes (`pages/`).
    *
-   * #### In Middleware
+   * ##### In Middleware
    *
    * :::info
    * Adding `auth` to your Middleware is optional, but recommended to keep the user session alive.
@@ -167,7 +167,7 @@ export interface NextAuthResult {
    * }
    * ```
    *
-   * #### In Server Components
+   * ##### In Server Components
    *
    * @example
    * ```ts title="app/page.ts"
@@ -179,7 +179,7 @@ export interface NextAuthResult {
    * }
    * ```
    *
-   * #### In Route Handlers
+   * ##### In Route Handlers
    * @example
    * ```ts title="app/api/route.ts"
    * import { auth } from "../../auth"
@@ -189,7 +189,7 @@ export interface NextAuthResult {
    * })
    * ```
    *
-   * #### In Edge API Routes
+   * ##### In Edge API Routes
    *
    * @example
    * ```ts title="pages/api/protected.ts"
@@ -202,7 +202,7 @@ export interface NextAuthResult {
    * export const config = { runtime: "edge" }
    * ```
    *
-   * #### In API Routes
+   * ##### In API Routes
    *
    * @example
    * ```ts title="pages/api/protected.ts"
@@ -219,7 +219,7 @@ export interface NextAuthResult {
    * }
    * ```
    *
-   * #### In `getServerSideProps`
+   * ##### In `getServerSideProps`
    *
    * @example
    * ```ts title="pages/protected-ssr.ts"
