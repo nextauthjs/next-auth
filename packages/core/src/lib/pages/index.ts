@@ -121,7 +121,9 @@ export default function renderPage(params: RenderPageParams) {
           providers: params.providers?.filter(
             (provider) =>
               // Always render oauth and email type providers
-              ["email", "oauth", "oidc"].includes(provider.type) ||
+              ["email", "sms", "anonymous", "oauth", "oidc"].includes(
+                provider.type
+              ) ||
               // Only render credentials type provider if credentials are defined
               (provider.type === "credentials" && provider.credentials) ||
               // Only render webauthn type provider if formFields are defined
