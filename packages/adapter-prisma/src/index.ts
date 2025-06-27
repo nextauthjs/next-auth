@@ -15,8 +15,7 @@
  *
  * @module @auth/prisma-adapter
  */
-import { type PrismaClient } from "@prisma/client"
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
+import type { PrismaClient } from "@prisma/client"
 import type {
   Adapter,
   AdapterAccount,
@@ -90,7 +89,9 @@ export function PrismaAdapter(
         // If token already used/deleted, just return null
         // https://www.prisma.io/docs/reference/api-reference/error-reference#p2025
         if (
-          error instanceof PrismaClientKnownRequestError &&
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
           error.code === "P2025"
         )
           return null
