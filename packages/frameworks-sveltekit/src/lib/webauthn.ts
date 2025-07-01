@@ -24,7 +24,7 @@ async function webAuthnOptions(
   providerID: ProviderId,
   options?: Omit<SignInOptions, "redirect">
 ) {
-  const baseUrl = base ?? ""
+  const baseUrl = `${base}/auth`
 
   // @ts-expect-error
   const params = new URLSearchParams(options)
@@ -72,7 +72,7 @@ export async function signIn<Redirect extends boolean = true>(
     ...signInParams
   } = rest
 
-  const baseUrl = base ?? ""
+  const baseUrl = `${base}/auth`
 
   if (!provider || provider !== "webauthn") {
     // TODO: Add docs link with explanation

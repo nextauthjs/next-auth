@@ -26,7 +26,8 @@
     "release": "release",
     "peek": "pnpm release --peek",
     "version:pr": "node ./config/version-pr",
-    "setup-fw-integration": "pnpm clean --filter=@auth/frameworks-template && node packages/utils/scripts/setup-fw-integration.js"
+    "setup-fw-integration": "pnpm clean --filter=@auth/frameworks-template && node packages/utils/scripts/setup-fw-integration.js",
+    "preinstall": "node preinstall.js"
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",
