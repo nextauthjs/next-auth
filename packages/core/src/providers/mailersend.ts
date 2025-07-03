@@ -1,11 +1,9 @@
 import type { EmailConfig, EmailUserConfig } from "./index.js"
 import { html, text } from "../lib/utils/email.js"
 
-/** @todo Document this */
 export default function Mailersend(config: EmailUserConfig): EmailConfig {
   return {
     id: "mailersend",
-    apiKey: "",
     type: "email",
     name: "Mailersend",
     from: "no-reply@authjs.dev",
