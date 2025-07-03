@@ -114,6 +114,7 @@ export interface FusionAuthProfile extends Record<string, any> {
  * It is highly recommended to follow this example call when using the provider in Next.js
  *  so that you can access both the access_token and id_token on the server.
  * 
+ * ```ts
  * /// <reference types="next-auth" />
 import NextAuth from 'next-auth';
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -269,7 +270,7 @@ declare module 'next-auth' {
     providerAccountId: string;
   }
 }
-
+```
  * 
  * 
  * 
