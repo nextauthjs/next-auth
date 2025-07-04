@@ -46,6 +46,8 @@ function isSemverString(version: string): version is SemverString {
 
 let hasCredentials = false
 let hasEmail = false
+let hasSMS = false
+let hasAnonymous = false
 let hasWebAuthn = false
 
 const emailMethods: (keyof Adapter)[] = [
@@ -53,6 +55,14 @@ const emailMethods: (keyof Adapter)[] = [
   "useVerificationToken",
   "getUserByEmail",
 ]
+
+const smsMethods: (keyof Adapter)[] = [
+  "createVerificationToken",
+  "useVerificationToken",
+  "getUserByPhoneNumber",
+]
+
+const anonymousMethods: (keyof Adapter)[] = ["getUserByAnonymousId"]
 
 const sessionMethods: (keyof Adapter)[] = [
   "createUser",
@@ -148,6 +158,8 @@ export function assertConfig(
 
     if (provider.type === "credentials") hasCredentials = true
     else if (provider.type === "email") hasEmail = true
+    else if (provider.type === "sms") hasSMS = true
+    else if (provider.type === "anonymous") hasAnonymous = true
     else if (provider.type === "webauthn") {
       hasWebAuthn = true
 
@@ -211,6 +223,8 @@ export function assertConfig(
   const requiredMethods: (keyof Adapter)[] = []
 
   if (
+    hasSMS ||
+    hasAnonymous ||
     hasEmail ||
     session?.strategy === "database" ||
     (!session?.strategy && adapter)
@@ -218,6 +232,13 @@ export function assertConfig(
     if (hasEmail) {
       if (!adapter) return new MissingAdapter("Email login requires an adapter")
       requiredMethods.push(...emailMethods)
+    } else if (hasSMS) {
+      if (!adapter) return new MissingAdapter("SMS login requires an adapter")
+      requiredMethods.push(...smsMethods)
+    } else if (hasSMS) {
+      if (!adapter)
+        return new MissingAdapter("Anonymous login requires an adapter")
+      requiredMethods.push(...anonymousMethods)
     } else {
       if (!adapter)
         return new MissingAdapter("Database session requires an adapter")

@@ -3,7 +3,10 @@
   "version": "5.0.0-beta.29",
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
-  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextauthjs/next-auth.git"
+  },
   "author": "Balázs Orbán <info@balazsorban.com>",
   "contributors": [
     "Iain Collins <me@iaincollins.com>",

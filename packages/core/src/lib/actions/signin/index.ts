@@ -7,6 +7,7 @@ import type {
   RequestInternal,
   ResponseInternal,
 } from "../../../types.js"
+import { sendSmsToken } from "./send-sms-token.js"
 
 export async function signIn(
   request: RequestInternal,
@@ -31,6 +32,11 @@ export async function signIn(
       const response = await sendToken(request, options)
       return { ...response, cookies }
     }
+    case "sms": {
+      const response = await sendSmsToken(request, options)
+      return { ...response, cookies }
+    }
+    case "anonymous":
     default:
       return { redirect: signInUrl, cookies }
   }

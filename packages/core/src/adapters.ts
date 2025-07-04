@@ -183,6 +183,20 @@ export interface AdapterUser extends User {
    * It is `null` if the user has not signed in with the Email provider yet, or the date of the first successful signin.
    */
   emailVerified: Date | null
+  /** The user's phoneNumber. */
+  phoneNumber?: string
+  /**
+   * Whether the user has verified their phoneNumber via an [SMS provider](https://authjs.dev/getting-started/authentication/sms).
+   * It is `null` if the user has not signed in with the SMS provider yet, or the date of the first successful signin.
+   */
+  phoneNumberVerified?: Date | null
+  /** A unique identifier for the anonymous user. */
+  anonymousId?: string
+  /**
+   * Whether the user has a verified anonymousId.
+   * It is `null` if the user has not signed in with the Anonymous provider yet, or the date of the first successful signin.
+   */
+  anonymousIdVerified?: Date | null
 }
 
 /**
@@ -190,7 +204,7 @@ export interface AdapterUser extends User {
  */
 export type AdapterAccountType = Extract<
   ProviderType,
-  "oauth" | "oidc" | "email" | "webauthn"
+  "oauth" | "oidc" | "email" | "webauthn" | "sms" | "anonymous"
 >
 
 /**
@@ -298,6 +312,18 @@ export interface Adapter {
    * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
    */
   getUserByEmail?(email: string): Awaitable<AdapterUser | null>
+  /**
+   * Returns a user from the database via the user's phone number address.
+   *
+   * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
+   */
+  getUserByPhoneNumber?(phone_number: string): Awaitable<AdapterUser | null>
+  /**
+   * Returns a user from the database via the user's anonymous id.
+   *
+   * See also [Verification tokens](https://authjs.dev/guides/creating-a-database-adapter#verification-tokens)
+   */
+  getUserByAnonymousId?(anonymous_id: string): Awaitable<AdapterUser | null>
   /**
    * Using the provider id and the id of the user for a specific account, get the user.
    *

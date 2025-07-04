@@ -10,6 +10,8 @@ import type {
   OIDCConfig,
 } from "./oauth.js"
 import type { WebAuthnConfig, WebAuthnProviderType } from "./webauthn.js"
+import { SMSConfig } from "./sms.js"
+import { AnonymousConfig } from "./anonymous.js"
 
 export * from "./credentials.js"
 export * from "./email.js"
@@ -28,6 +30,8 @@ export type ProviderType =
   | "oauth"
   | "email"
   | "credentials"
+  | "sms"
+  | "anonymous"
   | WebAuthnProviderType
 
 /** Shared across all {@link ProviderType} */
@@ -70,6 +74,8 @@ export type Provider<P extends Profile = any> = (
       | OIDCConfig<P>
       | OAuth2Config<P>
       | EmailConfig
+      | SMSConfig
+      | AnonymousConfig
       | CredentialsConfig
       | WebAuthnConfig
     ) &
@@ -80,6 +86,8 @@ export type Provider<P extends Profile = any> = (
       | OAuth2Config<P>
       | OIDCConfig<P>
       | EmailConfig
+      | SMSConfig
+      | AnonymousConfig
       | CredentialsConfig
       | WebAuthnConfig
     ) &

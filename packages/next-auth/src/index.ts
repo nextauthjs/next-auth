@@ -391,6 +391,7 @@ export default function NextAuth(
       signIn: async (provider, options, authorizationParams) => {
         const _config = await config(undefined)
         setEnvDefaults(_config)
+        console.log("BLABLA3:", { provider, options, authorizationParams })
         return signIn(provider, options, authorizationParams, _config)
       },
       signOut: async (options) => {
