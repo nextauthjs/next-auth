@@ -36,7 +36,7 @@
     "algoliasearch": "^4.24.0",
     "classnames": "^2.5.1",
     "framer-motion": "^11.11.8",
-    "next": "14.2.21",
+    "next": "14.2.26",
     "next-sitemap": "^4.2.3",
     "nextra": "3.0.15",
     "nextra-theme-docs": "3.0.15",
