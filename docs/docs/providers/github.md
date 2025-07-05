@@ -29,14 +29,16 @@ You can override any of the options to suit your own use case.
 
 ```js
 import GitHubProvider from "next-auth/providers/github";
-...
-providers: [
-  GitHubProvider({
-    clientId: process.env.GITHUB_ID,
-    clientSecret: process.env.GITHUB_SECRET
-  })
-]
-...
+import NextAuth from "next-auth";
+
+export default NextAuth({
+    providers: [
+      GitHubProvider({
+        clientId: process.env.GITHUB_ID,
+        clientSecret: process.env.GITHUB_SECRET
+      })
+    ]
+})
 ```
 
 :::warning
