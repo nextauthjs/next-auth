@@ -36,6 +36,7 @@ on:
           - "@auth/mongodb-adapter"
           - "@auth/neo4j-adapter"
           - "@auth/pg-adapter"
+          - "@auth/pgjs-adapter"
           - "@auth/pouchdb-adapter"
           - "@auth/prisma-adapter"
           - "@auth/sequelize-adapter"
