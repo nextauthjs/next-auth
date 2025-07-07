@@ -38,7 +38,7 @@ model Account {
 }
 
 model Session {
-  sessionToken String   @unique
+  sessionToken String   @id // Replacing @unique with @id to avoid REPLICA IDENTITY error in postgres sql
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
