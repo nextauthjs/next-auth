@@ -118,6 +118,13 @@ export default function NotionProvider<P extends NotionProfile>(
     type: "oauth",
     token: {
       url: `${NOTION_HOST}/v1/oauth/token`,
+      async conform(response) {
+        const body = await response.json()
+        if (!body.refresh_token || typeof body.refresh_token !== "string") {
+          delete body.refresh_token;
+        }
+        return new Response(JSON.stringify(body), response);
+      }
     },
     userinfo: {
       url: `${NOTION_HOST}/v1/users`,
