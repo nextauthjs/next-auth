@@ -138,3 +138,4 @@ app.use(
 
 - You need to select "Public Integration" on the configuration page to get an `oauth_id` and `oauth_secret`. Private integrations do not provide these details.
 - You must provide a `clientId` and `clientSecret` to use this provider, as-well as a redirect URI (due to this being required by Notion endpoint to fetch tokens).
+- The Notion OAuth API doesn’t support refreshing tokens, and so doesn’t return a refresh token. The access token never expires.
