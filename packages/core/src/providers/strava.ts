@@ -11,7 +11,7 @@
 import type { OAuthConfig, OAuthUserConfig } from "./index.js"
 
 export interface StravaProfile extends Record<string, any> {
-  id: string // this is really a number
+  id: number
   firstname: string
   lastname: string
   profile: string
