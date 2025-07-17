@@ -55,7 +55,7 @@ export interface SequelizeAdapterOptions {
     Account: ModelCtor<AccountInstance>
     Session: ModelCtor<SessionInstance>
     VerificationToken: ModelCtor<VerificationTokenInstance>
-  }>,
+  }>;
   /**
    * Override the default model {@link https://sequelize.org/docs/v6/core-concepts/assocs/ associations}
    *
@@ -73,7 +73,12 @@ export interface SequelizeAdapterOptions {
    * }
    * ```
    */
-  associations?: (User: UserInstance, Account: AccountInstance, Session: SessionInstance, VerificationToken: VerificationTokenInstance) => void
+  associations?: (
+    User: ModelCtor<UserInstance>,
+    Account: ModelCtor<AccountInstance>,
+    Session: ModelCtor<SessionInstance>,
+    VerificationToken: ModelCtor<VerificationTokenInstance>
+  ) => void;
 }
 
 export default function SequelizeAdapter(
@@ -130,10 +135,10 @@ export default function SequelizeAdapter(
   }
 
   if (associations) {
-    associations();
+    associations(User, Account, Session, VerificationToken);
   } else {
-    Account.belongsTo(User, { onDelete: "cascade" })
-    Session.belongsTo(User, { onDelete: "cascade" })
+    Account.belongsTo(User, { onDelete: 'cascade' });
+    Session.belongsTo(User, { onDelete: 'cascade' });
   }
 
   return {
