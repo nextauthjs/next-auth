@@ -34,7 +34,7 @@ To have access to the user id, add the following to your Auth.js configuration:
 ```
 
 During sign-in, the `jwt` callback exposes the user's profile information coming from the provider.
-You can leverage this to add the user's id to the JWT token. Then, on subsequent calls of this API will have access to the user's id via `token.id`.
+You can leverage this to add the user's id to the JWT token. Then, on subsequent calls of this API you will have access to the user's id via `token.id`.
 Then, to expose the user's id in the actual session, you can access `token.id` in the `session` callback and save it on `session.user.id`.
 
 Calls to `auth()` or `useSession()` will now have access to the user's id.
