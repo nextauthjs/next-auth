@@ -108,7 +108,7 @@ export interface BankIDNorwayProfile {
  * const request = new Request(origin)
  * const response = await Auth(request, {
  *   providers: [
- *     Auth0({
+ *     BankIDNorge({
  *       clientId: AUTH_BANKID_NO_ID,
  *       clientSecret: AUTH_BANKID_NO_SECRET,
  *     }),
