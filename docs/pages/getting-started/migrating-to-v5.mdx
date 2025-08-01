@@ -126,20 +126,21 @@ export default async function Page() {
 
 Imports from `next-auth/react` are now marked with the [`"use client"`](https://nextjs.org/docs/getting-started/react-essentials#the-use-client-directive) directive. Therefore, they can be used in client components just like they were used in previous versions. Don't forget, client components that attempt to access the session via context will need to be wrapped in a `<SessionProvider />`.
 
-```ts filename="components/clientComponent.tsx"
+```ts filename="components/my-component.tsx"
 'use client';
 
-import { useSession, SessionProvider } from 'next-auth/react';
+import { SessionProvider, useSession } from "next-auth/react";
 
-const ClientComponent = () => {
-  const session = useSession();
+const UserName = () => {
+  const { data: session } = useSession();
+  return <p>Welcome {session?.user?.name}</p>;
+};
 
-  return (
-    <SessionProvider>
-      <p>Welcome {session?.user?.name}</p>
-    </SessionProvider>
-  )
-}
+const MyComponent = () => (
+  <SessionProvider>
+    <UserName />
+  </SessionProvider>
+);
 ```
 
 </Tabs.Tab>
