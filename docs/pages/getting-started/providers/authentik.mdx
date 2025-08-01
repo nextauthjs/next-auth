@@ -40,8 +40,8 @@ https://example.com/auth/callback/authentik
 ### Environment Variables
 
 ```
-AUTH_AUTHENTIK_ID
-AUTH_AUTHENTIK_SECRET
+AUTH_AUTHENTIK_CLIENT_ID
+AUTH_AUTHENTIK_CLIENT_SECRET
 AUTH_AUTHENTIK_ISSUER
 ```
 
@@ -89,6 +89,11 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit";
 import Authentik from "@auth/sveltekit/providers/authentik";
+import {
+	AUTH_AUTHENTIK_CLIENT_ID,
+	AUTH_AUTHENTIK_CLIENT_SECRET,
+	AUTH_AUTHENTIK_ISSUER
+} from '$env/static/private';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [Authentik({
