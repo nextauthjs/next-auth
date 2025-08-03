@@ -42,6 +42,7 @@ export interface EmailConfig extends CommonProviderOptions {
   type: "email"
   name: string
   from?: string
+  /** In seconds */
   maxAge?: number
   sendVerificationRequest: (
     params: EmailProviderSendVerificationRequestParams
