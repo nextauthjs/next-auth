@@ -63,7 +63,9 @@ export async function signIn(
   }
 
   if (foundProvider.type === "credentials") {
-    url = url.replace("signin", "callback")
+    const urlObj = new URL(url)
+    urlObj.pathname = urlObj.pathname.replace("signin", "callback")
+    url = urlObj.href
   }
 
   headers.set("Content-Type", "application/x-www-form-urlencoded")
