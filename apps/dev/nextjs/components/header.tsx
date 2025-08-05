@@ -48,6 +48,9 @@ export function Header({
           <Link className={styles.navItem} href="/dashboard">
             Dashboard (app)
           </Link>
+          <Link className={styles.navItem} href="/login">
+            Login (app)
+          </Link>
           <Link className={styles.navItem} href="/policy">
             Policy (pages)
           </Link>

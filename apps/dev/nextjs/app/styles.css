@@ -82,11 +82,7 @@ main {
   }
 
   .card-body {
-    padding-bottom: 1.1rem;
-
-    &:has(button) {
-      padding: 1.1rem;
-    }
+    padding: 1.1rem;
   }
 
   .card-footer {
@@ -128,5 +124,22 @@ main {
   }
   button:hover {
     background-color: #ccc;
+  }
+
+  input {
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.4rem;
+    background-color: #fff;
+    color: black;
+    margin-bottom: 1rem;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #999;
+    background-color: #fafafa;
   }
 }

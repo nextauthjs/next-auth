@@ -1,8 +1,17 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+  beforeAll,
+} from "vitest"
 import NextAuth, { NextAuthConfig } from "../src"
 // TODO: Move the MemoryAdapter to utils package
 import { MemoryAdapter } from "../../core/test/memory-adapter"
 import Nodemailer from "@auth/core/providers/nodemailer"
+import Credentials from "@auth/core/providers/credentials"
 
 let mockedHeaders = vi.hoisted(() => {
   return new globalThis.Headers()
@@ -104,6 +113,35 @@ describe("signIn action", () => {
       expect(redirectTo).toEqual(
         "http://localhost/api/auth/error?error=Configuration"
       )
+    })
+  })
+  describe("with credentials provider", () => {
+    beforeEach(() => {
+      nextAuth = NextAuth({
+        ...config,
+        providers: [
+          Credentials({
+            credentials: { password: { label: "Password", type: "password" } },
+            authorize(c) {
+              if (c.password !== "password") return null
+              return {
+                id: "test",
+                name: "Test User",
+                email: "test@example.com",
+              }
+            },
+          }),
+        ],
+      })
+    })
+    it("follow redirects and callback signin", async () => {
+      await nextAuth?.signIn("credentials", { password: "password" })
+      expect(mockRedirect).toHaveBeenCalledWith("http://localhost/")
+    })
+    it("only replaces signin on path name", async () => {
+      process.env.AUTH_URL = "http://signin"
+      await nextAuth?.signIn("credentials", { password: "password" })
+      expect(mockRedirect).toHaveBeenCalledWith("http://signin/")
     })
   })
 })
