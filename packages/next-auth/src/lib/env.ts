@@ -3,13 +3,21 @@ import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
-/** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
+/**
+ *  If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL.
+ *  Reset the basePath onto the url as it checks the full url in nextauth api handlers
+ *  References:
+ * - Bug in Next.js affecting URL handling: https://github.com/vercel/next.js/issues/62756
+ * - Bug in NextAuth causing incorrect action, redirect URL behavior: https://github.com/nextauthjs/next-auth/issues/13034
+ */
 export function reqWithEnvURL(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
+  // nextjs basepath not auth config basepath
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
   if (!url) return req
   const { origin: envOrigin } = new URL(url)
   const { href, origin } = req.nextUrl
-  return new NextRequest(href.replace(origin, envOrigin), req)
+  return new NextRequest(href.replace(origin, envOrigin + basePath), req)
 }
 
 /**
