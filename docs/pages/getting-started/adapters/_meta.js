@@ -11,6 +11,7 @@ export default {
   kysely: "Kysely",
   "mikro-orm": "MikroORM",
   mongodb: "MongoDB",
+  "nats-kv": "NATS KV",
   neo4j: "Neo4j",
   neon: "Neon",
   pg: "PostgreSQL",
