@@ -289,7 +289,6 @@ export function NatsKVAdapter(
       const token = data.json<VerificationToken>()
       await natsPurge(tokenKey)
       return hydrateDates(token)
-      // return reviveFromJson(token)
     },
     async unlinkAccount(account) {
       const id = `${account.provider}.${account.providerAccountId}`
