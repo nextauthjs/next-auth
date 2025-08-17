@@ -8,7 +8,7 @@ export function setEnvDefaults(
   config: SvelteKitAuthConfig
 ) {
   config.trustHost ??= dev
-  config.basePath = `${base}/auth`
+  config.basePath ??= `${base}/auth`
   config.skipCSRFCheck = skipCSRFCheck
   if (building) return
   coreSetEnvDefaults(envObject, config)
