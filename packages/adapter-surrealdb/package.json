@@ -1,14 +1,15 @@
 {
   "name": "@auth/surrealdb-adapter",
-  "version": "1.9.0",
+  "version": "2.1.0",
   "description": "SurrealDB adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
   },
-  "author": "Martin Schaer <martin@schaerweb.com>",
+  "author": "Dylan Vanmali <https://github.com/dvanmali>",
   "contributors": [
+    "Martin Schaer <martin@schaerweb.com>",
     "Thang Huu Vu <hi@thvu.dev>"
   ],
   "type": "module",
@@ -29,7 +30,7 @@
     "next-auth",
     "next.js",
     "oauth",
-    "mongodb",
+    "surrealdb",
     "adapter"
   ],
   "private": false,
@@ -45,6 +46,6 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "surrealdb.js": "^0.11.0"
+    "surrealdb": "^1.3.0"
   }
 }

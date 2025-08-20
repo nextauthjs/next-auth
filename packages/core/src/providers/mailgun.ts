@@ -24,7 +24,10 @@ import { html, text } from "../lib/utils/email.js"
  * const request = new Request(origin)
  * const response = await Auth(request, {
  *   providers: [
- *     Mailgun({ from: MAILGUN_DOMAIN }),
+ *     Mailgun({
+ *       from: MAILGUN_DOMAIN,
+ *       region: "EU", // Optional
+ *     }),
  *   ],
  * })
  * ```
@@ -43,7 +46,23 @@ import { html, text } from "../lib/utils/email.js"
  *
  * :::
  */
-export default function MailGun(config: EmailUserConfig): EmailConfig {
+export default function MailGun(
+  config: EmailUserConfig & {
+    /**
+     * https://documentation.mailgun.com/docs/mailgun/api-reference/#base-url
+     *
+     * @default "US"
+     */
+    region?: "US" | "EU"
+  }
+): EmailConfig {
+  const { region = "US" } = config
+  const servers = {
+    US: "api.mailgun.net",
+    EU: "api.eu.mailgun.net",
+  }
+  const apiServer = servers[region]
+
   return {
     id: "mailgun",
     type: "email",
@@ -64,7 +83,7 @@ export default function MailGun(config: EmailUserConfig): EmailConfig {
       form.append("html", html({ host, url, theme }))
       form.append("text", text({ host, url }))
 
-      const res = await fetch(`https://api.mailgun.net/v3/${domain}/messages`, {
+      const res = await fetch(`https://${apiServer}/v3/${domain}/messages`, {
         method: "POST",
         headers: {
           Authorization: `Basic ${btoa(`api:${provider.apiKey}`)}`,
