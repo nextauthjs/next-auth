@@ -154,8 +154,23 @@ export interface NextAuthResult {
    * @example
    * ```ts title="middleware.ts"
    * import { auth } from "./auth"
-   * export default auth((req) => {
-   *   // req.auth
+   * const protectedRoutes = [
+   *   { route: "/admin", role: "admin" },
+   *   { route: "/settings", role: "basic" },
+   * ]
+   *
+   * export default auth((request) => {
+   *   const { pathname } = request.nextUrl
+   *
+   *   const isProtected = protectedRoutes.some(
+   *     (route) => route.route === pathname
+   *   )
+   *
+   *   if (isProtected && !request.auth) {
+   *     return NextResponse.redirect(new URL("/auth", request.nextUrl))
+   *   }
+   *
+   *   return NextResponse.next()
    * })
    * ```
    *
@@ -182,11 +197,21 @@ export interface NextAuthResult {
    * ##### In Route Handlers
    * @example
    * ```ts title="app/api/route.ts"
-   * import { auth } from "../../auth"
+   *  import { auth } from "@/auth"
+   *  import { NextRequest, NextResponse } from "next/server"
    *
-   * export const POST = auth((req) => {
-   *   // req.auth
-   * })
+   *  export const GET = async (request: NextRequest) => {
+   *    const session = await auth()
+   *
+   *    if (!session) {
+   *      return NextResponse.json(
+   *        { message: "Unauthenticated. Please log in." },
+   *        { status: 401 }
+   *      )
+   *    }
+   *
+   *    return NextResponse.json({ message: "Success" })
+   *  }
    * ```
    *
    * ##### In Edge API Routes

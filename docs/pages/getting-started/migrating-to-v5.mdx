@@ -83,11 +83,11 @@ export const { GET, POST } = handlers
 
 Auth.js has had a few different ways to authenticate server-side in the past, so we've tried to simplify this as much as possible.
 
-Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single `auth()` function call in most cases.
+Now that Next.js components are **server-first** by default, and thanks to the investment in using standard Web APIs, we were able to simplify the authentication process to a single [`auth()`](https://authjs.dev/reference/nextjs#in-server-components) function call in most cases.
 
 ### Authentication methods
 
-See the table below for a summary of the changes. Below that are `diff` examples of how to use the new `auth()` method in various environments and contexts.
+See the table below for a summary of the changes. Below that are `diff` examples of how to use the new [`auth()`](https://authjs.dev/reference/nextjs#auth-1) method in various environments and contexts.
 
 | Where                   | v4                                                    | v5                               |
 | ----------------------- | ----------------------------------------------------- | -------------------------------- |
@@ -115,8 +115,8 @@ Auth.js v4 has supported reading the session in Server Components for a while vi
 + import { auth } from "@/auth"
 
 export default async function Page() {
--  const session = await getServerSession(authOptions)
-+  const session = await auth()
+- const session = await getServerSession(authOptions)
++ const session = await auth()
   return (<p>Welcome {session?.user.name}!</p>)
 }
 ```
@@ -140,7 +140,7 @@ const SessionLayout = async () => {
 }
 ```
 
-```ts filename="components/clientComponent.tsx"
+```ts filename="components/client-component.tsx"
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -155,18 +155,36 @@ const ClientComponent = () => {
 </Tabs.Tab>
 <Tabs.Tab>
 
+You can use the `auth` function in your [`middleware.ts`](https://nextjs.org/docs/app/api-reference/file-conventions/middleware) file to secure routes at the edge.
+
+By default, simply export the `auth` function as middleware:
+
 ```diff filename="middleware.ts"
 - export { default } from "next-auth/middleware"
 + export { auth as middleware } from "@/auth"
 ```
 
-For advanced use cases, you can use `auth` as a wrapper for your Middleware:
+For more control, you can wrap your own middleware logic with `auth` function. This allows you to implement features like role-based access or custom redirects.
 
 ```ts filename="middleware.ts"
 import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 
-export default auth((req) => {
-  // req.auth
+const protectedRoutes = [
+  { route: "/admin", role: "admin" },
+  { route: "/settings", role: "basic" },
+]
+
+export default auth((request) => {
+  const { pathname } = request.nextUrl
+
+  const isProtected = protectedRoutes.some((route) => route.route === pathname)
+
+  if (isProtected && !request.auth) {
+    return NextResponse.redirect(new URL("/auth", request.nextUrl))
+  }
+
+  return NextResponse.next()
 })
 
 // Optionally, don't invoke Middleware on some paths
@@ -182,14 +200,14 @@ Check out additional [Middleware docs](/getting-started/session-management/prote
 
 As of `NextAuth.js v5`, you can use the `auth()` function inside [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) to access the session.
 
-Import the `auth()` function from your authentication configuration file (commonly `auth.ts`) and use it directly in your route logic.
+Import the `auth` function from your authentication configuration file (commonly `auth.ts`) and use it as a wrapper around your Route Handler logic.
 
 ```ts
 import { auth } from "@/auth"
 import { NextRequest, NextResponse } from "next/server"
 
-export const GET = async (request: NextRequest) => {
-  const session = await auth()
+export const GET = auth((request: NextRequest) => {
+  const session = request.auth
 
   if (!session) {
     return NextResponse.json(
@@ -199,7 +217,7 @@ export const GET = async (request: NextRequest) => {
   }
 
   return NextResponse.json({ message: "Success" })
-}
+})
 ```
 
 </Tabs.Tab>
