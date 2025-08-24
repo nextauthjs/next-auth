@@ -5,15 +5,19 @@ import { createCSRFToken } from "./actions/callback/oauth/csrf-token.js"
 
 import { AdapterError, EventError } from "../errors.js"
 import parseProviders from "./utils/providers.js"
-import { setLogger, type LoggerInstance } from "./utils/logger.js"
+import type { LoggerInstance } from "./utils/logger.js"
 import { merge } from "./utils/merge.js"
 
-import type { InternalOptions, RequestInternal } from "../types.js"
+import type {
+  AuthConfigInternal,
+  InternalOptions,
+  RequestInternal,
+} from "../types.js"
 import type { AuthConfig } from "../index.js"
 
 interface InitParams {
   url: URL
-  authOptions: AuthConfig
+  authOptions: AuthConfigInternal
   providerId?: string
   action: InternalOptions["action"]
   /** Callback URL value extracted from the incoming request. */
@@ -65,7 +69,6 @@ export async function init({
   options: InternalOptions
   cookies: cookie.Cookie[]
 }> {
-  const logger = setLogger(config)
   const { providers, provider } = parseProviders({ url, providerId, config })
 
   const maxAge = 30 * 24 * 60 * 60 // Sessions expire after 30 days of being idle by default
@@ -129,11 +132,11 @@ export async function init({
       ...config.jwt,
     },
     // Event messages
-    events: eventsErrorHandler(config.events ?? {}, logger),
-    adapter: adapterErrorHandler(config.adapter, logger),
+    events: eventsErrorHandler(config.events ?? {}, config.logger),
+    adapter: adapterErrorHandler(config.adapter, config.logger),
     // Callback functions
     callbacks: { ...defaultCallbacks, ...config.callbacks },
-    logger,
+    logger: config.logger,
     callbackUrl: url.origin,
     isOnRedirectProxy,
     experimental: {

@@ -53,6 +53,7 @@ import type { Adapter, AdapterSession, AdapterUser } from "./adapters.js"
 import type {
   Account,
   AuthAction,
+  AuthConfigInternal,
   Awaitable,
   CookiesOptions,
   DefaultSession,
@@ -102,19 +103,22 @@ export async function Auth(
   request: Request,
   config: AuthConfig
 ): Promise<Response | ResponseInternal> {
-  const logger = setLogger(config)
+  const configWithLogger: AuthConfigInternal = {
+    ...config,
+    logger: setLogger(config),
+  }
 
-  const internalRequest = await toInternalRequest(request, config)
+  const internalRequest = await toInternalRequest(request, configWithLogger)
   // There was an error parsing the request
   if (!internalRequest) return Response.json(`Bad request.`, { status: 400 })
 
   const warningsOrError = assertConfig(internalRequest, config)
 
   if (Array.isArray(warningsOrError)) {
-    warningsOrError.forEach(logger.warn)
+    warningsOrError.forEach(configWithLogger.logger.warn)
   } else if (warningsOrError) {
     // If there's an error in the user config, bail out early
-    logger.error(warningsOrError)
+    configWithLogger.logger.error(warningsOrError)
     const htmlPages = new Set<AuthAction>([
       "signin",
       "signout",
@@ -143,7 +147,7 @@ export async function Auth(
     // Either there was no error page configured or the configured one contains infinite redirects
     if (!pages?.error || authOnErrorPage) {
       if (authOnErrorPage) {
-        logger.error(
+        configWithLogger.logger.error(
           new ErrorPageLoop(
             `The error page ${pages?.error} should not require authentication`
           )
@@ -161,7 +165,10 @@ export async function Auth(
   const isRedirect = request.headers?.has("X-Auth-Return-Redirect")
   const isRaw = config.raw === raw
   try {
-    const internalResponse = await AuthInternal(internalRequest, config)
+    const internalResponse = await AuthInternal(
+      internalRequest,
+      configWithLogger
+    )
     if (isRaw) return internalResponse
 
     const response = toResponse(internalResponse)
@@ -172,7 +179,7 @@ export async function Auth(
     return Response.json({ url }, { headers: response.headers })
   } catch (e) {
     const error = e as Error
-    logger.error(error)
+    configWithLogger.logger.error(error)
 
     const isAuthError = error instanceof AuthError
     if (isAuthError && isRaw && !isRedirect) throw error
