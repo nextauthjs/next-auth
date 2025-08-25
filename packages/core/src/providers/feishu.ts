@@ -166,8 +166,6 @@ export default function Feishu(options: FeishuOptions): OAuthConfig<FeishuProfil
       params: {
         client_id: options.clientId,
         response_type: "code",
-        state: "RANDOMSTRING",
-        scope: "",
       },
     },
     token: {
@@ -228,41 +226,11 @@ export default function Feishu(options: FeishuOptions): OAuthConfig<FeishuProfil
           throw new Error(`Failed to get user info: ${data.msg || JSON.stringify(data)}`);
         }
 
-        return {
-          name: data.data.name,
-          en_name: data.data.en_name,
-          avatar_url: data.data.avatar_url,
-          avatar_thumb: data.data.avatar_thumb,
-          avatar_middle: data.data.avatar_middle,
-          avatar_big: data.data.avatar_big,
-          open_id: data.data.open_id,
-          union_id: data.data.union_id,
-          email: data.data.email,
-          enterprise_email: data.data.enterprise_email,
-          user_id: data.data.user_id,
-          mobile: data.data.mobile,
-          tenant_key: data.data.tenant_key,
-          employee_no: data.data.employee_no,
-        } satisfies FeishuProfile;
+        return data.data satisfies FeishuProfile;
       },
     },
     profile(profile: FeishuProfile) {
-      return {
-        name: profile.name,
-        en_name: profile.en_name,
-        avatar_url: profile.avatar_url,
-        avatar_thumb: profile.avatar_thumb,
-        avatar_middle: profile.avatar_middle,
-        avatar_big: profile.avatar_big,
-        open_id: profile.open_id,
-        union_id: profile.union_id,
-        email: profile.email,
-        enterprise_email: profile.enterprise_email,
-        user_id: profile.user_id,
-        mobile: profile.mobile,
-        tenant_key: profile.tenant_key,
-        employee_no: profile.employee_no,
-      };
+      return profile;
     },
     options,
   };
