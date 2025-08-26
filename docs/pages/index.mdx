@@ -10,6 +10,7 @@ import Express from "../public/img/etc/express.svg"
 import Next from "../public/img/etc/nextjs.svg"
 import Qwik from "../public/img/etc/qwik.svg"
 import { CaretRight } from "@/icons"
+import ProvidersMarquee from "@/components/ProvidersMarquee"
 
 {/* Testimonials section */}
 import { VercelIcon } from "@/components/Icons/VercelIcon"
@@ -279,87 +280,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 {" "}
 
-<section className="relative flex h-[40rem] flex-col items-center justify-center overflow-hidden">
+<section className="relative flex py-12 flex-col items-center justify-center overflow-hidden">
   <div className="z-10 flex flex-col items-center justify-center gap-4 px-8 text-center">
     <h2 className="text-3xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">
-      Sign in with anything.
+      Sign in with _\* anything \*_
     </h2>
     <div className="max-w-2xl text-lg text-neutral-600 dark:text-neutral-400">
-      With over 50 popular providers, you can let your users sign in with the
+      With over 100 popular providers, you can let your users sign in with the
       services they already use and trust.
     </div>
   </div>
-  {/* This is where you would place your LogosMarquee component */}
-  {/* For now, here is a placeholder for the visual effect */}
-  <div className="absolute left-1/2 top-1/2 -z-0 flex h-full w-full -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-    <div className="animate-scroll flex h-auto w-[200%] flex-nowrap">
-      {/* Repeat this block for a seamless loop */}
-      <div className="flex w-full justify-around">
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Google
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          GitHub
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Apple
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Twitter
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Auth0
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Okta
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Discord
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Twitch
-        </span>
-      </div>
-      <div className="flex w-full justify-around">
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Google
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          GitHub
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Apple
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Twitter
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Auth0
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Okta
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Discord
-        </span>
-        <span className="p-8 text-4xl text-neutral-400 dark:text-neutral-600">
-          Twitch
-        </span>
-      </div>
-    </div>
-  </div>
-  {/* Add this to your CSS for the animation */}
-  <style>
-    {`
-      @keyframes scroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-      }
-      .animate-scroll {
-        animation: scroll 40s linear infinite;
-      }
-    `}
-  </style>
+
+  <ProvidersMarquee />
 </section>
 
   <section className="w-full bg-white dark:bg-black py-16 sm:py-24 relative overflow-hidden">
