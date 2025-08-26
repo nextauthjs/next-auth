@@ -36,26 +36,44 @@ const CaretRight = () => <span>›</span>
 // --- Main Code Tabs Component ---
 export const CodeTabs = () => {
   const [activeTab, setActiveTab] = useState("nextjs")
-  const [highlighter, setHighlighter] = useState<Highlighter | null>(null)
+  const [highlighter, setHighlighter] = useState<Highlighter[] | null>([])
 
   // 1. Initialize the Shiki highlighter
   useEffect(() => {
     ;(async () => {
       const hl = await createHighlighter({
+        themes: ["github-light-default", "github-light-default"],
+        langs: ["ts", "tsx", "bash"], // Add any languages you need
+      })
+      const h2 = await createHighlighter({
         themes: ["github-dark", "github-dark"],
         langs: ["ts", "tsx", "bash"], // Add any languages you need
       })
-      setHighlighter(hl)
+      setHighlighter([hl, h2])
     })()
   }, [])
 
   // 2. A function to convert a raw code string to highlighted HTML
-  const highlight = (code: string, lang: "ts" | "tsx" | "bash") => {
-    if (!highlighter) {
+  const highlightLight = (code: string, lang: "ts" | "tsx" | "bash") => {
+    if (!highlighter || highlighter.length !== 2) {
       // Return raw code while highlighter is loading
       return `<pre><code>${code}</code></pre>`
     }
-    return highlighter.codeToHtml(code, {
+    return highlighter[0].codeToHtml(code, {
+      lang,
+      themes: {
+        light: "github-light-default",
+        dark: "github-light-default",
+      },
+    })
+  }
+
+  const highlightDark = (code: string, lang: "ts" | "tsx" | "bash") => {
+    if (!highlighter || highlighter.length !== 2) {
+      // Return raw code while highlighter is loading
+      return `<pre><code>${code}</code></pre>`
+    }
+    return highlighter[1].codeToHtml(code, {
       lang,
       themes: {
         light: "github-dark",
@@ -138,9 +156,15 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
       <div className="py-4">
         {/* 3. Render the highlighted HTML using dangerouslySetInnerHTML */}
         <div
-          className="[&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
+          className="dark:hidden [&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
           dangerouslySetInnerHTML={{
-            __html: highlight(codeSnippets[activeTab], "ts"),
+            __html: highlightLight(codeSnippets[activeTab], "ts"),
+          }}
+        />
+        <div
+          className="hidden dark:block [&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{
+            __html: highlightDark(codeSnippets[activeTab], "ts"),
           }}
         />
       </div>
