@@ -289,3 +289,40 @@ html > head:has(meta[content*="reference/core/providers"]) + body .provider {
     @apply hidden;
   }
 }
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-scroll-left {
+  animation: scroll-left 15s linear infinite;
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.animate-scroll-right {
+  animation: scroll-right 15s linear infinite;
+}
+
+@media (min-width: 1024px) {
+  .animate-scroll-left {
+    animation-duration: 75s;
+  }
+  .animate-scroll-right {
+    animation-duration: 75s;
+  }
+}
+
+.filter-white {
+  filter: brightness(0) invert(1);
+}
