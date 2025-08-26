@@ -247,7 +247,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       </div>
 
       {/* CTA Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex gap-4">
         <a
           href="https://discord.authjs.dev/?utm_source=docs"
           target="_blank"
@@ -258,7 +258,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         <a
           href="https://github.com/nextauthjs/next-auth"
           target="_blank"
-          className="p-4 text-center rounded-lg font-semibold flex items-center gap-2 text-black dark:text-white transition bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm"
+          className="p-4 text-center rounded-lg font-semibold flex items-center max-lg:justify-center gap-2 text-black dark:text-white transition bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm"
         >
           <GithubLogo className="text-white h-8"/>
         </a>
