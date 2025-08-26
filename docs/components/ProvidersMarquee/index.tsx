@@ -2,11 +2,11 @@ import React from "react"
 
 // --- Reusable Provider Icon Component ---
 const ProviderIcon = ({ name }) => (
-  <div className="group relative mx-4 flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-lg border border-black/5 bg-black/10 backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
+  <div className="group relative mx-4 flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-lg border border-black/5 bg-black/10 backdrop-blur-sm lg:h-32 lg:w-32 dark:border-white/10 dark:bg-white/5">
     <img
       src={`../img/providers/${name}.svg`}
       alt={name}
-      className="dark:filter-white h-12 w-12"
+      className="dark:filter-white h-8 w-8 lg:h-12 lg:w-12"
       // Fix: Cast the event target to HTMLImageElement to access style properties
       onError={(e) => {
         ;(e.currentTarget as HTMLImageElement).style.display = "none"
@@ -196,7 +196,7 @@ const ProviderMarquee = () => {
             100% { transform: translateX(-50%); }
           }
           .animate-scroll-left {
-            animation: scroll-left 90s linear infinite;
+            animation: scroll-left 15s linear infinite;
           }
           
           @keyframes scroll-right {
@@ -204,7 +204,16 @@ const ProviderMarquee = () => {
             100% { transform: translateX(0); }
           }
           .animate-scroll-right {
-            animation: scroll-right 90s linear infinite;
+            animation: scroll-right 15s linear infinite;
+          }
+
+          @media (min-width: 1024px) {
+            .animate-scroll-left {
+              animation-duration: 75s;
+            }
+            .animate-scroll-right {
+              animation-duration: 75s;
+            }
           }
 
           .filter-white {
