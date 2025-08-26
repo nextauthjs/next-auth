@@ -166,7 +166,7 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
   <div className="max-w-7xl mx-auto px-8">
     <div className="flex flex-col items-center gap-12">
       <h2 className="text-3xl font-bold text-center text-neutral-800 dark:text-neutral-200 tracking-tight">
-        Trusted by the best in the business
+        Trusted by the best in the game
       </h2>
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <TestimonialCard icon={ChatGPTIcon} title="ChatGPT" iconClassName="h-10">
@@ -342,7 +342,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       {/* CTA Buttons */}
       <div className="flex flex-col sm:flex-row gap-4">
         <a
-          href="https://discord.gg/nextauth"
+          href="https://discord.authjs.dev/?utm_source=docs"
           target="_blank"
           className="p-4 px-6 text-center bg-violet-600 dark:bg-violet-800 text-white hover:dark:bg-violet-900 transition hover:bg-violet-700 duration-300 rounded-lg font-semibold flex items-center gap-2"
         >
@@ -353,6 +353,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           target="_blank"
           className="p-4 px-6 text-center dark:bg-gray-300 bg-violet-200 text-black transition duration-300 hover:dark:bg-gray-400 hover:bg-violet-300 rounded-lg font-semibold flex items-center gap-2"
         >
+          <svg className="h-5 w-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.966a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.393c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.966z"/>
+          </svg>
           Star on GitHub
         </a>
       </div>
@@ -416,36 +419,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       {/* Column 1: About */}
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">About Auth.js</h3>
-        <a href="/getting-started/introduction" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Introduction</a>
-        <a href="/getting-started/security" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Security</a>
-        <a href="https://github.com/nextauthjs/next-auth/blob/main/LICENSE" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">License</a>
+        <a href="/getting-started" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Introduction</a>
+        <a href="/getting-started/migrating-to-v5" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Migrating to v5</a>
       </div>
 
       {/* Column 2: Documentation */}
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Documentation</h3>
         <a href="/getting-started" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Get Started</a>
-        <a href="/getting-started/adapters" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Adapters</a>
-        <a href="/getting-started/providers" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Providers</a>
+        <a href="/getting-started/providers/42-school" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Providers</a>
+        <a href="/getting-started/adapters/azure-tables" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Adapters</a>
       </div>
 
       {/* Column 3: Community */}
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Community</h3>
         <a href="https://github.com/nextauthjs/next-auth" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">GitHub</a>
-        <a href="https://discord.gg/nextauth" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Discord</a>
-        <a href="https://x.com/nextauthjs" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Twitter / X</a>
+        <a href="https://discord.authjs.dev/?utm_source=docs" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Discord</a>
+        <a href="https://www.npmjs.com/package/next-auth" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">NPM</a>
       </div>
 
       {/* Column 4: Acknowledgements */}
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Acknowledgements</h3>
-        <a href="https://vercel.com" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Vercel</a>
         <a href="https://clerk.com" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Clerk (Sponsor)</a>
+        <a href="https://authjs.dev/contributors" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Contributors</a>
+        <a href="https://authjs.dev/sponsors" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Sponsors</a>
       </div>
     </div>
     <div className="mt-16 pt-8 border-t border-neutral-200 dark:border-neutral-800 text-center text-neutral-500 dark:text-neutral-500">
-      <p>&copy; {new Date().getFullYear()} Auth.js Team. All rights reserved.</p>
+      <p>&copy; {new Date().getFullYear()} Auth.js Team. Balázs Orbán and Team. All rights reserved.</p>
     </div>
 
   </div>
