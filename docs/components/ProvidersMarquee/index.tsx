@@ -2,16 +2,24 @@ import React from "react"
 
 // --- Reusable Provider Icon Component ---
 const ProviderIcon = ({ name }) => (
-  <div className="mx-4 flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-lg border border-black/5 bg-black/10 backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
+  <div className="group relative mx-4 flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-lg border border-black/5 bg-black/10 backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
     <img
       src={`../img/providers/${name}.svg`}
       alt={name}
-      className="h-12 w-12"
+      className="dark:filter-white h-12 w-12"
       // Fix: Cast the event target to HTMLImageElement to access style properties
       onError={(e) => {
         ;(e.currentTarget as HTMLImageElement).style.display = "none"
       }}
     />
+    {/* Floating tag that appears on hover */}
+    <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 scale-0 opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100">
+      <div className="whitespace-nowrap rounded-md border border-neutral-700 bg-neutral-900 px-2 py-1 text-xs text-neutral-200">
+        {name}.svg
+      </div>
+      {/* Tooltip arrow */}
+      <div className="absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 border-x-4 border-t-4 border-x-transparent border-t-neutral-700"></div>
+    </div>
   </div>
 )
 
