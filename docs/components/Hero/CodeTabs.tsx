@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { type Highlighter, createHighlighter } from "shiki"
+import Image from "next/image"
 
 import expressIcon from "../../public/img/etc/express.svg"
 import nextIcon from "../../public/img/etc/nextjs.svg"
@@ -7,18 +8,28 @@ import qwikIcon from "../../public/img/etc/qwik.svg"
 import sveltekitIcon from "../../public/img/etc/sveltekit.svg"
 
 const ExpressIcon = () => (
-  <img src={expressIcon.src} alt="Express" className="h-6 w-6 dark:invert" />
-)
-const NextIcon = () => (
-  <img
-    src={nextIcon.src}
-    alt="Next.js"
-    className="h-6 w-6 filter dark:invert"
+  <Image
+    src={expressIcon.src}
+    alt="Express"
+    width={24}
+    height={24}
+    className="dark:invert"
   />
 )
-const QwikIcon = () => <img src={qwikIcon.src} alt="Qwik" className="h-6 w-6" />
+const NextIcon = () => (
+  <Image
+    src={nextIcon.src}
+    alt="Next.js"
+    width={24}
+    height={24}
+    className="filter dark:invert"
+  />
+)
+const QwikIcon = () => (
+  <Image src={qwikIcon.src} alt="Qwik" width={24} height={24} />
+)
 const SvelteKitIcon = () => (
-  <img src={sveltekitIcon.src} alt="SvelteKit" className="h-6 w-6" />
+  <Image src={sveltekitIcon.src} alt="SvelteKit" width={24} height={24} />
 )
 const CaretRight = () => <span>›</span>
 
