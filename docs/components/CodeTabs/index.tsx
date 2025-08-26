@@ -1,4 +1,3 @@
-import { Pre } from "nextra/components"
 import React, { useState, useEffect } from "react"
 import { type Highlighter, createHighlighter } from "shiki"
 
@@ -7,7 +6,7 @@ const ExpressIcon = () => (
   <img
     src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg"
     alt="Express"
-    className="h-6 w-6 invert"
+    className="h-6 w-6 dark:invert"
   />
 )
 const NextIcon = () => (
