@@ -9,8 +9,17 @@ import SvelteKit from "../public/img/etc/sveltekit.svg"
 import Express from "../public/img/etc/express.svg"
 import Next from "../public/img/etc/nextjs.svg"
 import Qwik from "../public/img/etc/qwik.svg"
-
 import { CaretRight } from "@/icons"
+
+{/* Testimonials section */}
+import { VercelIcon } from "@/components/Icons/VercelIcon"
+import { ChatGPTIcon } from "@/components/Icons/ChatGPTIcon"
+import { CalIcon } from "@/components/Icons/CalIcon"
+import { T3Icon } from "@/components/Icons/T3Icon"
+import { ArtlistIcon } from "@/components/Icons/Artlist"
+import { DubIcon } from "@/components/Icons/DubIcon"
+
+import TestimonialCard from "@/components/TestimonialCard"
 
 <div className="relative overflow-hidden w-full h-full flex flex-col">
   <section className="flex justify-center w-full px-8 xl:px-0 flex-col lg:flex-row self-center items-center lg:items-start gap-12 max-w-7xl pt-12 pb-24 sm:py-32 lg:py-56">
@@ -159,103 +168,29 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
         Trusted by the best in the business
       </h2>
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* ChatGPT Card */}
-        <div className="flex flex-col gap-6 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <div className="flex justify-start text-black dark:text-white">
-            <svg
-              className="h-10"
-              viewBox="0 0 320 320"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-            >
-              <path d="m297.06 130.97c7.26-21.79 4.76-45.66-6.85-65.48-17.46-30.4-52.56-46.04-86.84-38.68-15.25-17.18-37.16-26.95-60.13-26.81-35.04-.08-66.13 22.48-76.91 55.82-22.51 4.61-41.94 18.7-53.31 38.67-17.59 30.32-13.58 68.54 9.92 94.54-7.26 21.79-4.76 45.66 6.85 65.48 17.46 30.4 52.56 46.04 86.84 38.68 15.24 17.18 37.16 26.95 60.13 26.8 35.06.09 66.16-22.49 76.94-55.86 22.51-4.61 41.94-18.7 53.31-38.67 17.57-30.32 13.55-68.51-9.94-94.51zm-120.28 168.11c-14.03.02-27.62-4.89-38.39-13.88.49-.26 1.34-.73 1.89-1.07l63.72-36.8c3.26-1.85 5.26-5.32 5.24-9.07v-89.83l26.93 15.55c.29.14.48.42.52.74v74.39c-.04 33.08-26.83 59.9-59.91 59.97zm-128.84-55.03c-7.03-12.14-9.56-26.37-7.15-40.18.47.28 1.3.79 1.89 1.13l63.72 36.8c3.23 1.89 7.23 1.89 10.47 0l77.79-44.92v31.1c.02.32-.13.63-.38.83l-64.41 37.19c-28.69 16.52-65.33 6.7-81.92-21.95zm-16.77-139.09c7-12.16 18.05-21.46 31.21-26.29 0 .55-.03 1.52-.03 2.2v73.61c-.02 3.74 1.98 7.21 5.23 9.06l77.79 44.91-26.93 15.55c-.27.18-.61.21-.91.08l-64.42-37.22c-28.63-16.58-38.45-53.21-21.95-81.89zm221.26 51.49-77.79-44.92 26.93-15.54c.27-.18.61-.21.91-.08l64.42 37.19c28.68 16.57 38.51 53.26 21.94 81.94-7.01 12.14-18.05 21.44-31.2 26.28v-75.81c.03-3.74-1.96-7.2-5.2-9.06zm26.8-40.34c-.47-.29-1.3-.79-1.89-1.13l-63.72-36.8c-3.23-1.89-7.23-1.89-10.47 0l-77.79 44.92v-31.1c-.02-.32.13-.63.38-.83l64.41-37.16c28.69-16.55 65.37-6.7 81.91 22 6.99 12.12 9.52 26.31 7.15 40.1zm-168.51 55.43-26.94-15.55c-.29-.14-.48-.42-.52-.74v-74.39c.02-33.12 26.89-59.96 60.01-59.94 14.01 0 27.57 4.92 38.34 13.88-.49.26-1.33.73-1.89 1.07l-63.72 36.8c-3.26 1.85-5.26 5.31-5.24 9.06l-.04 89.79zm14.63-31.54 34.65-20.01 34.65 20v40.01l-34.65 20-34.65-20z"/></svg>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">ChatGPT</h3>
-            <div className="text-neutral-600 dark:text-neutral-400">
-              The category-defining generative AI platform from OpenAI, enabling developers to build intelligent applications.
-            </div>
-          </div>
-        </div>
+        <TestimonialCard icon={ChatGPTIcon} title="ChatGPT" iconClassName="h-10">
+          The category-defining generative AI platform from OpenAI, enabling developers to build intelligent applications.
+        </TestimonialCard>
+        
+        <TestimonialCard icon={CalIcon} title="Cal.com" iconClassName="h-6">
+          Open-source scheduling infrastructure for everyone, from individuals to enterprise scale.
+        </TestimonialCard>
 
-        {/* Cal.com Card */}
-        <div className="flex flex-col gap-6 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <div className="flex justify-start text-black dark:text-white">
-             <svg className="h-6" viewBox="0 0 101 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.0582 20.817C4.32115 20.817 0 16.2763 0 10.6704C0 5.04589 4.1005 0.467773 10.0582 0.467773C13.2209 0.467773 15.409 1.43945 17.1191 3.66311L14.3609 5.96151C13.2025 4.72822 11.805 4.11158 10.0582 4.11158C6.17833 4.11158 4.04533 7.08268 4.04533 10.6704C4.04533 14.2582 6.38059 17.1732 10.0582 17.1732C11.7866 17.1732 13.2577 16.5566 14.4161 15.3233L17.1375 17.7151C15.501 19.8453 13.2577 20.817 10.0582 20.817Z" fill="currentColor"/>
-                <path d="M29.0161 5.88601H32.7304V20.4612H29.0161V18.331C28.2438 19.8446 26.9566 20.8536 24.4927 20.8536C20.5577 20.8536 17.4133 17.4341 17.4133 13.2297C17.4133 9.02528 20.5577 5.60571 24.4927 5.60571C26.9383 5.60571 28.2438 6.61477 29.0161 8.12835V5.88601ZM29.1264 13.2297C29.1264 10.95 27.5634 9.06266 25.0995 9.06266C22.7274 9.06266 21.1828 10.9686 21.1828 13.2297C21.1828 15.4346 22.7274 17.3967 25.0995 17.3967C27.5451 17.3967 29.1264 15.4907 29.1264 13.2297Z" fill="currentColor"/>
-                <path d="M35.3599 0H39.0742V20.4427H35.3599V0Z" fill="currentColor"/>
-                <path d="M40.7291 18.5182C40.7291 17.3223 41.6853 16.3132 42.9908 16.3132C44.2964 16.3132 45.2158 17.3223 45.2158 18.5182C45.2158 19.7515 44.278 20.7605 42.9908 20.7605C41.7037 20.7605 40.7291 19.7515 40.7291 18.5182Z" fill="currentColor"/>
-                <path d="M59.4296 18.1068C58.0505 19.7885 55.9543 20.8536 53.4719 20.8536C49.0404 20.8536 45.7858 17.4341 45.7858 13.2297C45.7858 9.02528 49.0404 5.60571 53.4719 5.60571C55.8623 5.60571 57.9402 6.61477 59.3193 8.20309L56.4508 10.6136C55.7336 9.71667 54.7958 9.04397 53.4719 9.04397C51.0999 9.04397 49.5553 10.95 49.5553 13.211C49.5553 15.472 51.0999 17.378 53.4719 17.378C54.9062 17.378 55.8991 16.6306 56.6346 15.6215L59.4296 18.1068Z" fill="currentColor"/>
-                <path d="M59.7422 13.2297C59.7422 9.02528 62.9968 5.60571 67.4283 5.60571C71.8598 5.60571 75.1144 9.02528 75.1144 13.2297C75.1144 17.4341 71.8598 20.8536 67.4283 20.8536C62.9968 20.8349 59.7422 17.4341 59.7422 13.2297ZM71.3449 13.2297C71.3449 10.95 69.8003 9.06266 67.4283 9.06266C65.0563 9.04397 63.5117 10.95 63.5117 13.2297C63.5117 15.4907 65.0563 17.3967 67.4283 17.3967C69.8003 17.3967 71.3449 15.4907 71.3449 13.2297Z" fill="currentColor"/>
-                <path d="M100.232 11.5482V20.4428H96.518V12.4638C96.518 9.94119 95.3412 8.85739 93.576 8.85739C91.921 8.85739 90.7442 9.67958 90.7442 12.4638V20.4428H87.0299V12.4638C87.0299 9.94119 85.8346 8.85739 84.0878 8.85739C82.4329 8.85739 80.9802 9.67958 80.9802 12.4638V20.4428H77.2659V5.8676H80.9802V7.88571C81.7525 6.31607 83.15 5.53125 85.3014 5.53125C87.3425 5.53125 89.0525 6.5403 89.9903 8.24074C90.9281 6.50293 92.3072 5.53125 94.8079 5.53125C97.8603 5.54994 100.232 7.86702 100.232 11.5482Z" fill="currentColor"/>
-              </svg>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">Cal.com</h3>
-            <div className="text-neutral-600 dark:text-neutral-400">
-             Open-source scheduling infrastructure for everyone, from individuals to enterprise scale.
-            </div>
-          </div>
-        </div>
+        <TestimonialCard icon={VercelIcon} title="Vercel" iconClassName="h-10">
+          The platform for frontend developers, providing the speed and reliability innovators need to create at the moment of inspiration.
+        </TestimonialCard>
 
-        {/* Vercel Card */}
-        <div className="flex flex-col gap-6 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <div className="flex justify-start text-black dark:text-white">
-            <svg className="h-8" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><title>Vercel</title><path d="m12 1.608 12 20.784H0Z"/></svg>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">Vercel</h3>
-            <div className="text-neutral-600 dark:text-neutral-400">
-              The platform for frontend developers, providing the speed and reliability innovators need to create at the moment of inspiration.
-            </div>
-          </div>
-        </div>
+        <TestimonialCard icon={DubIcon} title="Dub.co" iconClassName="h-10 w-10">
+          An open-source link management tool for modern marketing teams to create, share, and track short links.
+        </TestimonialCard>
 
-        {/* Dub.co Card */}
-        <div className="flex flex-col gap-6 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <div className="flex justify-start text-black dark:text-white">
-            <svg className="h-10" viewBox="0 0 65 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M32.5 64C50.1731 64 64.5 49.6731 64.5 32C64.5 20.1555 58.0648 9.81393 48.5 4.28099V31.9999V47.9998H40.5V45.8594C38.1466 47.2207 35.4143 47.9999 32.5 47.9999C23.6634 47.9999 16.5 40.8364 16.5 31.9999C16.5 23.1633 23.6634 15.9999 32.5 15.9999C35.4143 15.9999 38.1466 16.779 40.5 18.1404V1.00812C37.943 0.350018 35.2624 0 32.5 0C14.8269 0 0.500038 14.3269 0.500038 32C0.500038 49.6731 14.8269 64 32.5 64Z" fill="currentColor"/></svg>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">Dub.co</h3>
-            <div className="text-neutral-600 dark:text-neutral-400">
-              An open-source link management tool for modern marketing teams to create, share, and track short links.
-            </div>
-          </div>
-        </div>
+        <TestimonialCard icon={T3Icon} title="The T3 Stack" iconClassName="h-8">
+          An opinionated, modular stack focused on simplicity, and type safety, recommending Auth.js as its primary auth solution.
+        </TestimonialCard>
 
-        {/* T3 Stack Card */}
-        <div className="flex flex-col gap-6 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <div className="flex justify-start text-black dark:text-white">
-            <svg className="h-10" viewBox="0 0 258 199" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" clipRule="evenodd" d="M165.735 25.0701L188.947 0.972412H0.465994V25.0701H165.735Z" fill="currentColor"/>
-              <path d="M163.981 96.3239L254.022 3.68314L221.206 3.68295L145.617 80.7609L163.981 96.3239Z" fill="currentColor"/>
-              <path d="M233.658 131.418C233.658 155.075 214.48 174.254 190.823 174.254C171.715 174.254 155.513 161.738 150 144.439L146.625 133.848L127.329 153.143L129.092 157.336C139.215 181.421 163.034 198.354 190.823 198.354C227.791 198.354 257.759 168.386 257.759 131.418C257.759 106.937 244.399 85.7396 224.956 74.0905L220.395 71.3582L202.727 89.2528L210.788 93.5083C224.403 100.696 233.658 114.981 233.658 131.418Z" fill="currentColor"/>
-              <path fillRule="evenodd" clipRule="evenodd" d="M88.2625 192.669L88.2626 45.6459H64.1648L64.1648 192.669H88.2625Z" fill="currentColor"/>
-            </svg>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">The T3 Stack</h3>
-            <div className="text-neutral-600 dark:text-neutral-400">
-              An opinionated, modular stack focused on simplicity, and type safety, recommending Auth.js as its primary auth solution.
-            </div>
-          </div>
-        </div>
-
-        {/* Artlist Card */}
-        <div className="flex flex-col gap-6 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-          <div className="flex justify-start text-black dark:text-white">
-            <svg className="h-4" viewBox="0 0 47 13" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M30.5454 1.36828C30.5454 2.12396 29.9328 2.73655 29.1771 2.73655C28.4214 2.73655 27.8088 2.12396 27.8088 1.36828C27.8088 0.612598 28.4214 0 29.1771 0C29.9328 0 30.5454 0.612598 30.5454 1.36828ZM26.6818 12.2524H24.3134V0.508286H26.6818V12.2524ZM23.1691 12.2524V10.1788H21.9933C21.3718 10.1788 21.1366 9.90785 21.1366 9.40022V5.62534H23.1187V3.62885H21.1366V1.21293H18.7682L18.7705 3.62885L17.3444 3.63266L17.3404 5.62534H18.7682V9.7861C18.7682 11.4303 19.5913 12.2524 21.2374 12.2524H23.1691ZM16.1379 3.62885C14.7941 3.62885 14.1222 4.14895 13.6519 4.9207L13.4323 3.63266H11.2835V12.2567H13.6539V8.02656C13.6539 6.71794 14.1894 5.6658 15.6003 5.6658H16.5543V3.63266L16.1379 3.62885ZM27.995 12.2524H30.3802V3.72521H27.995V12.2524ZM35.5116 12.353C33.1096 12.353 31.4802 11.2289 31.3795 9.38345H33.6303C33.7143 10.1384 34.3694 10.6585 35.5284 10.6585C36.5194 10.6585 37.1241 10.3397 37.1241 9.73577C37.1241 9.05717 36.5789 8.98541 35.2934 8.8162L35.142 8.79624C33.1264 8.56136 31.5642 8.10838 31.5642 6.32999C31.5642 4.61871 33.0592 3.49463 35.2764 3.51141C37.5944 3.51141 39.1902 4.53482 39.3077 6.29643H37.0401C36.9729 5.60857 36.3178 5.18914 35.3604 5.18914C34.4365 5.18914 33.8319 5.52468 33.8319 6.07833C33.8319 6.71115 34.5232 6.79471 35.6931 6.93611L35.8139 6.95075C37.796 7.15207 39.4421 7.60506 39.4421 9.55122C39.4421 11.2625 37.8296 12.353 35.5116 12.353ZM45.7217 12.2524V10.1788H44.5459C43.9244 10.1788 43.6892 9.90785 43.6892 9.40023V5.62535H45.6713V3.62886H43.6892V1.21294H41.3208L41.3231 3.62886L39.897 3.63267L39.893 5.62535H41.3208V9.78611C41.3208 11.4303 42.1439 12.2524 43.79 12.2524H45.7217ZM5.02751 12.247H2.14772H0V10.3357L3.49117 1.22374H6.70832L10.1946 10.3335V12.247H7.94583H7.10308H5.02751ZM7.67152 10.1609L5.09734 3.50719L2.48466 10.1609H7.67152Z"></path></svg>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-neutral-900 dark:text-white">Artlist</h3>
-            <div className="text-neutral-600 dark:text-neutral-400">
-              A creative powerhouse providing creators with royalty-free music, SFX, stock footage, and video editing software.
-            </div>
-          </div>
-        </div>
-
+        <TestimonialCard icon={ArtlistIcon} title="Artlist" iconClassName="h-6">
+          A creative powerhouse providing creators with royalty-free music, SFX, stock footage, and video editing software.
+        </TestimonialCard>
       </div>
     </div>
 
