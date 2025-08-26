@@ -10,6 +10,7 @@ import Express from "../public/img/etc/express.svg"
 import Next from "../public/img/etc/nextjs.svg"
 import Qwik from "../public/img/etc/qwik.svg"
 import { CaretRight } from "@/icons"
+import { GithubLogo } from "@/components/Icons/GithubLogo"
 import { CodeTabs } from "@/components/CodeTabs"
 import ProvidersMarquee from "@/components/ProvidersMarquee"
 
@@ -219,7 +220,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* GitHub Stars Card */}
         <div className="flex flex-col items-center text-center gap-4 p-8 bg-neutral-100 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-transform duration-300 hover:scale-105 hover:border-violet-700">
-          <h3 className="text-5xl font-bold text-violet-600 dark:text-violet-400">30k+</h3>
+          <h3 className="text-5xl font-bold text-violet-600 dark:text-violet-400">25k+</h3>
           <div className="text-xl font-semibold text-neutral-900 dark:text-white">GitHub Stars</div>
           <div className="text-neutral-600 dark:text-neutral-400">
             A testament to the community's trust and love for the project.
@@ -228,7 +229,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         {/* NPM Downloads Card */}
         <div className="flex flex-col items-center text-center gap-4 p-8 bg-neutral-100 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-transform duration-300 hover:scale-105 hover:border-violet-700">
-          <h3 className="text-5xl font-bold text-violet-600 dark:text-violet-400">5M+</h3>
+          <h3 className="text-5xl font-bold text-violet-600 dark:text-violet-400">60M+</h3>
           <div className="text-xl font-semibold text-neutral-900 dark:text-white">NPM Downloads</div>
           <div className="text-neutral-600 dark:text-neutral-400">
             Powering millions of applications every month, from side projects to enterprise.
@@ -237,7 +238,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         {/* Contributors Card */}
         <div className="flex flex-col items-center text-center gap-4 p-8 bg-neutral-100 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-transform duration-300 hover:scale-105 hover:border-violet-700">
-          <h3 className="text-5xl font-bold text-violet-600 dark:text-violet-400">700+</h3>
+          <h3 className="text-5xl font-bold text-violet-600 dark:text-violet-400">900+</h3>
           <div className="text-xl font-semibold text-neutral-900 dark:text-white">Contributors</div>
           <div className="text-neutral-600 dark:text-neutral-400">
             A massive thank you to everyone who has contributed to the project.
@@ -257,12 +258,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         <a
           href="https://github.com/nextauthjs/next-auth"
           target="_blank"
-          className="p-4 px-6 text-center rounded-lg font-semibold flex items-center gap-2 text-black dark:text-white transition bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm"
+          className="p-4 text-center rounded-lg font-semibold flex items-center gap-2 text-black dark:text-white transition bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm"
         >
-          <svg className="h-5 w-5 text-black dark:text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.966a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.393c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.966z"/>
-          </svg>
-          Star on GitHub
+          <GithubLogo className="text-white h-8"/>
         </a>
       </div>
     </div>
