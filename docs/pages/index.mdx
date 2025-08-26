@@ -364,22 +364,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   </div>
 </section>
 
-{" "}
-
 <section className="w-full bg-white py-16 sm:py-24 dark:bg-black">
-  <div className="mx-auto max-w-7xl px-8">
-    <div className="relative isolate overflow-hidden rounded-2xl bg-violet-800/80 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
-      <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
+  <div className="mx-auto max-w-7xl px-4 sm:px-8">
+    <div className="relative isolate overflow-hidden rounded-2xl bg-violet-800/80 px-6 py-16 text-center shadow-2xl sm:rounded-3xl sm:px-16 sm:py-24">
+      <h2 className="mx-auto max-w-2xl text-2xl font-bold tracking-tight text-white sm:text-4xl">
         Ready to secure your app?
       </h2>
       <div className="mx-auto mt-6 max-w-xl text-lg leading-8 text-violet-200">
         Get started in minutes with our quickstart guide or dive into the
         documentation to see everything Auth.js has to offer.
       </div>
-      <div className="mt-10 flex items-center justify-center gap-x-6">
+      <div className="mt-10 flex flex-col items-center justify-center gap-x-6 gap-y-6 sm:flex-row">
         <a
           href="/getting-started"
-          className="rounded-md bg-white px-5 py-3.5 text-base font-semibold text-violet-800 shadow-sm transition-colors duration-300 hover:bg-violet-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="w-full rounded-md bg-white px-5 py-3.5 text-base font-semibold text-violet-800 shadow-sm transition-colors duration-300 hover:bg-violet-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
         >
           Get started
         </a>
@@ -420,6 +418,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">About Auth.js</h3>
         <a href="/getting-started" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Introduction</a>
+        <a href="/security" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Security</a>
         <a href="/getting-started/migrating-to-v5" className="text-neutral-600 dark:text-neutral-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Migrating to v5</a>
       </div>
 
