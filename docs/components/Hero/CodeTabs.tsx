@@ -1,61 +1,47 @@
 import React, { useState, useEffect } from "react"
 import { type Highlighter, createHighlighter } from "shiki"
 
-// --- SVG Icon Components (placeholders) ---
+import expressIcon from "../../public/img/etc/express.svg"
+import nextIcon from "../../public/img/etc/nextjs.svg"
+import qwikIcon from "../../public/img/etc/qwik.svg"
+import sveltekitIcon from "../../public/img/etc/sveltekit.svg"
+
 const ExpressIcon = () => (
-  <img
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg"
-    alt="Express"
-    className="h-6 w-6 dark:invert"
-  />
+  <img src={expressIcon.src} alt="Express" className="h-6 w-6 dark:invert" />
 )
 const NextIcon = () => (
   <img
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg"
+    src={nextIcon.src}
     alt="Next.js"
     className="h-6 w-6 filter dark:invert"
   />
 )
-const QwikIcon = () => (
-  <img
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/qwik/qwik-original.svg"
-    alt="Qwik"
-    className="h-6 w-6"
-  />
-)
+const QwikIcon = () => <img src={qwikIcon.src} alt="Qwik" className="h-6 w-6" />
 const SvelteKitIcon = () => (
-  <img
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg"
-    alt="SvelteKit"
-    className="h-6 w-6"
-  />
+  <img src={sveltekitIcon.src} alt="SvelteKit" className="h-6 w-6" />
 )
 const CaretRight = () => <span>›</span>
 
-// --- Main Code Tabs Component ---
 export const CodeTabs = () => {
   const [activeTab, setActiveTab] = useState("nextjs")
   const [highlighter, setHighlighter] = useState<Highlighter[] | null>([])
 
-  // 1. Initialize the Shiki highlighter
   useEffect(() => {
     ;(async () => {
       const hl = await createHighlighter({
         themes: ["github-light-default", "github-light-default"],
-        langs: ["ts", "tsx", "bash"], // Add any languages you need
+        langs: ["ts", "tsx", "bash"],
       })
       const h2 = await createHighlighter({
         themes: ["github-dark", "github-dark"],
-        langs: ["ts", "tsx", "bash"], // Add any languages you need
+        langs: ["ts", "tsx", "bash"],
       })
       setHighlighter([hl, h2])
     })()
   }, [])
 
-  // 2. A function to convert a raw code string to highlighted HTML
   const highlightLight = (code: string, lang: "ts" | "tsx" | "bash") => {
     if (!highlighter || highlighter.length !== 2) {
-      // Return raw code while highlighter is loading
       return `<pre><code>${code}</code></pre>`
     }
     return highlighter[0].codeToHtml(code, {
@@ -69,7 +55,6 @@ export const CodeTabs = () => {
 
   const highlightDark = (code: string, lang: "ts" | "tsx" | "bash") => {
     if (!highlighter || highlighter.length !== 2) {
-      // Return raw code while highlighter is loading
       return `<pre><code>${code}</code></pre>`
     }
     return highlighter[1].codeToHtml(code, {
@@ -126,7 +111,6 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
 
   return (
     <div className="w-full max-w-3xl rounded-lg border border-neutral-200 bg-[#FFF4] p-2 px-4 backdrop-blur-sm dark:border-neutral-800 dark:bg-[#FFFFFF03]">
-      {/* Header with Tabs */}
       <div className="flex items-center justify-between border-b border-neutral-200 p-2 pb-4 dark:border-neutral-800">
         <div className="flex items-center gap-2">
           {tabs.map((tab) => (
@@ -151,9 +135,7 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
         </div>
       </div>
 
-      {/* Code Content */}
       <div className="py-4">
-        {/* 3. Render the highlighted HTML using dangerouslySetInnerHTML */}
         <div
           className="dark:hidden [&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
           dangerouslySetInnerHTML={{

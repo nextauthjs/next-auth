@@ -1,97 +1,82 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
-import cx from "classnames"
+import React from "react"
 
-function kFormatter(num: number) {
-  return (Math.sign(num) * (Math.abs(num) / 1000)).toFixed(1) + "k"
+function FooterSection({ children }) {
+  return <div className="flex flex-col gap-4">{children}</div>
 }
 
-export function Footer({ className = "" }) {
-  const router = useRouter()
-
-  useEffect(() => {
-    fetch("https://api.github.com/repos/nextauthjs/next-auth")
-      .then((res) => res.json())
-      .then((data) => {
-        const githubStat = document.querySelector(".github-counter")!
-        if (!githubStat) return
-        githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
-      })
-
-    // CarbonAds hydration error workaround hack
-    const carbonAdsEl =
-      document.querySelector<HTMLScriptElement>("#_carbonads_js")
-    if (carbonAdsEl) {
-      carbonAdsEl.src =
-        "https://cdn.carbonads.com/carbon.js?serve=CWYD42JY&placement=authjsdev&format=cover"
-
-      router.events.on("routeChangeComplete", () => {
-        window._carbonads?.refresh()
-      })
-    }
-  }, [])
+function FooterHeading({ children }) {
   return (
-    <div
-      className={cx(
-        "mx-auto flex w-full flex-col items-center gap-4 px-12 pb-20 pt-24 text-gray-600 sm:gap-12 dark:text-gray-100",
-        className
-      )}
-    >
-      <div className="flex w-full max-w-[90rem] flex-col justify-between gap-6 sm:flex-row sm:gap-0">
-        <div className="flex flex-col">
-          <h3 className="mb-4 text-lg font-black">About Auth.js</h3>
-          <ul className="flex flex-col gap-2">
-            <li>
-              <a href="/getting-started">Introduction</a>
-            </li>
-            <li>
-              <a href="/security">Security</a>
-            </li>
-            <li>
-              <a
-                href="https://discord.authjs.dev/?utm_source=docs"
-                title="Join our Discord"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1"
-                target="_blank"
-              >
-                Discord Community
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div className="flex flex-col">
-          <h3 className="mb-4 text-lg font-black">Download</h3>
-          <ul className="flex flex-col gap-2">
-            <a
-              rel="noopener noreferrer"
-              target="_blank"
-              href="https://github.com/nextauthjs/next-auth"
-            >
-              GitHub
-            </a>
-            <a
-              rel="noopener noreferrer"
-              target="_blank"
-              href="https://www.npmjs.com/package/next-auth"
-            >
-              NPM
-            </a>
-          </ul>
-        </div>
-        <div className="flex flex-col">
-          <h3 className="mb-4 text-lg font-black">Acknowledgements</h3>
-          <ul className="flex flex-col gap-2">
-            <a href="/contributors">Contributors</a>
-            <a href="/sponsors">Sponsors</a>
-          </ul>
-        </div>
-      </div>
-      <div className="mx-auto mt-4 flex-grow text-gray-400 sm:mt-0 dark:text-gray-500">
-        Auth.js &copy; Balázs Orbán and Team - {new Date().getFullYear()}
-      </div>
-    </div>
+    <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+      {children}
+    </h3>
   )
 }
 
-export default Footer
+function FooterLink({ href, children }) {
+  return (
+    <a
+      href={href}
+      className="text-neutral-600 transition-colors hover:text-violet-500 dark:text-neutral-400 dark:hover:text-violet-400"
+    >
+      {children}
+    </a>
+  )
+}
+
+export default function Footer() {
+  return (
+    <footer className="w-full border-t border-neutral-200 bg-white dark:border-neutral-800 dark:bg-black">
+      <div className="mx-auto max-w-7xl px-8 pb-8 pt-16">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          <FooterSection>
+            <FooterHeading>About Auth.js</FooterHeading>
+            <FooterLink href="/getting-started">Introduction</FooterLink>
+            <FooterLink href="/security">Security</FooterLink>
+            <FooterLink href="/getting-started/migrating-to-v5">
+              Migrating to v5
+            </FooterLink>
+          </FooterSection>
+
+          <FooterSection>
+            <FooterHeading>Documentation</FooterHeading>
+            <FooterLink href="/getting-started">Get Started</FooterLink>
+            <FooterLink href="/getting-started/providers/42-school">
+              Providers
+            </FooterLink>
+            <FooterLink href="/getting-started/adapters/azure-tables">
+              Adapters
+            </FooterLink>
+          </FooterSection>
+
+          <FooterSection>
+            <FooterHeading>Community</FooterHeading>
+            <FooterLink href="https://github.com/nextauthjs/next-auth">
+              GitHub
+            </FooterLink>
+            <FooterLink href="https://discord.authjs.dev/?utm_source=docs">
+              Discord
+            </FooterLink>
+            <FooterLink href="https://www.npmjs.com/package/next-auth">
+              NPM
+            </FooterLink>
+          </FooterSection>
+
+          <FooterSection>
+            <FooterHeading>Acknowledgements</FooterHeading>
+            <FooterLink href="https://clerk.com">Clerk (Sponsor)</FooterLink>
+            <FooterLink href="https://authjs.dev/contributors">
+              Contributors
+            </FooterLink>
+            <FooterLink href="https://authjs.dev/sponsors">Sponsors</FooterLink>
+          </FooterSection>
+        </div>
+        <div className="mt-16 border-t border-neutral-200 pt-8 text-center text-neutral-500 dark:border-neutral-800 dark:text-neutral-500">
+          <p>
+            &copy; {new Date().getFullYear()} Auth.js Team. Balázs Orbán and
+            Team. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}
