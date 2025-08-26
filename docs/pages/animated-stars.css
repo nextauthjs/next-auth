@@ -9,6 +9,7 @@
 #stars {
   width: 1px;
   height: 1px;
+  border-radius: 50%;
   background: transparent;
   box-shadow:
     117px 1613px #ce93d8,
@@ -1427,6 +1428,7 @@
 #stars2 {
   width: 2px;
   height: 2px;
+  border-radius: 50%;
   background: transparent;
   box-shadow:
     1117px 1306px #ce93d8,
@@ -1845,6 +1847,7 @@
 #stars3 {
   width: 3px;
   height: 3px;
+  border-radius: 50%;
   background: transparent;
   box-shadow:
     940px 1360px #ce93d8,
@@ -2061,8 +2064,9 @@
 }
 
 #stars4 {
-  width: 1px;
-  height: 1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   background: transparent;
   box-shadow:
     233px 1976px #ce93d8,
