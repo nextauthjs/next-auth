@@ -1,111 +1,14 @@
 import React from "react"
+import manifest from "@/data/manifest.json"
 
-const providers = [
-  "42-school",
-  "apple",
-  "asgardeo",
-  "atlassian",
-  "auth0",
-  "authentik",
-  "azure-ad-b2c",
-  "azure-ad",
-  "azure-devops",
-  "azure",
-  "bankid-no",
-  "battlenet",
-  "beyondidentity",
-  "bitbucket",
-  "box",
-  "boxyhq-saml",
-  "bungie",
-  "click-up",
-  "cognito",
-  "coinbase",
-  "concept2",
-  "descope",
-  "discord",
-  "dribbble",
-  "dropbox",
-  "duende-identityserver-6",
-  "eventbrite",
-  "eveonline",
-  "facebook",
-  "faceit",
-  "figma",
-  "forwardemail",
-  "foursquare",
-  "freshbooks",
-  "frontegg",
-  "fusionauth",
-  "github",
-  "gitlab",
-  "google",
-  "hubspot",
-  "huggingface",
-  "identity-server4",
-  "instagram",
-  "kakao",
-  "keycloak",
-  "kinde",
-  "line",
-  "linkedin",
-  "logto",
-  "loops",
-  "mailchimp",
-  "mailgun",
-  "mailru",
-  "mastodon",
-  "mattermost",
-  "medium",
-  "microsoft-entra-id",
-  "naver",
-  "netlify",
-  "netsuite",
-  "nextcloud",
-  "nodemailer",
-  "notion",
-  "okta",
-  "onelogin",
-  "osso",
-  "osu",
-  "passage",
-  "passkey",
-  "patreon",
-  "ping-id",
-  "pinterest",
-  "pipedrive",
-  "postmark",
-  "reddit",
-  "resend",
-  "roblox",
-  "sailpoint",
-  "salesforce",
-  "sendgrid",
-  "simplelogin",
-  "slack",
-  "spotify",
-  "strava",
-  "threads",
-  "tiktok",
-  "todoist",
-  "trakt",
-  "twitch",
-  "twitter",
-  "united-effects",
-  "vercel",
-  "vipps-mobilepay",
-  "vipps",
-  "vk",
-  "webex",
-  "wechat",
-  "wikimedia",
-  "wordpress",
-  "workos",
-  "yandex",
-  "zitadel",
-  "zoho",
-  "zoom",
-]
+const providersOAuth = manifest.providersOAuth
+const providers = Object.keys(providersOAuth)
+
+const quarter = Math.ceil(providers.length / 4)
+const row1 = providers.slice(0, quarter)
+const row2 = providers.slice(quarter, quarter * 2)
+const row3 = providers.slice(quarter * 2, quarter * 3)
+const row4 = providers.slice(quarter * 3)
 
 const ProviderIcon = ({ name }) => (
   <div className="group relative mx-3 flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-lg border border-black/5 bg-black/10 backdrop-blur-sm lg:mx-4 lg:h-32 lg:w-32 dark:border-white/10 dark:bg-white/5">
@@ -119,7 +22,7 @@ const ProviderIcon = ({ name }) => (
     />
     <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 scale-0 opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100">
       <div className="whitespace-nowrap rounded-md border border-neutral-700 bg-neutral-900 px-2 py-1 text-xs text-neutral-200">
-        {name}.svg
+        {providersOAuth[name]}
       </div>
       <div className="absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 border-x-4 border-t-4 border-x-transparent border-t-neutral-700"></div>
     </div>
@@ -127,12 +30,6 @@ const ProviderIcon = ({ name }) => (
 )
 
 const ProviderMarquee = () => {
-  const quarter = Math.ceil(providers.length / 4)
-  const row1 = providers.slice(0, quarter)
-  const row2 = providers.slice(quarter, quarter * 2)
-  const row3 = providers.slice(quarter * 2, quarter * 3)
-  const row4 = providers.slice(quarter * 3)
-
   return (
     <div className="relative w-full overflow-hidden py-16">
       <div className="flex flex-col gap-6 lg:gap-8">
