@@ -284,7 +284,7 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
         <div className="flex flex-col gap-8">
           {/* Pillar 1: Use Any Framework */}
           <div className="flex flex-col gap-4 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg h-full">
-            <div className="flex justify-start text-white">
+            <div className="flex justify-start text-black dark:text-white">
               <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -297,7 +297,7 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
 
           {/* Pillar 2: Own Your Data */}
           <div className="flex flex-col gap-4 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg h-full">
-            <div className="flex justify-start text-white">
+            <div className="flex justify-start text-black dark:text-white">
               <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 7v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7M4 7c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2M4 7l8 5 8-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -311,7 +311,7 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
 
         {/* Pillar 3: Fully Extensible with Code Example */}
         <div className="flex flex-col gap-4 p-8 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-            <div className="flex justify-start text-white">
+            <div className="flex justify-start text-black dark:text-white">
               <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10 3H5a2 2 0 00-2 2v5m7-7h5a2 2 0 012 2v5m-7 11h5a2 2 0 002-2v-5m-7 7H5a2 2 0 01-2-2v-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -346,7 +346,7 @@ export const { handlers, auth } = NextAuth({
 
 {" "}
 
-<section className="relative flex h-[40rem] flex-col items-center justify-center overflow-hidden bg-neutral-100 py-24 dark:bg-neutral-900">
+<section className="relative flex h-[40rem] flex-col items-center justify-center overflow-hidden">
   <div className="z-10 flex flex-col items-center justify-center gap-4 px-8 text-center">
     <h2 className="text-3xl font-bold tracking-tight text-neutral-800 dark:text-neutral-200">
       Sign in with anything.
@@ -546,7 +546,7 @@ export const { handlers, auth } = NextAuth({
 </section>
 
 <footer className="w-full bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-800">
-  <div className="max-w-7xl mx-auto px-8 py-16">
+  <div className="max-w-7xl mx-auto px-8 pt-16 pb-8">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {/* Column 1: About */}
       <div className="flex flex-col gap-4">
@@ -592,6 +592,6 @@ export const { handlers, auth } = NextAuth({
     <div id="stars4"></div>
   </div>
   <div
-    className="fixed inset-0 w-full h-full pointer-events-none bg-[radial-gradient(circle,#11111100_0%,#111111_50%)] -z-10"
+    className="fixed inset-0 w-full h-full pointer-events-none bg-[radial-gradient(circle,#FFFFFF00_0%,#FFFFFF_50%)] dark:bg-[radial-gradient(circle,#11111100_0%,#111111_50%)] -z-10"
   />
 </div>
