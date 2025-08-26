@@ -255,22 +255,20 @@ export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] 
             <div className="text-lg text-neutral-600 dark:text-neutral-400 mb-4">
               Choose from 50+ pre-configured providers or add your own. Customize everything from UI to session handling with callbacks.
             </div>
-            <div className="p-4 bg-neutral-900/50 border border-neutral-800 rounded-lg font-mono text-sm text-neutral-400 mt-auto">
-              <pre className="whitespace-pre-wrap"><code>
+            <div className="px-4 bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 rounded-lg font-mono text-sm mt-auto">
 
-{`...
-export const { handlers, auth } = NextAuth({
-  providers: [ GitHub, Apple, Auth0 ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) token.id = user.id
-      return token
-    }
-  }
-})`}
+<Code className="!bg-transparent !border-transparent [&>pre]:whitespace-pre-wrap">
+```ts
+import NextAuth from "next-auth"
 
-</code></pre>
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [],
+})
+```
+</Code>
+
 </div>
+
 </div>
 
       </div>
