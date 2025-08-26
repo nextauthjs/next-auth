@@ -10,6 +10,7 @@ import Express from "../public/img/etc/express.svg"
 import Next from "../public/img/etc/nextjs.svg"
 import Qwik from "../public/img/etc/qwik.svg"
 import { CaretRight } from "@/icons"
+import { CodeTabs } from "@/components/CodeTabs"
 import ProvidersMarquee from "@/components/ProvidersMarquee"
 
 {/* Testimonials section */}
@@ -63,113 +64,8 @@ import TestimonialCard from "@/components/TestimonialCard"
       </Link>
     </div>
   </div>
-
-{/* Bottom Column: Interactive Code Block */}
-
-  <div className="w-full max-w-3xl rounded-lg bg-[#FFF4] p-2 backdrop-blur-sm dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800">
-  <RichTabs
-    orientation="horizontal"
-    tabKey="hero"
-    defaultValue="nextjs"
-    className="!m-0 flex flex-col !py-0"
-  >
-    <RichTabs.List className="justify-between p-2">
-      <div className="flex items-center gap-2">
-        {[
-          { value: "express", src: Express, name: "Express", darkInvert: true },
-          { value: "nextjs", src: Next, name: "Next.js", darkInvert: true },
-          { value: "qwik", src: Qwik, name: "Qwik", darkInvert: false },
-          { value: "sveltekit", src: SvelteKit, name: "SvelteKit", darkInvert: false },
-        ].map((trigger) => (
-          <RichTabs.Trigger
-            key={trigger.value}
-            title={trigger.name}
-            value={trigger.value}
-            orientation="vertical"
-            className="!h-10 !w-10 !flex-row !items-center !justify-center !gap-2 !border-0 rounded-lg p-2 font-medium text-neutral-600 outline-none transition-all duration-300 hover:bg-black/5 aria-selected:!bg-violet-600 aria-selected:!text-white dark:text-neutral-400 hover:dark:bg-white/5 aria-selected:dark:!bg-violet-800"
-          >
-            <img
-              width="24"
-              src={trigger.src}
-              alt={`${trigger.name} Logo`}
-              className={trigger.darkInvert ? "dark:invert" : ""}
-            />
-          </RichTabs.Trigger>
-        ))}
-        <Link
-          href="/getting-started/integrations"
-          className="flex h-10 items-center gap-2 rounded-lg p-2 px-3 text-sm font-medium text-neutral-600 transition-colors duration-300 hover:bg-black/5 dark:text-neutral-400 hover:dark:bg-white/5"
-        >
-          <span>More</span>
-          <CaretRight className="size-4" />
-        </Link>
-      </div>
-      <div className="inline-flex h-12 items-center self-end gap-2 pr-2">
-        <div className="size-3 rounded-full bg-green-400"></div>
-        <div className="size-3 rounded-full bg-amber-400"></div>
-        <div className="size-3 rounded-full bg-red-400"></div>
-      </div>
-    </RichTabs.List>
-    <div className="pt-2 rounded-lg bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm [&_div]:border-0 [&_div]:shadow-none [&>div>div>div>pre]:!bg-transparent [&>div>div>div>pre]:!p-4">
-      {Object.entries({
-        nextjs: `\
-// auth.ts
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
-export const { auth, handlers } = NextAuth({ providers: [GitHub] })
-
-// middleware.ts
-export { auth as middleware } from "@auth"
-
-// app/api/auth/[...nextauth]/route.ts
-import { handlers } from "@auth"
-export const { GET, POST } = handlers
-`,
-        sveltekit: `\
-// src/auth.ts
-import { SvelteKitAuth } from "@auth/sveltekit"
-import GitHub from '@auth/sveltekit/providers/github'
-
-export const { handle } = SvelteKitAuth({
-  providers: [GitHub],
-})
-
-// src/hooks.server.ts
-export { handle } from "./auth"
-`,
-        express: `\
-// server.ts
-import { express } from "express"
-import { ExpressAuth } from "@auth/express"
-import GitHub from "@auth/express/providers/github"
-
-const app = express()
-
-app.use("/auth/\*", ExpressAuth({ providers: [GitHub] }))
-`,
-        qwik: `\
-// src/routes/plugin@auth.ts
-import { QwikAuth } from "@auth/qwik"
-import GitHub from "@auth/qwik/providers/github"
-export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] }))
-`,
-}).map(([key, code]) => (
-
-<RichTabs.Content
-key={key}
-orientation="vertical"
-value={key}
-className="h-full"
-tabIndex={-1} >
-<Pre data-language="tsx" data-copy="">
-<Code data-language="tsx">{code}</Code>
-</Pre>
-</RichTabs.Content>
-))}
-</div>
-
-  </RichTabs>
-</div>
+    <CodeTabs />
+  
 </section>
 
   <section className="w-full bg-white dark:bg-neutral-950 py-16 sm:py-24">
@@ -361,9 +257,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         <a
           href="https://github.com/nextauthjs/next-auth"
           target="_blank"
-          className="p-4 px-6 text-center dark:bg-gray-300 bg-violet-200 text-black transition duration-300 hover:dark:bg-gray-400 hover:bg-violet-300 rounded-lg font-semibold flex items-center gap-2"
+          className="p-4 px-6 text-center rounded-lg font-semibold flex items-center gap-2 text-black dark:text-white transition bg-[#FFF4] dark:bg-[#FFFFFF03] border border-neutral-200 dark:border-neutral-800 backdrop-blur-sm"
         >
-          <svg className="h-5 w-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="h-5 w-5 text-black dark:text-white" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.966a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.175 0l-3.38 2.455c-.784.57-1.838-.197-1.539-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.393c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.966z"/>
           </svg>
           Star on GitHub

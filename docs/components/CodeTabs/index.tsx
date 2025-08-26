@@ -1,0 +1,149 @@
+import { Pre } from "nextra/components"
+import React, { useState, useEffect } from "react"
+import { type Highlighter, createHighlighter } from "shiki"
+
+// --- SVG Icon Components (placeholders) ---
+const ExpressIcon = () => (
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg"
+    alt="Express"
+    className="h-6 w-6 invert"
+  />
+)
+const NextIcon = () => (
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg"
+    alt="Next.js"
+    className="h-6 w-6 filter dark:invert"
+  />
+)
+const QwikIcon = () => (
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/qwik/qwik-original.svg"
+    alt="Qwik"
+    className="h-6 w-6"
+  />
+)
+const SvelteKitIcon = () => (
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg"
+    alt="SvelteKit"
+    className="h-6 w-6"
+  />
+)
+const CaretRight = () => <span>›</span>
+
+// --- Main Code Tabs Component ---
+export const CodeTabs = () => {
+  const [activeTab, setActiveTab] = useState("nextjs")
+  const [highlighter, setHighlighter] = useState<Highlighter | null>(null)
+
+  // 1. Initialize the Shiki highlighter
+  useEffect(() => {
+    ;(async () => {
+      const hl = await createHighlighter({
+        themes: ["github-dark", "github-dark"],
+        langs: ["ts", "tsx", "bash"], // Add any languages you need
+      })
+      setHighlighter(hl)
+    })()
+  }, [])
+
+  // 2. A function to convert a raw code string to highlighted HTML
+  const highlight = (code: string, lang: "ts" | "tsx" | "bash") => {
+    if (!highlighter) {
+      // Return raw code while highlighter is loading
+      return `<pre><code>${code}</code></pre>`
+    }
+    return highlighter.codeToHtml(code, {
+      lang,
+      themes: {
+        light: "github-dark",
+        dark: "github-dark",
+      },
+    })
+  }
+
+  const codeSnippets = {
+    nextjs: `// auth.ts
+import NextAuth from "next-auth"
+import GitHub from "next-auth/providers/github"
+export const { auth, handlers } = NextAuth({ providers: [GitHub] })
+
+// middleware.ts
+export { auth as middleware } from "@auth"
+
+// app/api/auth/[...nextauth]/route.ts
+import { handlers } from "@auth"
+export const { GET, POST } = handlers`,
+    sveltekit: `// src/auth.ts
+import { SvelteKitAuth } from "@auth/sveltekit"
+import GitHub from '@auth/sveltekit/providers/github'
+
+export const { handle } = SvelteKitAuth({
+  providers: [GitHub],
+})
+
+// src/hooks.server.ts
+export { handle } from "./auth"`,
+    express: `// server.ts
+import express from "express"
+import { ExpressAuth } from "@auth/express"
+import GitHub from "@auth/express/providers/github"
+
+const app = express()
+
+app.use("/auth/*", ExpressAuth({ providers: [GitHub] }))`,
+    qwik: `// src/routes/plugin@auth.ts
+import { QwikAuth } from "@auth/qwik"
+import GitHub from "@auth/qwik/providers/github"
+export const { onRequest, useSession } = QwikAuth$(() => ({ providers: [GitHub] }))`,
+  }
+
+  const tabs = [
+    { value: "express", Icon: ExpressIcon, name: "Express" },
+    { value: "nextjs", Icon: NextIcon, name: "Next.js" },
+    { value: "qwik", Icon: QwikIcon, name: "Qwik" },
+    { value: "sveltekit", Icon: SvelteKitIcon, name: "SvelteKit" },
+  ]
+
+  return (
+    <div className="w-full max-w-3xl rounded-lg border border-neutral-200 bg-[#FFF4] p-2 px-4 backdrop-blur-sm dark:border-neutral-800 dark:bg-[#FFFFFF03]">
+      {/* Header with Tabs */}
+      <div className="flex items-center justify-between border-b border-neutral-200 p-2 pb-4 dark:border-neutral-800">
+        <div className="flex items-center gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setActiveTab(tab.value)}
+              className={`flex h-10 w-10 items-center justify-center rounded-lg bg-[#FFF4] outline-none dark:bg-[#FFFFFF09] ${
+                activeTab === tab.value &&
+                "border border-neutral-200 dark:border-neutral-800"
+              }`}
+            >
+              <tab.Icon />
+            </button>
+          ))}
+          <a
+            href="/getting-started/integrations"
+            className="flex h-10 items-center gap-2 rounded-lg p-2 px-3 text-sm font-medium text-neutral-600 transition-colors duration-300 hover:bg-black/5 dark:text-neutral-400 hover:dark:bg-white/5"
+          >
+            <span>More</span>
+            <CaretRight />
+          </a>
+        </div>
+      </div>
+
+      {/* Code Content */}
+      <div className="py-4">
+        {/* 3. Render the highlighted HTML using dangerouslySetInnerHTML */}
+        <div
+          className="[&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{
+            __html: highlight(codeSnippets[activeTab], "ts"),
+          }}
+        />
+      </div>
+    </div>
+  )
+}
