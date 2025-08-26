@@ -23,11 +23,32 @@ import type {
   User,
 } from "../../../types.js"
 import type { Cookie, SessionStore } from "../../utils/cookie.js"
+import type { JWT } from "../../../jwt.js"
 import {
   assertInternalOptionsWebAuthn,
   verifyAuthenticate,
   verifyRegister,
 } from "../../utils/webauthn-utils.js"
+
+/**
+ * Resolve the maxAge value for session cookies.
+ * Handles static values, "session" for session cookies, and dynamic functions.
+ */
+async function resolveMaxAge(
+  maxAge: InternalOptions["session"]["maxAge"],
+  params: {
+    user?: User
+    token?: JWT
+    trigger?: "signIn" | "signUp" | "update"
+    isNewUser?: boolean
+    session?: any
+  }
+): Promise<number | "session"> {
+  if (typeof maxAge === "function") {
+    return await maxAge(params)
+  }
+  return maxAge
+}
 
 /** Handle callbacks from login services */
 export async function callback(
@@ -161,13 +182,23 @@ export async function callback(
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token, salt })
 
-          // Set cookie expiry date
-          const cookieExpires = new Date()
-          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-          const sessionCookies = sessionStore.chunk(newToken, {
-            expires: cookieExpires,
+          // Resolve maxAge dynamically
+          const resolvedMaxAge = await resolveMaxAge(sessionMaxAge, {
+            user,
+            token,
+            trigger: isNewUser ? "signUp" : "signIn",
+            isNewUser,
           })
+
+          // Set cookie expiry date
+          const cookieOptions: { expires?: Date } = {}
+          if (resolvedMaxAge !== "session") {
+            const cookieExpires = new Date()
+            cookieExpires.setTime(cookieExpires.getTime() + resolvedMaxAge * 1000)
+            cookieOptions.expires = cookieExpires
+          }
+
+          const sessionCookies = sessionStore.chunk(newToken, cookieOptions)
           cookies.push(...sessionCookies)
         }
       } else {
@@ -285,13 +316,23 @@ export async function callback(
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token, salt })
 
-          // Set cookie expiry date
-          const cookieExpires = new Date()
-          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-          const sessionCookies = sessionStore.chunk(newToken, {
-            expires: cookieExpires,
+          // Resolve maxAge dynamically
+          const resolvedMaxAge = await resolveMaxAge(sessionMaxAge, {
+            user,
+            token,
+            trigger: isNewUser ? "signUp" : "signIn",
+            isNewUser,
           })
+
+          // Set cookie expiry date
+          const cookieOptions: { expires?: Date } = {}
+          if (resolvedMaxAge !== "session") {
+            const cookieExpires = new Date()
+            cookieExpires.setTime(cookieExpires.getTime() + resolvedMaxAge * 1000)
+            cookieOptions.expires = cookieExpires
+          }
+
+          const sessionCookies = sessionStore.chunk(newToken, cookieOptions)
           cookies.push(...sessionCookies)
         }
       } else {
@@ -374,13 +415,23 @@ export async function callback(
         // Encode token
         const newToken = await jwt.encode({ ...jwt, token, salt })
 
-        // Set cookie expiry date
-        const cookieExpires = new Date()
-        cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-        const sessionCookies = sessionStore.chunk(newToken, {
-          expires: cookieExpires,
+        // Resolve maxAge dynamically
+        const resolvedMaxAge = await resolveMaxAge(sessionMaxAge, {
+          user: loggedInUser,
+          token,
+          trigger: isNewUser ? "signUp" : "signIn",
+          isNewUser,
         })
+
+        // Set cookie expiry date
+        const cookieOptions: { expires?: Date } = {}
+        if (resolvedMaxAge !== "session") {
+          const cookieExpires = new Date()
+          cookieExpires.setTime(cookieExpires.getTime() + resolvedMaxAge * 1000)
+          cookieOptions.expires = cookieExpires
+        }
+
+        const sessionCookies = sessionStore.chunk(newToken, cookieOptions)
 
         cookies.push(...sessionCookies)
       }
@@ -482,13 +533,23 @@ export async function callback(
           // Encode token
           const newToken = await jwt.encode({ ...jwt, token, salt })
 
-          // Set cookie expiry date
-          const cookieExpires = new Date()
-          cookieExpires.setTime(cookieExpires.getTime() + sessionMaxAge * 1000)
-
-          const sessionCookies = sessionStore.chunk(newToken, {
-            expires: cookieExpires,
+          // Resolve maxAge dynamically
+          const resolvedMaxAge = await resolveMaxAge(sessionMaxAge, {
+            user,
+            token,
+            trigger: isNewUser ? "signUp" : "signIn",
+            isNewUser,
           })
+
+          // Set cookie expiry date
+          const cookieOptions: { expires?: Date } = {}
+          if (resolvedMaxAge !== "session") {
+            const cookieExpires = new Date()
+            cookieExpires.setTime(cookieExpires.getTime() + resolvedMaxAge * 1000)
+            cookieOptions.expires = cookieExpires
+          }
+
+          const sessionCookies = sessionStore.chunk(newToken, cookieOptions)
           cookies.push(...sessionCookies)
         }
       } else {
