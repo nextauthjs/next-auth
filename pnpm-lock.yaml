@@ -676,9 +676,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@panva/hkdf':
-        specifier: ^1.2.1
-        version: 1.2.1
       jose:
         specifier: ^6.0.6
         version: 6.0.6
@@ -4067,9 +4064,6 @@ packages:
 
   '@pandacss/types@0.22.1':
     resolution: {integrity: sha512-WZCQrTa5wlenBStlu0gntKGi4dWA96LCft1oEqdh2u6VPK0sEfqk0wjyJGps/YN3pNjNKiQW3b4p1Wx+RshlYA==}
-
-  '@panva/hkdf@1.2.1':
-    resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
 
   '@parcel/watcher-android-arm64@2.4.1':
     resolution: {integrity: sha512-LOi/WTbbh3aTn2RYddrO8pnapixAziFl6SMxHM69r3tvdSm94JtCenaKgk1GRg5FJ5wpMCpHeW+7yqPlvZv7kg==}
@@ -18056,8 +18050,6 @@ snapshots:
       ts-pattern: 5.0.5
 
   '@pandacss/types@0.22.1': {}
-
-  '@panva/hkdf@1.2.1': {}
 
   '@parcel/watcher-android-arm64@2.4.1':
     optional: true
