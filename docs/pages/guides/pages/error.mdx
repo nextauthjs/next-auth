@@ -54,14 +54,12 @@ So now we can update our custom error page with it:
 ```tsx filename="app/error/page.tsx"
 "use client"
 
+import tyep { ReactNode } from "react";
 import { useSearchParams } from "next/navigation"
+import type { SignInPageErrorParam, ErrorPageParam } from "next-auth"
 
-enum Error {
-  Configuration = "Configuration",
-}
-
-const errorMap = {
-  [Error.Configuration]: (
+const errorMap: Partial<Record<SignInPageErrorParam | ErrorPageParam, ReactNode>> = {
+  Configuration: (
     <p>
       There was a problem when trying to authenticate. Please contact us if this
       error persists. Unique error code:{" "}
