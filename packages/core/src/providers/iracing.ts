@@ -68,6 +68,14 @@ export default function IRacing<P extends IRacingProfile>(
           delete data.refresh_token
         }
 
+        if (data?.refresh_token_expires_in === null) {
+          delete data.refresh_token_expires_in
+        }
+
+        if (data?.scope === null) {
+          delete data.scope
+        }
+
         return new Response(JSON.stringify(data), {
           status: response.status,
           headers: response.headers,
