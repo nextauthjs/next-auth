@@ -60,7 +60,20 @@ export default function IRacing<P extends IRacingProfile>(
         scope: "iracing.profile",
       },
     },
-    token: "https://oauth.iracing.com/oauth2/token",
+    token: {
+      url: "https://oauth.iracing.com/oauth2/token",
+      conform: async (response) => {
+        const data = await response.clone().json()
+        if (data?.refresh_token === null) {
+          delete data.refresh_token
+        }
+
+        return new Response(JSON.stringify(data), {
+          status: response.status,
+          headers: response.headers,
+        })
+      },
+    },
     userinfo: "https://oauth.iracing.com/oauth2/iracing/profile",
     profile(profile) {
       return {
