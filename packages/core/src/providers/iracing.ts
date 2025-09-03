@@ -44,7 +44,31 @@ export interface IRacingProfile {
  *
  * ### Resources
  *
+ * - [iRacing OAuth documentation](https://oauth.iracing.com/oauth2/book/introduction.html)
+ *
  * ### Notes
+ *
+ * By default, Auth.js assumes that the iRacing provider is
+ * based on the [OAuth 2](https://www.rfc-editor.org/rfc/rfc6749.html) specification.
+ *
+ * You need to configure a client with iRacing as described at https://oauth.iracing.com/oauth2/book/client_registration.html
+ *
+ * :::tip
+ *
+ * The HubSpot provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/hubspot.ts).
+ * To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
+ *
+ * :::
+ *
+ * :::info **Disclaimer**
+ *
+ * If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+ *
+ * Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+ * the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+ * we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
+ *
+ * :::
  */
 export default function IRacing<P extends IRacingProfile>(
   options: OAuthUserConfig<P>
@@ -57,7 +81,7 @@ export default function IRacing<P extends IRacingProfile>(
     authorization: {
       url: "https://oauth.iracing.com/oauth2/authorize",
       params: {
-        scope: "iracing.profile",
+        scope: "iracing.profile iracing.auth",
       },
     },
     token: {
@@ -89,6 +113,7 @@ export default function IRacing<P extends IRacingProfile>(
         name: profile.iracing_name,
       }
     },
+    style: { brandColor: "#0F1F43", text: "#fff" },
     options,
   }
 }
