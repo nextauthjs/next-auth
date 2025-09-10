@@ -134,7 +134,7 @@ export const CodeTabs = () => {
         tabKey="framework"
         className="mt-0 pt-0"
       >
-        <div className="flex items-center justify-between border-b border-neutral-200 pb-4 pt-2 dark:border-neutral-800">
+        <div className="-mt-2 flex items-center justify-between border-b border-neutral-200 pb-4 dark:border-neutral-800">
           <RichTabs.List className="gap-3">
             {tabs.map((tab) => (
               <RichTabs.Trigger
@@ -171,7 +171,7 @@ export const CodeTabs = () => {
               }}
             />
             <div
-              className="hidden dark:block [&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
+              className="hidden text-sm lg:text-base dark:block [&>*]:!bg-transparent [&_*]:whitespace-pre-wrap"
               dangerouslySetInnerHTML={{
                 __html: highlightDark(
                   codeSnippets[tab.value as keyof typeof codeSnippets],
