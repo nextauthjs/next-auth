@@ -1,6 +1,6 @@
 {
-  "name": "@kollerdroid/next-auth",
-  "version": "4.24.11-dev.38",
+  "name": "next-auth",
+  "version": "4.25.0",
   "description": "Authentication for Next.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
