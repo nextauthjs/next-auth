@@ -127,8 +127,16 @@ export default function Wca(
       },
     },
     profile(profile) {
-      const { id, name, avatar, email } = profile.me
-      return { id: id.toString(), name, email, image: avatar.url }
+      const { id, name, avatar, email, wca_id, country, gender } = profile.me
+      return {
+        id: id.toString(),
+        name,
+        email,
+        image: avatar.url,
+        wcaId: wca_id,
+        country,
+        gender,
+      }
     },
     style: { bg: "#24292f", text: "#fff" },
     options: config,
