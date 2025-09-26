@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@auth/core": "workspace:*",
-    "@neondatabase/serverless": "^0.10.4"
+    "@neondatabase/serverless": "^1.0.1"
   },
   "devDependencies": {
     "@types/ws": "^8.5.13",
