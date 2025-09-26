@@ -6,8 +6,7 @@
   <p align="center">Open Source. Full Stack. Own Your Data.</p>
   <p align="center" style="align: center;">
     <a href="https://x.com/authjs" ><img src="https://shields.io/badge/Follow @authjs-000?logo=x&style=flat-square" alt="X (formerly known Twitter)" /></a>
-    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/latest?style=flat-square&label=latest%20stable" alt="NPM next-auth@latest release" /></a>
-    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/beta?style=flat-square&label=latest%20NextAuth.js v5" alt="NPM next-auth@beta release" /></a>
+    <a href="https://github.com/nextauthjs/next-auth/releases"><img src="https://img.shields.io/npm/v/next-auth/latest?style=flat-square&label=latest%20stable" alt="NPM next-auth@latest release" /></a> 
     <!-- TODO: Should count `@auth/core` when NextAuth.js v5 is released as stable. -->
     <a href="https://www.npmtrends.com/next-auth"><img src="https://img.shields.io/npm/dm/next-auth?style=flat-square&color=cyan" alt="Downloads" /></a>
     <a href="https://github.com/nextauthjs/next-auth/stargazers"><img src="https://img.shields.io/github/stars/nextauthjs/next-auth?style=flat-square&color=orange" alt="GitHub Stars" /></a>
