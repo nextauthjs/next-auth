@@ -75,9 +75,6 @@ If you think you have found a vulnerability (or are not sure) in Auth.js or any 
 We're open to all community contributions! If you'd like to contribute in any way, please first read
 our [Contributing Guide](https://github.com/nextauthjs/.github/blob/main/CONTRIBUTING.md).
 
-> [!NOTE]
-> The Auth.js/NextAuth.js project is not provided by, nor otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
-
 ## License
 
 ISC
