@@ -38,14 +38,6 @@ export default {
       typesetting: "article",
     },
   },
-  sponsors: {
-    title: "Sponsors",
-    type: "page",
-    display: "hidden",
-    theme: {
-      typesetting: "article",
-    },
-  },
   404: {
     title: "404",
     type: "page",
