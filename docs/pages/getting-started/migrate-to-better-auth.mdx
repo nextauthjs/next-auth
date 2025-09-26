@@ -1,0 +1,166 @@
+---
+title: Migrating to Better Auth
+---
+
+import { Callout, Tabs, Steps } from "nextra/components"
+
+## Before You Begin
+
+Before starting the migration process, set up Better Auth in your project. Follow the Better Auth [installation guide](https://better-auth.com/docs/installation) to get started.
+
+<Steps>
+### Mapping Existing Columns
+
+Instead of altering your existing database column names, you can map them to match Better Auth's expected structure. This allows you to retain your current database schema.
+
+**User Schema**
+
+Map the following fields in the user schema:
+
+- (next-auth v4) `emailVerified`: datetime → boolean
+
+**Session Schema**
+
+Map the following fields in the session schema:
+
+- `expires` → `expiresAt`
+- `sessionToken` → `token`
+- (next-auth v4) add `createdAt` with datetime type
+- (next-auth v4) add `updatedAt` with datetime type
+
+Make sure to have `createdAt` and `updatedAt` fields on your session schema.
+
+**Account Schema**
+
+Map these fields in the account schema:
+
+- (next-auth v4) `provider` → `providerId`
+- `providerAccountId` → `accountId`
+- `refresh_token` → `refreshToken`
+- `access_token` → `accessToken`
+- (next-auth v3) `access_token_expires` → `accessTokenExpiresAt` and int → datetime
+- (next-auth v4) `expires_at` → `accessTokenExpiresAt` and int → datetime
+- `id_token` → `idToken`
+- (next-auth v4) add `createdAt` with datetime type
+- (next-auth v4) add `updatedAt` with datetime type
+
+Remove the `session_state`, `type`, and `token_type` fields, as they are not required by Better Auth.
+
+```typescript filename="auth.ts"
+export const auth = betterAuth({
+  // Other configs
+  account: {
+    fields: {
+      accountId: "providerAccountId",
+      refreshToken: "refresh_token",
+      accessToken: "access_token",
+      accessTokenExpiresAt: "access_token_expires",
+      idToken: "id_token",
+    },
+  },
+})
+```
+
+**Note:** If you use ORM adapters, you can map these fields in your schema file.
+
+**Example with Prisma:**
+
+```prisma filename="schema.prisma"
+model Session {
+    id          String   @id @default(cuid())
+    expiresAt   DateTime @map("expires") // Map your existing `expires` field to Better Auth's `expiresAt`
+    token       String   @map("sessionToken") // Map your existing `sessionToken` field to Better Auth's `token`
+    userId      String
+    user        User     @relation(fields: [userId], references: [id])
+}
+```
+
+Make sure to have `createdAt` and `updatedAt` fields on your account schema.
+
+### Update the Route Handler
+
+In the `app/api/auth` folder, rename the `[...nextauth]` file to `[...all]` to avoid confusion. Then, update the `route.ts` file as follows:
+
+```typescript filename="app/api/auth/[...all]/route.ts"
+import { toNextJsHandler } from "better-auth/next-js"
+import { auth } from "~/server/auth"
+
+export const { POST, GET } = toNextJsHandler(auth)
+```
+
+### Update the Client
+
+Create a file named `auth-client.ts` in the `lib` folder. Add the following code:
+
+```typescript filename="auth-client.ts"
+import { createAuthClient } from "better-auth/react"
+
+export const authClient = createAuthClient({
+  baseURL: process.env.BASE_URL!, // Optional if the API base URL matches the frontend
+})
+
+export const { signIn, signOut, useSession } = authClient
+```
+
+**Social Login**
+
+Update your social login actions to use Better Auth. For example, for Discord:
+
+```typescript filename="actions.ts"
+import { signIn } from "~/lib/auth-client"
+
+export const signInDiscord = async () => {
+  const data = await signIn.social({
+    provider: "discord",
+  })
+  return data
+}
+```
+
+**Update `useSession` Calls**
+
+Replace `useSession` calls with Better Auth’s version. Example:
+
+```typescript filename="Profile.tsx"
+import { useSession } from "~/lib/auth-client";
+
+export const Profile = () => {
+    const { data } = useSession();
+    return (
+        <div>
+            <pre>
+                {JSON.stringify(data, null, 2)}
+            </pre>
+        </div>
+    );
+};
+```
+
+### Server-Side Session Handling
+
+Use the `auth` instance to get session data on the server:
+
+```typescript filename="actions.ts"
+"use server"
+
+import { auth } from "~/server/auth"
+import { headers } from "next/headers"
+
+export const protectedAction = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+}
+```
+
+### Middleware
+
+To protect routes with middleware, refer to the [Next.js middleware guide](/docs/integrations/next#middleware).
+
+## Wrapping Up
+
+Congratulations! You’ve successfully migrated from NextAuth.js to Better Auth. For a complete implementation with multiple authentication methods, check out the [demo repository](https://github.com/Bekacru/t3-app-better-auth).
+
+Better Auth offers greater flexibility and more features—be sure to explore the [documentation](/docs) to unlock its full potential.
+
+</Steps>
