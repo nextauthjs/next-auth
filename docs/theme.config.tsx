@@ -177,7 +177,6 @@ const config: DocsThemeConfig = {
     labels: "feedback",
   },
   toc: {
-    extraContent: <script id="_carbonads_js" />,
     backToTop: true,
   },
   docsRepositoryBase: "https://github.com/nextauthjs/next-auth/edit/main/docs",
