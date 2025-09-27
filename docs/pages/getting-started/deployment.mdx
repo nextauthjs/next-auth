@@ -45,7 +45,11 @@ to `true`. This tells Auth.js to trust the `X-Forwarded-Host` header from the re
 
 ### `AUTH_URL`
 
-This environment variable is mostly unnecessary with v5 as the host is inferred from the request headers. However, if you are using a different base path, you can set this environment variable as well. For example, `AUTH_URL=http://localhost:3000/web/auth` or `AUTH_URL=https://company.com/app1/auth`
+Generally, this environment variable is inferred from the request headers in v5 and is not required. However, you should set AUTH_URL if:
+- Your application is behind a reverse proxy that does not sanitize headers
+- You are using a different base path, for example, AUTH_URL=http://localhost:3000/web/auth or AUTH_URL=https://company.com/app1/auth.
+
+If you experience issues with redirect URIs (e.g., being redirected to localhost instead of your domain), try setting the AUTH_URL environment variable to your desired base URL.
 
 ### `AUTH_REDIRECT_PROXY_URL`
 
