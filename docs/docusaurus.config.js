@@ -158,12 +158,6 @@ module.exports = {
       respectPrefersColorScheme: true,
     },
   },
-  scripts: [
-    {
-      src: 'js/clerk.js',
-      async: true,
-    }
-  ],
   presets: [
     [
       "@docusaurus/preset-classic",

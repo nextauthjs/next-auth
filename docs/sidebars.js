@@ -60,7 +60,6 @@ module.exports = {
       collapsed: true,
       items: ["guides/basics", "guides/fullstack", "guides/testing"],
     },
-    clerk,
     {
       type: "html",
       value:
