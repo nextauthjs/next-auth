@@ -257,8 +257,6 @@ NextAuth.js is an open source project built by individual contributors who are v
 
 If you would like NextAuth.js to support a particular feature, the best way to help make it happen is to raise a feature request describing the feature and offer to work with other contributors to develop and test it.
 
-If you are not able to develop a feature yourself, you can offer to sponsor someone to work on it.
-
 </p>
 </details>
 

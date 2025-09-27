@@ -144,11 +144,7 @@ module.exports = {
             {
               label: "Contributors",
               to: "/contributors",
-            },
-            {
-              label: "Sponsors",
-              to: "/sponsors",
-            },
+            },  
             {
               label: "Images by unDraw",
               to: "https://undraw.co/",

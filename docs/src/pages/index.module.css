@@ -134,17 +134,3 @@
   align-items: center;
   gap: 0.5rem;
 }
-
-.sponsoredBadge {
-  font-size: 0.6rem;
-  line-height: 1rem;
-  border-radius: 2rem;
-  padding-inline: 0.5rem;
-  padding-block: 0.25rem;
-  background-color: rgb(229 231 235 / 0.5) !important;
-  color: #696969;
-}
-
-[data-theme="dark"] .sponsoredBadge {
-  background-color: #242526 !important;
-}

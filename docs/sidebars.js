@@ -1,9 +1,3 @@
-/** @type {import('@docusaurus/plugin-content-docs').PropSidebarItemHtml} */
-const clerk = {
-  type: "html",
-  value: "<div style='margin-top:6px;padding:12px;font-weight:600;'><div style='font-size:10px;opacity:0.5;margin-bottom:4px;'>Sponsored</div>Looking for a<br />hosted alternative?<a href='https://go.clerk.com/DefS1u4' style='display:block;'>Try Clerk &rarr;</div>",
-}
-
 module.exports = {
   docs: [
     {

@@ -132,19 +132,7 @@ function Home() {
                   Get Started
                 </Link>
               </div>
-            </div>
-            <div className={styles.heroClerk}>
-              <div>
-                Looking for a hosted alternative?
-                <a
-                  href="https://go.clerk.com/ew92wBC"
-                  target="_blank"
-                >
-                  Try Clerk →
-                </a>
-              </div>
-              <div className={styles.sponsoredBadge}>Sponsored</div>
-            </div>
+            </div> 
             <div className="hero-marquee">
               <ProviderMarquee />
             </div>
