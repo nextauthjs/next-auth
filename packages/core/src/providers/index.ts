@@ -21,7 +21,7 @@ export * from "./oauth.js"
  * @see [RFC 6749 - The OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749.html#section-2.3)
  * @see [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication)
  * @see [Email or Passwordless Authentication](https://authjs.dev/concepts/oauth)
- * @see [Credentials-based Authentication](https://authjs.dev/concepts/credentials)
+ * @see [Credentials-based Authentication](https://authjs.dev/getting-started/providers/credentials)
  */
 export type ProviderType =
   | "oidc"
@@ -63,7 +63,7 @@ interface InternalProviderOptions {
  *
  * @see [OAuth/OIDC guide](https://authjs.dev/guides/providers/custom-provider)
  * @see [Email (Passwordless) guide](https://authjs.dev/guides/providers/email)
- * @see [Credentials guide](https://authjs.dev/guides/providers/credentials)
+ * @see [Credentials guide](https://authjs.dev/getting-started/providers/credentials)
  */
 export type Provider<P extends Profile = any> = (
   | ((
