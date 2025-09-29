@@ -118,21 +118,14 @@ export default function GitLab<P extends GitLabProfile>(
   }
 ): OAuthConfig<P> {
   const baseUrl = config?.instance?.baseUrl ?? "https://gitlab.com"
-  const apiBaseUrl = config?.instance?.baseUrl
-    ? `${config?.instance?.baseUrl}/api/v4`
-    : "https://gitlab.com/api/v4"
 
   return {
     id: "gitlab",
     name: "GitLab",
     type: "oauth",
-    authorization: {
-      url: `${baseUrl}/oauth/authorize?scope=read_user`,
-    },
+    authorization: `${baseUrl}/oauth/authorize?scope=read_user`,
     token: `${baseUrl}/oauth/token`,
-    userinfo: {
-      url: `${apiBaseUrl}/user`,
-    },
+    userinfo: `${baseUrl}/api/v4/user`,
     profile(profile) {
       return {
         id: profile.sub?.toString() ?? profile.id?.toString(),
