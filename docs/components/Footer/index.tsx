@@ -83,12 +83,11 @@ export function Footer({ className = "" }) {
           <h3 className="mb-4 text-lg font-black">Acknowledgements</h3>
           <ul className="flex flex-col gap-2">
             <a href="/contributors">Contributors</a>
-            <a href="/sponsors">Sponsors</a>
           </ul>
         </div>
       </div>
       <div className="mx-auto mt-4 flex-grow text-gray-400 sm:mt-0 dark:text-gray-500">
-        Auth.js &copy; Balázs Orbán and Team - {new Date().getFullYear()}
+        Auth.js &copy; Better Auth Inc. - {new Date().getFullYear()}
       </div>
     </div>
   )
