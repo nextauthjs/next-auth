@@ -45,9 +45,9 @@
     "@auth/core": "workspace:*"
   },
   "peerDependencies": {
-    "firebase-admin": "^12.0.0"
+    "firebase-admin": "^12.0.0 || ^13.0.0"
   },
   "devDependencies": {
-    "firebase-admin": "^12.0.0"
+    "firebase-admin": "^13.5.0"
   }
 }
