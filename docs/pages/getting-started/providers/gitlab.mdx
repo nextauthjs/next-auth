@@ -54,7 +54,14 @@ import NextAuth from "next-auth"
 import GitLab from "next-auth/providers/gitlab"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [GitLab],
+  providers: [
+    // Default (gitlab.com)
+    GitLab,
+    // Self-hosted example
+    GitLab({
+      baseUrl: "https://gitlab.example.com",
+    }),
+  ],
 })
 ```
 
@@ -67,7 +74,14 @@ import GitLab from "@auth/qwik/providers/gitlab"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   () => ({
-    providers: [GitLab],
+    providers: [
+      GitLab,
+      GitLab({
+        instance: {
+          baseUrl: "https://gitlab.example.com"
+        }
+      })
+    ],
   })
 )
 ```
@@ -80,7 +94,12 @@ import { SvelteKitAuth } from "@auth/sveltekit"
 import GitLab from "@auth/sveltekit/providers/gitlab"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [GitLab],
+  providers: [
+    GitLab,
+    GitLab({
+      baseUrl: "https://gitlab.example.com",
+    }),
+  ],
 })
 ```
 
@@ -91,7 +110,17 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import GitLab from "@auth/express/providers/gitlab"
 
-app.use("/auth/*", ExpressAuth({ providers: [GitLab] }))
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      GitLab,
+      GitLab({
+        baseUrl: "https://gitlab.example.com",
+      }),
+    ],
+  })
+)
 ```
 
   </Code.Express>

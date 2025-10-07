@@ -109,18 +109,26 @@ export interface GitLabProfile extends Record<string, any> {
  * :::
  */
 export default function GitLab<P extends GitLabProfile>(
-  options: OAuthUserConfig<P>
+  options: OAuthUserConfig<P> & {
+    /**
+     * @default "https://gitlab.com"
+     */
+    baseUrl?: URL | string
+  }
 ): OAuthConfig<P> {
+  const baseUrl = options.baseUrl ?? "https://gitlab.com"
+  const url = new URL(baseUrl.toString())
+
   return {
     id: "gitlab",
     name: "GitLab",
     type: "oauth",
-    authorization: "https://gitlab.com/oauth/authorize?scope=read_user",
-    token: "https://gitlab.com/oauth/token",
-    userinfo: "https://gitlab.com/api/v4/user",
+    authorization: `${url}oauth/authorize?scope=read_user`,
+    token: `${url}oauth/token`,
+    userinfo: `${url}api/v4/user`,
     profile(profile) {
       return {
-        id: profile.sub?.toString(),
+        id: profile.sub?.toString() ?? profile.id?.toString(),
         name: profile.name ?? profile.username,
         email: profile.email,
         image: profile.avatar_url,
