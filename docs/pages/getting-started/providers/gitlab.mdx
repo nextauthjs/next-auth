@@ -59,10 +59,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitLab,
     // Self-hosted example
     GitLab({
-      instance: {
-        baseUrl: "https://gitlab.example.com"
-      }
-    })
+      baseUrl: "https://gitlab.example.com",
+    }),
   ],
 })
 ```
@@ -99,10 +97,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     GitLab,
     GitLab({
-      instance: {
-        baseUrl: "https://gitlab.example.com"
-      }
-    })
+      baseUrl: "https://gitlab.example.com",
+    }),
   ],
 })
 ```
@@ -114,14 +110,17 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 import { ExpressAuth } from "@auth/express"
 import GitLab from "@auth/express/providers/gitlab"
 
-app.use("/auth/*", ExpressAuth({ providers: [
-  GitLab,
-  GitLab({
-    instance: {
-      baseUrl: "https://gitlab.example.com"
-    }
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      GitLab,
+      GitLab({
+        baseUrl: "https://gitlab.example.com",
+      }),
+    ],
   })
-] }))
+)
 ```
 
   </Code.Express>

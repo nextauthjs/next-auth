@@ -109,23 +109,23 @@ export interface GitLabProfile extends Record<string, any> {
  * :::
  */
 export default function GitLab<P extends GitLabProfile>(
-  config: OAuthUserConfig<P> & {
-    /** Configuration for usage with self-hosted GitLab instances. */
-    instance?: {
-      /** The base URL of your GitLab instance. */
-      baseUrl?: string
-    }
+  options: OAuthUserConfig<P> & {
+    /**
+     * @default "https://gitlab.com"
+     */
+    baseUrl?: URL | string
   }
 ): OAuthConfig<P> {
-  const baseUrl = config?.instance?.baseUrl ?? "https://gitlab.com"
+  const baseUrl = options.baseUrl ?? "https://gitlab.com"
+  const url = new URL(baseUrl.toString())
 
   return {
     id: "gitlab",
     name: "GitLab",
     type: "oauth",
-    authorization: `${baseUrl}/oauth/authorize?scope=read_user`,
-    token: `${baseUrl}/oauth/token`,
-    userinfo: `${baseUrl}/api/v4/user`,
+    authorization: `${url}oauth/authorize?scope=read_user`,
+    token: `${url}oauth/token`,
+    userinfo: `${url}api/v4/user`,
     profile(profile) {
       return {
         id: profile.sub?.toString() ?? profile.id?.toString(),
@@ -135,6 +135,6 @@ export default function GitLab<P extends GitLabProfile>(
       }
     },
     style: { bg: "#FC6D26", text: "#fff" },
-    options: config,
+    options,
   }
 }
