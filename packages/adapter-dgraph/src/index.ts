@@ -52,7 +52,8 @@ export function DgraphAdapter(
 
   const fragments = { ...defaultFragments, ...options?.fragments }
   return {
-    async createUser(input: AdapterUser) {
+    async createUser(input) {
+      if (input?.id) { delete (input.id) } // Dgraph will generate the ID by itself
       const result = await c.run<{ user: any[] }>(
         /* GraphQL */ `
           mutation ($input: [AddUserInput!]!) {
