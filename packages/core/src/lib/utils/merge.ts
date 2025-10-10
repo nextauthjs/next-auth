@@ -1,5 +1,13 @@
-function isObject(item: unknown): item is object {
-  return item !== null && typeof item === "object"
+function isPlainObject(item: unknown): item is Record<string, unknown> {
+  return (
+    item !== null &&
+    typeof item === "object" &&
+    !Array.isArray(item) &&
+    !(item instanceof Date) &&
+    !(item instanceof RegExp) &&
+    !(item instanceof Error) &&
+    Object.prototype.toString.call(item) === "[object Object]"
+  )
 }
 
 /** Deep merge two or more objects */
@@ -8,23 +16,34 @@ export function merge<T extends Record<string, unknown>>(
   ...sources: Array<Record<string, unknown> | undefined>
 ): T & Record<string, unknown> {
   if (!sources.length) return target
-  const source = sources.shift()
 
-  if (isObject(target) && isObject(source)) {
-    for (const key in source) {
-      if (isObject(source[key])) {
-        if (!isObject(target[key]))
-          (target as Record<string, unknown>)[key] = Array.isArray(source[key])
-            ? []
-            : {}
+  for (const source of sources) {
+    if (!source) {
+      continue
+    }
+
+    // Use Object.keys to avoid prototype pollution
+    for (const key of Object.keys(source)) {
+      const sourceValue = source[key]
+      const targetValue = (target as Record<string, unknown>)[key]
+
+      // Skip undefined values from source
+      if (sourceValue === undefined) {
+        continue
+      }
+
+      // If both values are plain objects, merge them recursively
+      if (isPlainObject(targetValue) && isPlainObject(sourceValue)) {
         merge(
-          (target as Record<string, unknown>)[key] as T,
-          source[key] as Record<string, unknown>
+          targetValue as Record<string, unknown>,
+          sourceValue as Record<string, unknown>
         )
-      } else if (source[key] !== undefined)
-        (target as Record<string, unknown>)[key] = source[key]
+      } else {
+        // Otherwise, override the target value with the source value
+        ;(target as Record<string, unknown>)[key] = sourceValue
+      }
     }
   }
 
-  return merge(target, ...sources)
+  return target as T & Record<string, unknown>
 }
