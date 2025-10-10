@@ -25,7 +25,6 @@
     "format:write": "prettier --cache --write .",
     "release": "release",
     "peek": "pnpm release --peek",
-    "version:pr": "node ./config/version-pr",
     "setup-fw-integration": "pnpm clean --filter=@auth/frameworks-template && node packages/utils/scripts/setup-fw-integration.js"
   },
   "devDependencies": {
