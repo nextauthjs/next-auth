@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import { useRouter } from "next/router"
 import cx from "classnames"
 
 function kFormatter(num: number) {
@@ -7,8 +6,6 @@ function kFormatter(num: number) {
 }
 
 export function Footer({ className = "" }) {
-  const router = useRouter()
-
   useEffect(() => {
     fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
@@ -17,18 +14,6 @@ export function Footer({ className = "" }) {
         if (!githubStat) return
         githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
       })
-
-    // CarbonAds hydration error workaround hack
-    const carbonAdsEl =
-      document.querySelector<HTMLScriptElement>("#_carbonads_js")
-    if (carbonAdsEl) {
-      carbonAdsEl.src =
-        "https://cdn.carbonads.com/carbon.js?serve=CWYD42JY&placement=authjsdev&format=cover"
-
-      router.events.on("routeChangeComplete", () => {
-        window._carbonads?.refresh()
-      })
-    }
   }, [])
   return (
     <div
