@@ -1,0 +1,319 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/adapters/nats.svg" width="64" height="64" />
+
+# NATS KV Adapter
+
+## Resources
+
+- [NATS documentation](https://docs.nats.io/)
+
+## Setup
+
+### Installation
+
+```bash npm2yarn
+npm install @nats-io/transport-node @nats-io/kv @auth/nats-kv-adapter
+```
+
+### Environment Variables
+
+```sh
+NATS_SERVERS,
+NATS_CREDS
+```
+
+### Configuration
+
+You can either use this with Symbol.asyncDispose or handle the disposal yourself.
+
+#### With explicit resource management
+
+If you do choose asyncDispose, make sure you environment is configured to handled that by targeting at least es2022 and the `lib` option to include `esnext` or `esnext.disposable`, or by providing a polyfill. Using this pattern the adapter will call the cleanup function when the adapter is after NATS operations. [https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html#using-declarations-and-explicit-resource-management)
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+async function getNats(): Promise<
+  { kv: KV } & {
+    [Symbol.asyncDispose]: () => Promise<void>
+  }
+> {
+  const nc = await connect({
+    servers: process.env.NATS_SERVERS,
+    authenticator: process.env.NATS_CREDS,
+  })
+  const kvm = new Kvm(nc)
+  const kv = await kvm.create("name-of-auth-bucket")
+
+  return {
+    kv: kv,
+    [Symbol.asyncDispose]: async () => {
+      await nc.drain()
+      await nc.close()
+    },
+  }
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: NatsKVAdapter(getNats),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+async function getNats(): Promise<
+  { kv: KV } & {
+    [Symbol.asyncDispose]: () => Promise<void>
+  }
+> {
+  const nc = await connect({
+    servers: process.env.NATS_SERVERS,
+    authenticator: process.env.NATS_CREDS,
+  })
+  const kvm = new Kvm(nc)
+  const kv = await kvm.create("name-of-auth-bucket")
+
+  return {
+    kv: kv,
+    [Symbol.asyncDispose]: async () => {
+      await nc.drain()
+      await nc.close()
+    },
+  }
+}
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: NatsKVAdapter(getNats),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+async function getNats(): Promise<
+  { kv: KV } & {
+    [Symbol.asyncDispose]: () => Promise<void>
+  }
+> {
+  const nc = await connect({
+    servers: process.env.NATS_SERVERS,
+    authenticator: process.env.NATS_CREDS,
+  })
+  const kvm = new Kvm(nc)
+  const kv = await kvm.create("name-of-auth-bucket")
+
+  return {
+    kv: kv,
+    [Symbol.asyncDispose]: async () => {
+      await nc.drain()
+      await nc.close()
+    },
+  }
+}
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: NatsKVAdapter(getNats),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+async function getNats(): Promise<
+  { kv: KV } & {
+    [Symbol.asyncDispose]: () => Promise<void>
+  }
+> {
+  const nc = await connect({
+    servers: process.env.NATS_SERVERS,
+    authenticator: process.env.NATS_CREDS,
+  })
+  const kvm = new Kvm(nc)
+  const kv = await kvm.create("name-of-auth-bucket")
+
+  return {
+    kv: kv,
+    [Symbol.asyncDispose]: async () => {
+      await nc.drain()
+      await nc.close()
+    },
+  }
+}
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: NatsKVAdapter(getNats),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+#### Without explicit resource management
+
+You can instead provide the adapter with a KV instance, and handle the connection and disposal yourself. Useful if you want to keep the connection alive, or have explicit control over the connection.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+const nc = await connect({
+  servers: process.env.NATS_SERVERS,
+  authenticator: process.env.NATS_CREDS,
+})
+const kvm = new Kvm(nc)
+const kv = await kvm.create("name-of-auth-bucket")
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: NatsKVAdapter(kv),
+  providers: [],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+const nc = await connect({
+  servers: process.env.NATS_SERVERS,
+  authenticator: process.env.NATS_CREDS,
+})
+const kvm = new Kvm(nc)
+const kv = await kvm.create("name-of-auth-bucket")
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [],
+    adapter: NatsKVAdapter(kv),
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+const nc = await connect({
+  servers: process.env.NATS_SERVERS,
+  authenticator: process.env.NATS_CREDS,
+})
+const kvm = new Kvm(nc)
+const kv = await kvm.create("name-of-auth-bucket")
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: NatsKVAdapter(kv),
+  providers: [],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import { NatsKVAdapter } from "@auth/nats-kv-adapter"
+import { connect } from "@nats-io/transport-node"
+import { Kvm, KV } from "@nats-io/kv"
+
+const nc = await connect({
+  servers: process.env.NATS_SERVERS,
+  authenticator: process.env.NATS_CREDS,
+})
+const kvm = new Kvm(nc)
+const kv = await kvm.create("name-of-auth-bucket")
+
+const app = express()
+
+app.set("trust proxy", true)
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [],
+    adapter: NatsKVAdapter(kv),
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+### Advanced usage
+
+If you have multiple Auth.js connected apps using this instance, you need different key prefixes for every app.
+
+You can change the prefixes by passing an `options` object as the second argument to the adapter factory function.
+
+The default values for this object are:
+
+```ts
+const defaultOptions = {
+  baseKeyPrefix: "",
+  accountKeyPrefix: "user:account:",
+  accountByUserIdPrefix: "user:account:by-user-id:",
+  emailKeyPrefix: "user:email:",
+  sessionKeyPrefix: "user:session:",
+  sessionByUserIdKeyPrefix: "user:session:by-user-id:",
+  userKeyPrefix: "user:",
+  verificationTokenKeyPrefix: "user:token:",
+}
+```
+
+Usually changing the `baseKeyPrefix` should be enough for this scenario, but for more custom setups, you can also change the prefixes of every single key.
+
+```ts
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: NatsKVAdapter(kv, { baseKeyPrefix: "app2:" }),
+})
+```
