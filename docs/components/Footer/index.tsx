@@ -1,40 +1,25 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
-import cx from "classnames"
+import { useEffect } from "react";
+import cx from "classnames";
 
 function kFormatter(num: number) {
-  return (Math.sign(num) * (Math.abs(num) / 1000)).toFixed(1) + "k"
+  return (Math.sign(num) * (Math.abs(num) / 1000)).toFixed(1) + "k";
 }
 
 export function Footer({ className = "" }) {
-  const router = useRouter()
-
   useEffect(() => {
     fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
       .then((data) => {
-        const githubStat = document.querySelector(".github-counter")!
-        if (!githubStat) return
-        githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
-      })
-
-    // CarbonAds hydration error workaround hack
-    const carbonAdsEl =
-      document.querySelector<HTMLScriptElement>("#_carbonads_js")
-    if (carbonAdsEl) {
-      carbonAdsEl.src =
-        "https://cdn.carbonads.com/carbon.js?serve=CWYD42JY&placement=authjsdev&format=cover"
-
-      router.events.on("routeChangeComplete", () => {
-        window._carbonads?.refresh()
-      })
-    }
-  }, [])
+        const githubStat = document.querySelector(".github-counter")!;
+        if (!githubStat) return;
+        githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100);
+      });
+  }, []);
   return (
     <div
       className={cx(
         "mx-auto flex w-full flex-col items-center gap-4 px-12 pb-20 pt-24 text-gray-600 sm:gap-12 dark:text-gray-100",
-        className
+        className,
       )}
     >
       <div className="flex w-full max-w-[90rem] flex-col justify-between gap-6 sm:flex-row sm:gap-0">
@@ -90,7 +75,7 @@ export function Footer({ className = "" }) {
         Auth.js &copy; Better Auth Inc. - {new Date().getFullYear()}
       </div>
     </div>
-  )
+  );
 }
 
-export default Footer
+export default Footer;
