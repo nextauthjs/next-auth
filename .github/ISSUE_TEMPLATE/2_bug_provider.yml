@@ -72,6 +72,7 @@ body:
         - "Mastodon"
         - "Medium"
         - "Microsoft Entra ID"
+        - "Feishu"
         - "Naver"
         - "Netlify"
         - "NetSuite"
