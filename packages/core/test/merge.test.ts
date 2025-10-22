@@ -108,4 +108,240 @@ describe("merge function", () => {
       authorization: "https://example.com/user-config",
     })
   })
+
+  it("should handle merging Date object", () => {
+    const target = {
+      sessionToken: {
+        name: "authjs.session-token",
+        options: {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          secure: false,
+        },
+      },
+    }
+    const source = {
+      sessionToken: {
+        options: {
+          expires: new Date("2024-01-01T00:00:00Z"),
+        },
+      },
+    }
+
+    const expected = {
+      sessionToken: {
+        name: "authjs.session-token",
+        options: {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          secure: false,
+          expires: source.sessionToken.options.expires,
+        },
+      },
+    }
+
+    expect(merge(target, source)).toEqual(expected)
+  })
+
+  it("should handle RegExp objects", () => {
+    const target = { pattern: /old/g }
+    const source = { pattern: /new/i }
+
+    const result = merge(target, source)
+    expect(result.pattern).toEqual(/new/i)
+    expect(result.pattern.flags).toBe("i")
+  })
+
+  it("should handle Error objects", () => {
+    const target = { error: new Error("old error") }
+    const source = { error: new TypeError("new error") }
+
+    const result = merge(target, source)
+    expect(result.error).toBeInstanceOf(TypeError)
+    expect(result.error.message).toBe("new error")
+  })
+
+  it("should handle mixed types correctly", () => {
+    const target = {
+      number: 1,
+      string: "hello",
+      boolean: true,
+      array: [1, 2, 3],
+      object: { nested: "value" },
+      nullValue: null,
+      undefinedValue: undefined,
+    }
+
+    const source = {
+      number: 2,
+      string: "world",
+      boolean: false,
+      array: [4, 5],
+      object: { nested: "new value", added: "property" },
+      nullValue: "not null anymore",
+      undefinedValue: "defined now",
+      newProperty: "brand new",
+    }
+
+    const result = merge(target, source)
+
+    expect(result).toEqual({
+      number: 2,
+      string: "world",
+      boolean: false,
+      array: [4, 5],
+      object: { nested: "new value", added: "property" },
+      nullValue: "not null anymore",
+      undefinedValue: "defined now",
+      newProperty: "brand new",
+    })
+  })
+
+  it("should mutate the target object", () => {
+    const target = { a: 1, b: { c: 2 } }
+    const source = { b: { d: 3 } }
+    const originalTarget = JSON.parse(JSON.stringify(target))
+    const originalSource = JSON.parse(JSON.stringify(source))
+
+    const result = merge(target, source)
+
+    // Target should be mutated
+    expect(target).not.toEqual(originalTarget)
+    expect(target).toBe(result) // Should return the same reference
+    expect(target.b.c).toBe(2) // Original nested properties preserved
+    expect((target.b as any).d).toBe(3) // New properties added
+
+    // Source should not be mutated
+    expect(source).toEqual(originalSource)
+  })
+
+  it("should handle deeply nested objects", () => {
+    const target = {
+      level1: {
+        level2: {
+          level3: {
+            level4: {
+              value: "original",
+            },
+          },
+        },
+      },
+    }
+
+    const source = {
+      level1: {
+        level2: {
+          level3: {
+            level4: {
+              value: "updated",
+              newValue: "added",
+            },
+            newLevel4: "added",
+          },
+          newLevel3: "added",
+        },
+        newLevel2: "added",
+      },
+      newLevel1: "added",
+    }
+
+    const result = merge(target, source)
+
+    expect(result).toEqual({
+      level1: {
+        level2: {
+          level3: {
+            level4: {
+              value: "updated",
+              newValue: "added",
+            },
+            newLevel4: "added",
+          },
+          newLevel3: "added",
+        },
+        newLevel2: "added",
+      },
+      newLevel1: "added",
+    })
+  })
+
+  it("should handle class instances correctly", () => {
+    class TestClass {
+      constructor(public value: string) {}
+    }
+
+    const target = { instance: new TestClass("original") }
+    const source = { instance: new TestClass("updated") }
+
+    const result = merge(target, source)
+    expect(result.instance).toBeInstanceOf(TestClass)
+    expect(result.instance.value).toBe("updated")
+  })
+
+  it("should handle symbols as values", () => {
+    const sym1 = Symbol("test1")
+    const sym2 = Symbol("test2")
+
+    const target = { symbol: sym1 }
+    const source = { symbol: sym2 }
+
+    const result = merge(target, source)
+    expect(result.symbol).toBe(sym2)
+  })
+
+  it("should handle arrays with objects", () => {
+    const target = { items: [{ id: 1, name: "item1" }] }
+    const source = {
+      items: [
+        { id: 2, name: "item2" },
+        { id: 3, name: "item3" },
+      ],
+    }
+
+    const result = merge(target, source)
+    expect(result.items).toEqual([
+      { id: 2, name: "item2" },
+      { id: 3, name: "item3" },
+    ])
+  })
+
+  it("should handle empty arrays", () => {
+    const target = { items: [1, 2, 3] }
+    const source = { items: [] }
+
+    const result = merge(target, source)
+    expect(result.items).toEqual([])
+  })
+
+  it("should handle constructor property", () => {
+    const target = { constructor: Object }
+    const source = { constructor: Array }
+
+    const result = merge(target, source)
+    expect(result.constructor).toBe(Array)
+  })
+
+  it("should handle Map and Set objects", () => {
+    const map1 = new Map([["key1", "value1"]])
+    const map2 = new Map([["key2", "value2"]])
+    const set1 = new Set([1, 2])
+    const set2 = new Set([3, 4])
+
+    const target = { map: map1, set: set1 }
+    const source = { map: map2, set: set2 }
+
+    const result = merge(target, source)
+    expect(result.map).toBe(map2)
+    expect(result.set).toBe(set2)
+  })
+
+  it("should handle objects with numeric keys", () => {
+    const target = { 0: "zero", 1: "one" }
+    const source = { 1: "updated one", 2: "two" }
+
+    const result = merge(target, source)
+    expect(result).toEqual({ 0: "zero", 1: "updated one", 2: "two" })
+  })
 })
