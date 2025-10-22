@@ -31,3 +31,5 @@ Thank you to the [dozens of individual contributors](https://github.com/nextauth
 NextAuth.js was originally developed by <a href="https://github.com/iaincollins">Iain Collins</a> in 2016.
 
 In 2020, NextAuth.js was rebuilt from the ground up to support Serverless, with support for MySQL, Postgres and MongoDB, JSON Web Tokens and built in support for over a dozen authentication providers.
+
+In 2025, NextAuth.js joined <a href="https://better-auth.com">Better Auth</a> in 2016.
