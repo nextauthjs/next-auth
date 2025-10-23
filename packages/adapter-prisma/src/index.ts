@@ -24,53 +24,75 @@ import type {
 } from "@auth/core/adapters"
 
 export function PrismaAdapter(
-  prisma: PrismaClient | ReturnType<PrismaClient["$extends"]>
+  prisma: PrismaClient | ReturnType<PrismaClient["$extends"]>,
+  options?: {
+    accountModel?: string
+    authenticatorModel?: string
+    sessionModel?: string
+    userModel?: string
+    verificationTokenModel?: string
+  }
 ): Adapter {
   const p = prisma as PrismaClient
+  const accountModel =
+    p[(options?.accountModel ?? "account") as keyof PrismaClient]
+  const authenticatorModel =
+    p[(options?.authenticatorModel ?? "authenticator") as keyof PrismaClient]
+  const sessionModel =
+    p[(options?.sessionModel ?? "session") as keyof PrismaClient]
+  const userModel = p[(options?.userModel ?? "user") as keyof PrismaClient]
+  const verificationTokenModel =
+    p[
+      (options?.verificationTokenModel ??
+        "verificationToken") as keyof PrismaClient
+    ]
   return {
     // We need to let Prisma generate the ID because our default UUID is incompatible with MongoDB
-    createUser: ({ id, ...data }) => p.user.create(stripUndefined(data)),
-    getUser: (id) => p.user.findUnique({ where: { id } }),
-    getUserByEmail: (email) => p.user.findUnique({ where: { email } }),
+    createUser: ({ id, ...data }) => userModel.create(stripUndefined(data)),
+    getUser: (id) => userModel.findUnique({ where: { id } }),
+    getUserByEmail: (email) => userModel.findUnique({ where: { email } }),
     async getUserByAccount(provider_providerAccountId) {
-      const account = await p.account.findUnique({
+      const account = await accountModel.findUnique({
         where: { provider_providerAccountId },
         include: { user: true },
       })
       return (account?.user as AdapterUser) ?? null
     },
     updateUser: ({ id, ...data }) =>
-      p.user.update({
+      userModel.update({
         where: { id },
         ...stripUndefined(data),
       }) as Promise<AdapterUser>,
     deleteUser: (id) =>
-      p.user.delete({ where: { id } }) as Promise<AdapterUser>,
+      userModel.delete({ where: { id } }) as Promise<AdapterUser>,
     linkAccount: (data) =>
-      p.account.create({ data }) as unknown as AdapterAccount,
+      accountModel.create({ data }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
-      p.account.delete({
+      accountModel.delete({
         where: { provider_providerAccountId },
       }) as unknown as AdapterAccount,
     async getSessionAndUser(sessionToken) {
-      const userAndSession = await p.session.findUnique({
+      const userAndSession = await sessionModel.findUnique({
         where: { sessionToken },
         include: { user: true },
       })
       if (!userAndSession) return null
       const { user, ...session } = userAndSession
-      return { user, session } as { user: AdapterUser; session: AdapterSession }
+      return { user, session } as {
+        user: AdapterUser
+        session: AdapterSession
+      }
     },
-    createSession: (data) => p.session.create(stripUndefined(data)),
+    createSession: (data) => sessionModel.create(stripUndefined(data)),
     updateSession: (data) =>
-      p.session.update({
+      sessionModel.update({
         where: { sessionToken: data.sessionToken },
         ...stripUndefined(data),
       }),
     deleteSession: (sessionToken) =>
-      p.session.delete({ where: { sessionToken } }),
+      sessionModel.delete({ where: { sessionToken } }),
     async createVerificationToken(data) {
-      const verificationToken = await p.verificationToken.create(
+      const verificationToken = await verificationTokenModel.create(
         stripUndefined(data)
       )
       if ("id" in verificationToken && verificationToken.id)
@@ -79,7 +101,7 @@ export function PrismaAdapter(
     },
     async useVerificationToken(identifier_token) {
       try {
-        const verificationToken = await p.verificationToken.delete({
+        const verificationToken = await verificationTokenModel.delete({
           where: { identifier_token },
         })
         if ("id" in verificationToken && verificationToken.id)
@@ -99,25 +121,25 @@ export function PrismaAdapter(
       }
     },
     async getAccount(providerAccountId, provider) {
-      return p.account.findFirst({
+      return accountModel.findFirst({
         where: { providerAccountId, provider },
       }) as Promise<AdapterAccount | null>
     },
     async createAuthenticator(data) {
-      return p.authenticator.create(stripUndefined(data))
+      return authenticatorModel.create(stripUndefined(data))
     },
     async getAuthenticator(credentialID) {
-      return p.authenticator.findUnique({
+      return authenticatorModel.findUnique({
         where: { credentialID },
       })
     },
     async listAuthenticatorsByUserId(userId) {
-      return p.authenticator.findMany({
+      return authenticatorModel.findMany({
         where: { userId },
       })
     },
     async updateAuthenticatorCounter(credentialID, counter) {
-      return p.authenticator.update({
+      return authenticatorModel.update({
         where: { credentialID },
         data: { counter },
       })
