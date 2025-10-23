@@ -1,6 +1,7 @@
 import { Auth, setEnvDefaults, type AuthConfig } from "@auth/core"
 import Apple from "@auth/core/providers/apple"
 import Auth0 from "@auth/core/providers/auth0"
+import AuthKit from "@auth/core/providers/authkit"
 import AzureB2C from "@auth/core/providers/azure-ad-b2c"
 import BankId from "@auth/core/providers/bankid-no"
 import BoxyHQSAML from "@auth/core/providers/boxyhq-saml"
@@ -34,6 +35,7 @@ const authConfig: AuthConfig = {
   providers: [
     Apple,
     Auth0,
+    AuthKit,
     AzureB2C,
     BankId,
     BoxyHQSAML({
