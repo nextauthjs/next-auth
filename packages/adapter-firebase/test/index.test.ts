@@ -19,7 +19,6 @@ describe.each([
   (config) => {
     config.name = `authjs-test-${config.namingStrategy}`
     config.projectId = "authjs-test"
-    config.databaseURL = "http://localhost:8080"
 
     const preferSnakeCase = config.namingStrategy === "snake_case"
 
