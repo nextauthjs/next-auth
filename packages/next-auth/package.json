@@ -101,7 +101,7 @@
   "peerDependencies": {
     "@auth/core": "0.34.2",
     "next": "^12.2.5 || ^13 || ^14 || ^15",
-    "nodemailer": "^6.6.5",
+    "nodemailer": "^7.0.7",
     "react": "^17.0.2 || ^18 || ^19",
     "react-dom": "^17.0.2 || ^18 || ^19"
   },
