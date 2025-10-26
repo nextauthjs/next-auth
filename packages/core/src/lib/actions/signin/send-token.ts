@@ -93,11 +93,32 @@ export async function sendToken(
 
 function defaultNormalizer(email?: string) {
   if (!email) throw new Error("Missing email from request body.")
+
+  const trimmedEmail = email.toLowerCase().trim()
+
+  // Reject email addresses with quotes to prevent address parser confusion
+  // This prevents attacks like "attacker@evil.com"@victim.com
+  if (trimmedEmail.includes('"')) {
+    throw new Error("Invalid email address format.")
+  }
+
   // Get the first two elements only,
   // separated by `@` from user input.
-  let [local, domain] = email.toLowerCase().trim().split("@")
+  let [local, domain] = trimmedEmail.split("@")
+
+  // Validate that we have exactly 2 parts (local and domain)
+  if (!local || !domain || trimmedEmail.split("@").length !== 2) {
+    throw new Error("Invalid email address format.")
+  }
+
   // The part before "@" can contain a ","
   // but we remove it on the domain part
   domain = domain.split(",")[0]
+
+  // Additional validation: domain should not be empty after comma split
+  if (!domain) {
+    throw new Error("Invalid email address format.")
+  }
+
   return `${local}@${domain}`
 }
