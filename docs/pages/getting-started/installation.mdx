@@ -46,8 +46,41 @@ Start by installing the appropriate package for your framework.
 The only environment variable that is mandatory is the `AUTH_SECRET`. This is a random value used by the library to encrypt tokens and email
 verification hashes. (See [Deployment](/getting-started/deployment) to learn more). You can generate one via the official [Auth.js CLI](https://cli.authjs.dev) running:
 
+<Code>
+  <Code.Next>
+    
+    ```bash npm2yarn
+    npx auth secret
+    ```
+
+  </Code.Next>
+  <Code.Qwik>
+
+    ```bash npm2yarn
+    npx auth secret
+    ```
+
+  </Code.Qwik>
+  <Code.Svelte>
+  
+    ```bash npm2yarn
+    npx auth secret
+    ```
+    
+  </Code.Svelte>
+  <Code.Express>
+  
+    ```bash npm2yarn
+    npx auth secret
+    ```
+  
+  </Code.Express>
+</Code>
+
+Alternatively, you can use bun:
+
 ```bash
-npx auth secret
+bunx auth secret
 ```
 
 This will also add it to your `.env` file, respecting the framework conventions (eg.: Next.js' `.env.local`).
