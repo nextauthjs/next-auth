@@ -447,7 +447,7 @@ export interface AuthConfig {
        * - [Credentials Provider](https://authjs.dev/getting-started/authentication/credentials)
        * - [User database model](https://authjs.dev/guides/creating-a-database-adapter#user-management)
        */
-      user: User | AdapterUser
+      user: User | AdapterUser | undefined
       /**
        * Contains information about the provider that was used to sign in.
        * Also includes {@link TokenSet}
