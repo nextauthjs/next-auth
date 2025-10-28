@@ -1,0 +1,83 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/paybin.svg" width="64" height="64" />
+
+# Paybin Provider
+
+## Resources
+
+- [Paybin OAuth documentation](https://paybin.io/docs/oauth)
+- [Paybin OIDC configuration](https://idp.paybin.io/.well-known/openid-configuration)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+    ```bash
+    https://example.com/api/auth/callback/paybin
+    ```
+
+  </Code.Next>
+  <Code.Svelte>
+
+    ```bash
+    https://example.com/auth/callback/paybin
+    ```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_PAYBIN_ID
+AUTH_PAYBIN_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Paybin from "next-auth/providers/paybin"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Paybin],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Paybin from "@auth/sveltekit/providers/paybin"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Paybin],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Paybin from "@auth/express/providers/paybin"
+
+app.use("/auth/*", ExpressAuth({ providers: [Paybin] }))
+```
+
+  </Code.Express>
+</Code>
+
+<Callout>
+  By default, Auth.js assumes that the Paybin provider is based on the
+  [OIDC](https://openid.net/specs/openid-connect-core-1_0.html) specification.
+</Callout>
