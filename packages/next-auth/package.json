@@ -99,7 +99,7 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "@auth/core": "0.34.2",
+    "@auth/core": "0.34.3",
     "next": "^12.2.5 || ^13 || ^14 || ^15 || ^16",
     "nodemailer": "^7.0.7",
     "react": "^17.0.2 || ^18 || ^19",
@@ -114,7 +114,7 @@
     }
   },
   "devDependencies": {
-    "@auth/core": "0.34.2",
+    "@auth/core": "0.34.3",
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.2",
     "@babel/plugin-proposal-optional-catch-binding": "^7.16.7",

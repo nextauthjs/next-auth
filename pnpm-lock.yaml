@@ -450,7 +450,7 @@ importers:
 
   packages/next-auth:
     specifiers:
-      '@auth/core': 0.34.2
+      '@auth/core': 0.34.3
       '@babel/cli': ^7.17.10
       '@babel/core': ^7.18.2
       '@babel/plugin-proposal-optional-catch-binding': ^7.16.7
@@ -509,7 +509,7 @@ importers:
       preact-render-to-string: 5.2.6_preact@10.24.1
       uuid: 8.3.2
     devDependencies:
-      '@auth/core': 0.34.2
+      '@auth/core': 0.34.3
       '@babel/cli': 7.25.6_@babel+core@7.25.2
       '@babel/core': 7.25.2
       '@babel/plugin-proposal-optional-catch-binding': 7.18.6_@babel+core@7.25.2
@@ -750,12 +750,12 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@auth/core/0.34.2:
-    resolution: {integrity: sha512-KywHKRgLiF3l7PLyL73fjLSIBe1YNcA6sMeew4yMP6cfCWGXZrkkXd32AjRi1hlJ9nvovUBGZHvbn+LijO6ZeQ==}
+  /@auth/core/0.34.3:
+    resolution: {integrity: sha512-jMjY/S0doZnWYNV90x0jmU3B+UcrsfGYnukxYrRbj0CVvGI/MX3JbHsxSrx2d4mbnXaUsqJmAcDfoQWA6r0lOw==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
+      nodemailer: ^7
     peerDependenciesMeta:
       '@simplewebauthn/browser':
         optional: true
