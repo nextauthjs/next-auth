@@ -686,8 +686,8 @@ importers:
         specifier: ^6.0.6
         version: 6.0.6
       nodemailer:
-        specifier: ^6.8.0
-        version: 6.9.8
+        specifier: ^7.0.7
+        version: 7.0.10
       oauth4webapi:
         specifier: ^3.3.0
         version: 3.3.0
@@ -810,8 +810,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3(encoding@0.1.13)
       nodemailer:
-        specifier: ^6.6.5
-        version: 6.9.8
+        specifier: ^7.0.7
+        version: 7.0.10
       set-cookie-parser:
         specifier: ^2.7.0
         version: 2.7.0
@@ -875,8 +875,8 @@ importers:
         specifier: 15.3.1
         version: 15.3.1(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@19.0.0-rc-935180c7e0-20240524(react@18.3.1))(react@18.3.1)(sass@1.70.0)
       nodemailer:
-        specifier: ^6.9.3
-        version: 6.9.8
+        specifier: ^7.0.7
+        version: 7.0.10
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -10705,6 +10705,10 @@ packages:
 
   nodemailer@6.9.8:
     resolution: {integrity: sha512-cfrYUk16e67Ks051i4CntM9kshRYei1/o/Gi8K1d+R34OIs21xdFnW7Pt7EucmVKA0LKtqUGNcjMZ7ehjl49mQ==}
+    engines: {node: '>=6.0.0'}
+
+  nodemailer@7.0.10:
+    resolution: {integrity: sha512-Us/Se1WtT0ylXgNFfyFSx4LElllVLJXQjWi2Xz17xWw7amDKO2MLtFnVp1WACy7GkVGs+oBlRopVNUzlrGSw1w==}
     engines: {node: '>=6.0.0'}
 
   nopt@5.0.0:
@@ -27100,6 +27104,8 @@ snapshots:
   nodemailer@6.9.4: {}
 
   nodemailer@6.9.8: {}
+
+  nodemailer@7.0.10: {}
 
   nopt@5.0.0:
     dependencies:

@@ -15,13 +15,13 @@ import { Accordion, Accordions } from "@/components/Accordion"
 ### Installation
 
 ```bash npm2yarn
-npm install @prisma/client @auth/prisma-adapter
+npm install @prisma/client @prisma/extension-accelerate @auth/prisma-adapter
 npm install prisma --save-dev
 ```
 
 ### Environment Variables
 
-Prisma needs to set up the environment variable to establish a connection with your database and retrieve data. Prisma requires the `DATABASE_URL` environment variable to create the connection. For more information, read the [docs](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql).
+If you're using Prisma Postgres, the `DATABASE_URL` will be automatically set up during initialization. For other databases, you'll need to manually configure the `DATABASE_URL` environment variable. For more information, read the [docs](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql).
 
 ```sh
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
@@ -29,17 +29,40 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=SCHEMA
 
 ### Configuration
 
+First, initialize Prisma in your project. If you're using Prisma Postgres, run:
+
+```bash
+npx prisma init --db --output ./src/generated/prisma
+```
+
+This will create a Prisma Postgres database, set up your schema file, and configure the output directory for the generated Prisma Client.
+
+For other databases, run:
+
+```bash
+npx prisma init --output ./src/generated/prisma
+```
+
+Then manually configure your `DATABASE_URL` in the `.env` file.
+
 To improve performance using `Prisma ORM`, we can set up the Prisma instance to ensure only one instance is created throughout the project and then import it from any file as needed. This approach avoids recreating instances of PrismaClient every time it is used. Finally, we can import the Prisma instance from the `auth.ts` file configuration.
 
 ```ts filename="prisma.ts"
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "../src/generated/client"
+import { withAccelerate } from "@prisma/extension-accelerate"
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
-export const prisma = globalForPrisma.prisma || new PrismaClient()
+export const prisma =
+  globalForPrisma.prisma || new PrismaClient().$extends(withAccelerate())
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 ```
+
+<Callout type="info">
+  If you're not using Prisma Postgres with Accelerate, you can omit the
+  `withAccelerate()` extension and delete `.$extends(withAccelerate())`.
+</Callout>
 
 <Callout type="warning">
   We recommend using version `@prisma/client@5.12.0` or above if using
@@ -147,7 +170,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 model User {
@@ -231,7 +255,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 model User {
@@ -330,7 +355,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 model User {
@@ -416,7 +442,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 model User {
