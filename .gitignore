@@ -29,6 +29,7 @@ dist
 # Generated files
 .cache-loader
 packages/next-auth/providers
+packages/next-auth/legacy
 # copied from @auth/core
 packages/frameworks-*/**/providers
 packages/*/*.js
