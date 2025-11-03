@@ -4,9 +4,11 @@ import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as actions from "./actions/index.js"
 import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
-
-import type { RequestInternal, ResponseInternal } from "../types.js"
-import type { AuthConfig } from "../index.js"
+import type {
+  AuthConfigInternal,
+  RequestInternal,
+  ResponseInternal,
+} from "../types.js"
 import { skipCSRFCheck } from "./symbols.js"
 
 export { customFetch, raw, skipCSRFCheck } from "./symbols.js"
@@ -14,7 +16,7 @@ export { customFetch, raw, skipCSRFCheck } from "./symbols.js"
 /** @internal */
 export async function AuthInternal(
   request: RequestInternal,
-  authOptions: AuthConfig
+  authOptions: AuthConfigInternal
 ): Promise<ResponseInternal> {
   const { action, providerId, error, method } = request
 
