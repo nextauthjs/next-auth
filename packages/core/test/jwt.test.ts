@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { encode, decode } from "../jwt"
+import { encode, decode } from "../src/jwt"
 
 describe("supports secret rotation", () => {
   const token = { foo: "bar" }

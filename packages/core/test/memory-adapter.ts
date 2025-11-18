@@ -8,7 +8,7 @@ import {
   AdapterSession,
   AdapterUser,
   VerificationToken,
-} from "../adapters.js"
+} from "../src/adapters"
 
 /**
  * Represents the in-memory data structure for the adapter.
