@@ -571,7 +571,7 @@ export interface AuthConfig {
   /** Changes the theme of built-in {@link AuthConfig.pages}. */
   theme?: Theme
   /**
-   * When set to `true` then all cookies set by NextAuth.js will only be accessible from HTTPS URLs.
+   * When set to `true` then all cookies set by Auth.js will only be accessible from HTTPS URLs.
    * This option defaults to `false` on URLs that start with `http://` (e.g. http://localhost:3000) for developer convenience.
    * You can manually set this option to `false` to disable this security feature and allow cookies
    * to be accessible from non-secured URLs (this is not recommended).
@@ -583,6 +583,19 @@ export interface AuthConfig {
    * The default is `false` HTTP and `true` for HTTPS sites.
    */
   useSecureCookies?: boolean
+  /**
+   * When set to `true` then all cookies set by Auth.js will have the `SameSite` attribute set to `Strict`.
+   * This option defaults to `false` and sets the `SameSite` attribute to `Lax`.
+   *
+   * - ⚠ **This is an advanced option.** Advanced options are passed the same way as basic options,
+   * but **may have complex implications** or side effects.
+   * You should **try to avoid using advanced options** unless you are very comfortable using them.
+   *
+   * @default false
+   *
+   * @see [MDN: SameSite](https://developer.mozilla.org/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value)
+   */
+  useStrictCookies?: boolean
   /**
    * You can override the default cookie names and options for any of the cookies used by Auth.js.
    * You can specify one or more cookies with custom properties
