@@ -53,9 +53,9 @@ export async function sendToken(
     (await provider.generateVerificationToken?.()) ?? randomString(32)
 
   const ONE_DAY_IN_SECONDS = 86400
-  const expires = new Date(
-    Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
-  )
+  const maxAge =
+    provider.options?.maxAge ?? provider.maxAge ?? ONE_DAY_IN_SECONDS
+  const expires = new Date(Date.now() + maxAge * 1000)
 
   const secret = provider.secret ?? options.secret
 
