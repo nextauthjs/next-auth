@@ -33,7 +33,10 @@ export function initMemory(): Memory {
   }
 }
 
-export function MemoryAdapter(memory?: Memory): Adapter {
+export function MemoryAdapter(
+  memory?: Memory,
+  newSessionToken: string | null = null
+): Adapter {
   const { users, accounts, sessions, verificationTokens } =
     memory ?? initMemory()
 
@@ -169,6 +172,16 @@ export function MemoryAdapter(memory?: Memory): Adapter {
       if (!currentSession) throw new Error("Session not found")
 
       const updatedSession = { ...currentSession, ...session }
+      if (newSessionToken) {
+        // Delete old session token if a new one is provided
+        sessions.delete(session.sessionToken)
+        // Create a new session with the new session token
+        updatedSession.sessionToken = newSessionToken
+        sessions.set(newSessionToken, updatedSession)
+
+        return updatedSession
+      }
+
       sessions.set(session.sessionToken, updatedSession)
 
       return updatedSession
