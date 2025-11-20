@@ -9,6 +9,7 @@ on:
       - "3.x"
       - "v4"
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:

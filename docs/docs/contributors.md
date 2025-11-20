@@ -42,6 +42,4 @@ More information can be found at: https://opencollective.com/nextauth
 
 - In 2021, efforts have started to move NextAuth.js to other frameworks and to support as many databases and providers as possible.
 
-## Notes
-
-The Auth.js/NextAuth.js project is not provided by or otherwise affiliated with Vercel Inc. or its subsidiaries. Any contributions to this project by individuals affiliated with Vercel are made in their personal capacity.
+- In 2025, NextAuth.js was acquired by and is now owned and maintained by <a href="https://better-auth.com">Better Auth Inc.</a>

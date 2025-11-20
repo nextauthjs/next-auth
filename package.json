@@ -61,16 +61,6 @@
     ]
   },
   "packageManager": "pnpm@7.13.3",
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/balazsorban44"
-    },
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/nextauth"
-    }
-  ],
   "pnpm": {
     "overrides": {
       "undici": "5.11.0"

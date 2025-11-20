@@ -110,7 +110,7 @@ module.exports = {
     announcementBar: {
       id: "new-major-announcement",
       content:
-        "NextAuth.js is becoming Auth.js! 🎉 We're creating Authentication for the Web. Everyone included. You are looking at the NextAuth.js (v4) documentation. For the new documentation go to <a target='_blank' rel='noopener noreferrer' href='https://authjs.dev'>authjs.dev</a>.",
+        "🎉 NextAuth.js is now part of <a target='_blank' rel='noopener noreferrer' href='https://better-auth.com'>Better Auth</a>!",
       backgroundColor: "#000",
       textColor: "#fff",
     },
@@ -144,11 +144,7 @@ module.exports = {
             {
               label: "Contributors",
               to: "/contributors",
-            },
-            {
-              label: "Sponsors",
-              to: "/sponsors",
-            },
+            },  
             {
               label: "Images by unDraw",
               to: "https://undraw.co/",
@@ -156,18 +152,12 @@ module.exports = {
           ],
         },
       ],
-      copyright: `NextAuth.js &copy; Iain Collins ${new Date().getFullYear()}`,
+      copyright: `NextAuth.js &copy; Better Auth Inc. ${new Date().getFullYear()}`,
     },
     colorMode: {
       respectPrefersColorScheme: true,
     },
   },
-  scripts: [
-    {
-      src: 'js/clerk.js',
-      async: true,
-    }
-  ],
   presets: [
     [
       "@docusaurus/preset-classic",
