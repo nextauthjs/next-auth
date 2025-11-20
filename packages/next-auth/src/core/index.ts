@@ -70,17 +70,24 @@ async function toInternalRequest(
       cookies: parseCookie(req.headers.get("cookie") ?? ""),
       providerId: nextauth[1],
       error: url.searchParams.get("error") ?? nextauth[1],
-      origin: detectOrigin(
-        headers["x-forwarded-host"] ?? headers.host,
-        headers["x-forwarded-proto"]
-      ),
+      origin: headers?.host
+        ? `${url.protocol}//${headers.host}`
+        : detectOrigin(
+            headers["x-forwarded-host"] ?? headers.host,
+            headers["x-forwarded-proto"]
+          ),
       query,
     }
   }
 
   const { headers } = req
   const host = headers?.["x-forwarded-host"] ?? headers?.host
-  req.origin = detectOrigin(host, headers?.["x-forwarded-proto"])
+
+  req.origin = host
+    ? (process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL
+        ? "https://"
+        : "http://") + host
+    : detectOrigin(host, headers?.["x-forwarded-proto"])
 
   return req
 }
