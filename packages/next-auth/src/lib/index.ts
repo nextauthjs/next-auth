@@ -18,6 +18,24 @@ import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
   /**
+   * The base path configured in your Next.js application (next.config.js).
+   * If you have set `basePath` in your Next.js config, you must provide the same value here.
+   *
+   * @example
+   * ```ts
+   * // next.config.js
+   * module.exports = { basePath: "/my-app" }
+   *
+   * // auth.ts
+   * export const { handlers, auth } = NextAuth({
+   *   basePath: "/my-app/api/auth",
+   *   nextJsBasePath: "/my-app",
+   *   // ...
+   * })
+   * ```
+   */
+  nextJsBasePath?: string
+  /**
    * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
    * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
    */
