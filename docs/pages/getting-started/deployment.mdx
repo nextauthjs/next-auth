@@ -47,6 +47,29 @@ to `true`. This tells Auth.js to trust the `X-Forwarded-Host` header from the re
 
 This environment variable is mostly unnecessary with v5 as the host is inferred from the request headers. However, if you are using a different base path, you can set this environment variable as well. For example, `AUTH_URL=http://localhost:3000/web/auth` or `AUTH_URL=https://company.com/app1/auth`
 
+#### Using Next.js `basePath`
+
+If you have configured a `basePath` in your `next.config.js`, you must also set the `nextJsBasePath` option in your NextAuth.js configuration:
+
+```ts
+// next.config.js
+module.exports = { basePath: "/my-app" }
+
+// auth.ts
+export const { handlers, auth } = NextAuth({
+  basePath: "/my-app/api/auth",
+  nextJsBasePath: "/my-app", // Required when using Next.js basePath
+  // ...
+})
+```
+
+<Callout type="info">
+  The `nextJsBasePath` option is required because Next.js does not include the
+  basePath in the request URL when processing API routes. Without this
+  configuration, NextAuth.js will not be able to correctly handle authentication
+  requests.
+</Callout>
+
 ### `AUTH_REDIRECT_PROXY_URL`
 
 > **_NOTE:_** Some providers (eg Apple) do not support [redirect proxy](https://github.com/nextauthjs/next-auth/blob/3ec06842682a31e53fceabca701a362abda1e7dd/packages/core/src/lib/utils/providers.ts#L48) usage.
