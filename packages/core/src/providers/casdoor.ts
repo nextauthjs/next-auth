@@ -74,8 +74,8 @@ export default function Casdoor(
   options: OIDCUserConfig<CasdoorProfile>
 ): OIDCConfig<CasdoorProfile> {
   return {
-    id: "logto",
-    name: "Logto",
+    id: "casdoor",
+    name: "Casdoor",
     type: "oidc",
     authorization: {
       params: {
@@ -85,7 +85,7 @@ export default function Casdoor(
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.name ?? profile.username,
+        name: profile.name,
         email: profile.email,
         image: profile.picture,
       }
