@@ -24,7 +24,15 @@ export async function getAuthorizationUrl(
     // If url is undefined, we assume that issuer is always defined
     // We check this in assert.ts
 
-    const issuer = new URL(provider.issuer!)
+    // Better error handling here with URL which throws a TypeError if the URL is invalid
+    let issuer: URL
+    try {
+      issuer = new URL(provider.issuer!)
+    } catch (error) {
+      throw new TypeError(
+        `Invalid issuer URL: "${provider.issuer}". The issuer must be a valid URL. Error: ${error}`
+      )
+    }
     const discoveryResponse = await o.discoveryRequest(issuer, {
       [o.customFetch]: provider[customFetch],
       // TODO: move away from allowing insecure HTTP requests
@@ -46,7 +54,14 @@ export async function getAuthorizationUrl(
       )
     }
 
-    url = new URL(as.authorization_endpoint)
+    // Add validation here too
+    try {
+      url = new URL(as.authorization_endpoint)
+    } catch (error) {
+      throw new TypeError(
+        `Invalid authorization endpoint URL: "${as.authorization_endpoint}" Error: ${error}`
+      )
+    }
   }
 
   const authParams = url.searchParams
