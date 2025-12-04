@@ -1,0 +1,87 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/casdoor.svg" width="64" height="65" />
+
+# Casdoor Provider
+
+## Resources
+
+- [Casdoor overview](https://casdoor.org/docs/overview)
+- [Casdoor OpenID Connect API](https://door.casdoor.com/swagger/)
+
+> **_NOTE:_** Set `AUTH_CASDOOR_ISSUER` to the base URL of your Casdoor instance (defaults to `https://door.casdoor.com`).
+
+## Setup
+
+### Callback URL
+
+<Code>
+	<Code.Next>
+
+```bash
+https://example.com/api/auth/callback/casdoor
+```
+
+	</Code.Next>
+	<Code.Qwik>
+
+```bash
+https://example.com/auth/callback/casdoor
+```
+
+	</Code.Qwik>
+	<Code.Svelte>
+
+```bash
+https://example.com/auth/callback/casdoor
+```
+
+	</Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_CASDOOR_ID
+AUTH_CASDOOR_SECRET
+AUTH_CASDOOR_ISSUER=https://door.casdoor.com
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Casdoor from "next-auth/providers/casdoor"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Casdoor],
+})
+```
+
+  </Code.Next>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Casdoor from "@auth/sveltekit/providers/casdoor"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Casdoor],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Casdoor from "@auth/express/providers/casdoor"
+
+app.use("/auth/*", ExpressAuth({ providers: [Casdoor] }))
+```
+
+  </Code.Express>
+</Code>
