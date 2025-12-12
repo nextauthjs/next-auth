@@ -352,3 +352,40 @@ export type {
 ## Summary
 
 We hope this migration goes smoothly for everyone! If you have any questions or get stuck anywhere, feel free to create [a new issue](https://github.com/nextauthjs/next-auth/issues/new) on GitHub, or come chat with us in the [Discord](https://discord.authjs.dev) server.
+
+## Legacy Mode
+
+If you need more time to migrate or encounter compatibility issues during the migration to v5, you can use the `legacy` flag to enable compatibility with v4 behavior.
+
+<Steps>
+
+### Enable legacy mode
+
+Add the `legacy` flag to your v5 configuration:
+
+```ts filename="./auth.ts" {3}
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  providers: [GitHub, Google],
+  legacy: true, // Enable v4 compatibility
+})
+```
+
+### Benefits of legacy mode
+
+Legacy mode enables v4 compatibility in the following ways:
+
+1. **Cookie Names**: Uses `next-auth` prefix for cookies instead of `authjs`
+2. **OAuth Behavior**: More lenient validation in OAuth flows, similar to v4
+3. **State Validation**: Less strict state validation for providers that don't explicitly require it
+4. **PKCE Support**: Disables PKCE (Proof Key for Code Exchange) by default, matching v4 behavior
+
+### Progressive migration
+
+Legacy mode allows you to gradually migrate your application to v5:
+
+1. First, upgrade to v5 with `legacy: true`
+2. Test your application thoroughly
+3. Address any remaining issues
+4. Remove the `legacy` flag when your application is fully compatible with v5
+
+</Steps>

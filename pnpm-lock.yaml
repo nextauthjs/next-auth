@@ -858,13 +858,25 @@ importers:
       '@auth/core':
         specifier: workspace:*
         version: link:../core
+      '@panva/hkdf':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@simplewebauthn/browser':
         specifier: ^9.0.1
         version: 9.0.1
       '@simplewebauthn/server':
         specifier: ^9.0.2
         version: 9.0.3(encoding@0.1.13)
+      cookie:
+        specifier: ^0.7.0
+        version: 0.7.2
+      jose:
+        specifier: ^6.0.6
+        version: 6.0.6
     devDependencies:
+      '@types/cookie':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/react':
         specifier: 18.0.37
         version: 18.0.37
@@ -4247,7 +4259,6 @@ packages:
   '@playwright/test@1.41.2':
     resolution: {integrity: sha512-qQB9h7KbibJzrDpkXkYvsmiDJK14FULCCZgEcoe2AvFAS64oCirWTwzTlAYEbKaRxWs5TFesE1Na6izMv3HfGg==}
     engines: {node: '>=16'}
-    deprecated: Please update to the latest version of Playwright to test up-to-date browsers.
     hasBin: true
 
   '@polka/url@1.0.0-next.24':
@@ -7170,6 +7181,10 @@ packages:
 
   cookie@0.6.0:
     resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
+    engines: {node: '>= 0.6'}
+
+  cookie@0.7.2:
+    resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
   cookiejar@2.1.4:
@@ -22538,6 +22553,8 @@ snapshots:
   cookie-signature@1.0.6: {}
 
   cookie@0.6.0: {}
+
+  cookie@0.7.2: {}
 
   cookiejar@2.1.4: {}
 
