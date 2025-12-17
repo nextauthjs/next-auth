@@ -2,7 +2,6 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import Keycloak from "next-auth/providers/keycloak"
 import GitHub from "next-auth/providers/github"
-import Gumroad from "next-auth/providers/gumroad"
 
 // import { PrismaClient } from "@prisma/client"
 // import { PrismaAdapter } from "@auth/prisma-adapter"
@@ -67,9 +66,8 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         }
       },
     }),
-    // GitHub,
-    // Keycloak,
-    Gumroad,
+    GitHub,
+    Keycloak,
   ],
 
   callbacks: {
