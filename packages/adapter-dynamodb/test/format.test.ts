@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest"
 import { format } from "../src"
+import { from } from "./format_util.ts"
 
 describe("dynamodb utils.format", () => {
   test("format.to() preserves non-Date non-expires properties", () => {
@@ -38,9 +39,11 @@ describe("dynamodb utils.format", () => {
     })
   })
 
+  // `from` now requires formatting options; The imported `from` has the defaults set already
+  // to make testing a little easier.
   test("format.from() preserves non-special attributes", () => {
     expect(
-      format.from({
+      from({
         testAttr1: "test-value",
         testAttr2: 5,
       })
@@ -52,7 +55,7 @@ describe("dynamodb utils.format", () => {
 
   test("format.from() removes dynamodb key attributes", () => {
     expect(
-      format.from({
+      from({
         pk: "test-pk",
         sk: "test-sk",
         GSI1PK: "test-GSI1PK",
@@ -62,17 +65,17 @@ describe("dynamodb utils.format", () => {
   })
 
   test("format.from() only removes type attribute from Session, VT, and User", () => {
-    expect(format.from({ type: "SESSION" })).toEqual({})
-    expect(format.from({ type: "VT" })).toEqual({})
-    expect(format.from({ type: "USER" })).toEqual({})
-    expect(format.from({ type: "ANYTHING" })).toEqual({ type: "ANYTHING" })
-    expect(format.from({ type: "ELSE" })).toEqual({ type: "ELSE" })
+    expect(from({ type: "SESSION" })).toEqual({})
+    expect(from({ type: "VT" })).toEqual({})
+    expect(from({ type: "USER" })).toEqual({})
+    expect(from({ type: "ANYTHING" })).toEqual({ type: "ANYTHING" })
+    expect(from({ type: "ELSE" })).toEqual({ type: "ELSE" })
   })
 
   test("format.from() converts ISO strings to Date instances", () => {
     const date = new Date()
     expect(
-      format.from({
+      from({
         someDate: date.toISOString(),
       })
     ).toEqual({
@@ -86,7 +89,7 @@ describe("dynamodb utils.format", () => {
     const date = new Date()
     const timestamp = date.getTime() / 1000
     expect(
-      format.from({
+      from({
         expires: timestamp,
       })
     ).toEqual({
@@ -99,7 +102,7 @@ describe("dynamodb utils.format", () => {
     // ISO strings, so we need to handle those properly too.
     const date = new Date()
     expect(
-      format.from({
+      from({
         expires: date.toISOString(),
       })
     ).toEqual({
@@ -110,7 +113,7 @@ describe("dynamodb utils.format", () => {
   test("format.from(format.to()) preserves expires attribute", () => {
     const date = new Date()
     expect(
-      format.from(
+      from(
         format.to({
           expires: date,
         })
