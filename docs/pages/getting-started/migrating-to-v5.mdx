@@ -132,7 +132,7 @@ Imports from `next-auth/react` are now marked with the [`"use client"`](https://
 import { useSession, SessionProvider } from 'next-auth/react';
 
 const ClientComponent = () => {
-  const session = useSession();
+  const { data: session } = useSession();
 
   return (
     <SessionProvider>
