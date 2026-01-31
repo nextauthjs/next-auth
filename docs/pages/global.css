@@ -14,12 +14,16 @@ html[class~="dark"]
     img[src$="boxyhq-saml.svg"],
     img[src$="eveonline.svg"],
     img[src$="github.svg"],
-    img[src$="hasura.svg"],
     img[src$="mailchimp.svg"],
     img[src$="medium.svg"],
     img[src$="okta.svg"],
+    img[src$="patreon.svg"],
+    img[src$="ping-id.svg"],
     img[src$="prisma.svg"],
+    img[src$="resend.svg"],
+    img[src$="roblox.svg"],
     img[src$="threads.svg"],
+    img[src$="twitter.svg"],
     img[src$="wikimedia.svg"]
   ) {
   filter: invert(1);
@@ -193,31 +197,6 @@ html[data-theme="dark"] .github-counter {
 
 [data-scope="tooltip"][data-part="content"][data-state="closed"] {
   animation: fadeOut 250ms ease-in;
-}
-
-#carbonads_bak {
-  @apply flex flex-col gap-1 rounded-md bg-neutral-100 p-3 text-xs text-neutral-500 dark:bg-neutral-800 dark:!text-neutral-400;
-
-  .carbon-text {
-    @apply dark:text-neutral-300;
-  }
-
-  .carbon-poweredby {
-    @apply dark:text-neutral-400;
-  }
-
-  #carbon-responsive .carbon-img {
-    flex: unset !important;
-  }
-  img {
-    @apply w-full !max-w-full rounded-[0.25rem];
-  }
-
-  #carbon-responsive .carbon-responsive-wrap {
-    border: none !important;
-    background-color: unset !important;
-    padding: 0 !important;
-  }
 }
 
 .sponsoredBadge {

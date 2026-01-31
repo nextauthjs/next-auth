@@ -1,6 +1,6 @@
 {
   "name": "@auth/neon-adapter",
-  "version": "1.8.0",
+  "version": "1.11.0",
   "description": "Neon Postgres adapter for next-auth.",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -42,8 +42,10 @@
     "clean": "rm -rf *.js *.d.ts*"
   },
   "dependencies": {
-    "@auth/core": "workspace:*",
-    "@neondatabase/serverless": "^0.10.4"
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@neondatabase/serverless": "^0.10.4 || ^1.0.0"
   },
   "devDependencies": {
     "@types/ws": "^8.5.13",

@@ -20,9 +20,9 @@ export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
-        return { role: profile.role ?? "user", ... }
+        return { role: profile.role ?? "user", ...profile }
       },
-    })
+    }),
   ],
 })
 ```
@@ -39,7 +39,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
     providers: [
       Google({
         profile(profile) {
-          return { role: profile.role ?? "user", ... }
+          return { role: profile.role ?? "user", ...profile }
         },
       })
     ],
@@ -58,9 +58,9 @@ export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
-        return { role: profile.role ?? "user", ... }
+        return { role: profile.role ?? "user", ...profile }
       },
-    })
+    }),
   ],
 })
 ```
@@ -113,20 +113,20 @@ export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
-        return { role: profile.role ?? "user", ... }
+        return { role: profile.role ?? "user", ...profile }
       },
-    })
+    }),
   ],
   callbacks: {
     jwt({ token, user }) {
-      if(user) token.role = user.role
+      if (user) token.role = user.role
       return token
     },
     session({ session, token }) {
       session.user.role = token.role
       return session
-    }
-  }
+    },
+  },
 })
 ```
 
@@ -142,7 +142,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
     providers: [
       Google({
         profile(profile) {
-          return { role: profile.role ?? "user", ... }
+          return { role: profile.role ?? "user", ...profile }
         },
       })
     ],
@@ -171,20 +171,20 @@ export const { handle } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
-        return { role: profile.role ?? "user", ... }
+        return { role: profile.role ?? "user", ...profile }
       },
-    })
+    }),
   ],
   callbacks: {
     jwt({ token, user }) {
-      if(user) token.role = user.role
+      if (user) token.role = user.role
       return token
     },
     session({ session, token }) {
       session.user.role = token.role
       return session
-    }
-  }
+    },
+  },
 })
 ```
 
@@ -284,16 +284,16 @@ export const { handlers, auth } = NextAuth({
   providers: [
     Google({
       profile(profile) {
-        return { role: profile.role ?? "user", ... }
-      }
-    })
+        return { role: profile.role ?? "user", ...profile }
+      },
+    }),
   ],
   callbacks: {
     session({ session, user }) {
       session.user.role = user.role
       return session
-    }
-  }
+    },
+  },
 })
 ```
 
@@ -334,17 +334,16 @@ export const { handle, auth } = SvelteKitAuth({
   providers: [
     Google({
       profile(profile) {
-        return { role: profile.role ?? "user", ... }
-      }
-      ...
-    })
+        return { role: profile.role ?? "user", ...profile }
+      },
+    }),
   ],
   callbacks: {
     session({ session, user }) {
       session.user.role = user.role
       return session
-    }
-  }
+    },
+  },
 })
 ```
 

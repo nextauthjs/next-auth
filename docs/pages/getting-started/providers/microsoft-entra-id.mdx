@@ -47,6 +47,13 @@ https://example.com/auth/callback/microsoft-entra-id
 ```
 
   </Code.Svelte>
+  <Code.Express>
+
+```bash
+https://example.com/auth/callback/microsoft-entra-id
+```
+
+  </Code.Express>
 </Code>
 
 ### Environment Variables
@@ -57,6 +64,48 @@ AUTH_MICROSOFT_ENTRA_ID_SECRET
 AUTH_MICROSOFT_ENTRA_ID_ISSUER
 ```
 
+### Register Application
+
+1. Log in to the [Microsoft Entra admin center](https://entra.microsoft.com/).
+
+2. In the left sidebar, navigate to Identity --> Applications --> App
+   Registrations.
+
+3. Click on New registration.
+
+4. Give your application a name. This name will be displayed to the user when
+   they log in.
+
+5. Select the account types you want to allow to log in. The
+   `AUTH_MICROSOFT_ENTRA_ID_ISSUER` variable will be based on the selection you
+   make here.
+
+   - **Single tenant only** - Only allow users from your organization.<br />
+     `https://login.microsoftonline.com/<Directory (tenant) ID>/v2.0`
+
+   - **Multi-tenant** - Allow users from any organization.<br />
+     `https://login.microsoftonline.com/organizations/v2.0`
+
+   - **Multi-tenant + Personal** - Allow any Microsoft account (work, school,
+     personal).<br />
+     `https://login.microsoftonline.com/common/v2.0`
+
+   - **Personal Only** - Only allow personal Microsoft accounts.<br />
+     `https://login.microsoftonline.com/consumers/v2.0`
+
+6. Set the Redirect URI platform to `web` and the Callback URI for your
+   application. When developing you will set this to your local host
+   environment
+   (example `http://localhost:3000/api/auth/callback/microsoft-entra-id`).
+
+7. From the application overview page copy the **Application (client) ID** and
+   paste it in the `AUTH_MICROSOFT_ENTRA_ID_ID` variable.
+
+8. Navigate to Certificates & secrets and create a new client secret.
+
+9. Copy the secret value (this will be hidden when you leave this page) and
+   paste it in the `AUTH_MICROSOFT_ENTRA_ID_SECRET` variable.
+
 ### Configuration
 
 <Code>
@@ -66,7 +115,7 @@ AUTH_MICROSOFT_ENTRA_ID_ISSUER
 import NextAuth from "next-auth"
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
 
-const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
@@ -82,12 +131,12 @@ const { handlers, auth, signIn, signOut } = NextAuth({
   
 ```ts filename="/src/routes/plugin@auth.ts"
 import { QwikAuth$ } from "@auth/qwik"
-import Entra from "@auth/qwik/providers/microsoft-entra-id"
+import MicrosoftEntraID from "@auth/qwik/providers/microsoft-entra-id"
 
 export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
   () => ({
     providers: [
-      Entra({
+      MicrosoftEntraID({
         clientId: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_ID,
         clientSecret: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
         issuer: import.meta.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
@@ -102,15 +151,19 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 
 ```ts filename="/src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
-import Entra from "@auth/sveltekit/providers/microsoft-entra-id"
-import { env } from "$env/dynamic/private"
+import MicrosoftEntraID from "@auth/sveltekit/providers/microsoft-entra-id"
+import {
+  AUTH_MICROSOFT_ENTRA_ID_ID,
+  AUTH_MICROSOFT_ENTRA_ID_SECRET,
+  AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+} from "$env/static/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
-    Entra({
-      clientId: env.AUTH_MICROSOFT_ENTRA_ID_ID,
-      clientSecret: env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+    MicrosoftEntraID({
+      clientId: AUTH_MICROSOFT_ENTRA_ID_ID,
+      clientSecret: AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      issuer: AUTH_MICROSOFT_ENTRA_ID_ISSUER,
     }),
   ],
 })
@@ -121,13 +174,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 ```ts filename="/src/app.ts"
 import { ExpressAuth } from "@auth/express"
-import Entra from "@auth/express/providers/microsoft-entra-id"
+import MicrosoftEntraID from "@auth/express/providers/microsoft-entra-id"
 
 app.use(
   "/auth/*",
   ExpressAuth({
     providers: [
-      Entra({
+      MicrosoftEntraID({
         clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
         clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
         issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
@@ -140,30 +193,21 @@ app.use(
   </Code.Express>
 </Code>
 
-### Notes
-
-1. Allow only Specific Active Directory Users
-
-- In https://entra.microsoft.com/ select Identity from the left bar menu.
-- Next, go to "App Registration" in the left menu, and create a new one.
-- Pay close attention to "Who can use this application or access this API?"
-  - This allows you to scope access to specific types of user accounts
-  - Only your tenant, all Microsoft tenants, or all Microsoft tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
-- When asked for a redirection URL, use `https://yourapplication.com/api/auth/callback/microsoft-entra-id` or for development `http://localhost:3000/api/auth/callback/microsoft-entra-id`.
-- After your App Registration is created, under "Client Credential" create your Client secret.
-- Now copy your:
-  - Application (client) ID
-  - Client secret (value)
-  - Issuer
-
-In `.env.local` create the following entries:
-
-```
-AUTH_MICROSOFT_ENTRA_ID_ID=<copy Application (client) ID here>
-AUTH_MICROSOFT_ENTRA_ID_SECRET=<copy generated client secret value here>
-AUTH_MICROSOFT_ENTRA_ID_ISSUER=https://login.microsoftonline.com/<copy the issuer here>/v2.0
+```env filename=".env.local"
+AUTH_MICROSOFT_ENTRA_ID_ID="<Application (client) ID>"
+AUTH_MICROSOFT_ENTRA_ID_SECRET="<Client secret value>"
+AUTH_MICROSOFT_ENTRA_ID_ISSUER="https://login.microsoftonline.com/<Directory (tenant) ID>/v2.0"
 ```
 
-That will default the tenant to use the `common` authorization endpoint. [For more details see here](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints).
+## Notes
 
-- Microsoft Entra returns the profile picture in an ArrayBuffer, instead of just a URL to the image, so our provider converts it to a base64 encoded image string and returns that instead. See: https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples. The default image size is 48x48 to avoid [running out of space](https://next-auth.js.org/faq#:~:text=What%20are%20the%20disadvantages%20of%20JSON%20Web%20Tokens%3F) in case the session is saved as a JWT.
+- If the issuer paramater is not set it will default to
+  `https://login.microsoftonline.com/common/v2.0`.
+
+- Microsoft Entra returns the profile picture in an ArrayBuffer, instead of
+  just a URL to the image, so our provider converts it to a base64 encoded
+  image string and returns that instead. See
+  [Microsoft Graph profilePhoto](https://learn.microsoft.com/en-us/graph/api/profilephoto-get?view=graph-rest-1.0&tabs=http#examples).
+  The default image size is 48x48 to avoid
+  [running out of space](https://next-auth.js.org/faq#json-web-tokens) in case
+  the session is saved as a JWT.

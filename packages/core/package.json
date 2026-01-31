@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.38.0",
+  "version": "0.41.0",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -76,7 +76,7 @@
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.2",
-    "nodemailer": "^6.8.0"
+    "nodemailer": "^7.0.7"
   },
   "peerDependenciesMeta": {
     "@simplewebauthn/browser": {
