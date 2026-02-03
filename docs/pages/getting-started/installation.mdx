@@ -86,10 +86,15 @@ import { handlers } from "@/auth" // Referring to the auth.ts we just created
 export const { GET, POST } = handlers
 ```
 
-3. Add optional Middleware to keep the session alive, this will update the session expiry every time its called.
+3. Add optional Proxy to keep the session alive, this will update the session expiry every time its called.
 
-```ts filename="./middleware.ts"
-export { auth as middleware } from "@/auth"
+<Callout type="info">
+  As of Next.js 16, `middleware.ts` has been renamed to `proxy.ts`. If you are
+  using an older version of Next.js, use `middleware.ts` with `export { auth as middleware }` instead.
+</Callout>
+
+```ts filename="./proxy.ts"
+export { auth as proxy } from "@/auth"
 ```
 
   </Code.Next>

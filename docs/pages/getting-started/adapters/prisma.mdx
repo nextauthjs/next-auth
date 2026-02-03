@@ -65,9 +65,11 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 </Callout>
 
 <Callout type="warning">
-  We recommend using version `@prisma/client@5.12.0` or above if using
-  middleware or any other edge runtime(s). See [edge
-  compatibility](#edge-compatibility) below for more information.
+  We recommend using version `@prisma/client@5.12.0` or above if using proxy (or
+  middleware in older Next.js versions) or any other edge runtime(s). In Next.js
+  16+, `proxy.ts` runs on the Node.js runtime, so this may no longer be
+  necessary. See [edge compatibility](#edge-compatibility) below for more
+  information.
 </Callout>
 
 <Code>
@@ -152,9 +154,9 @@ At the moment, Prisma is still working on being fully compatible with edge runti
 - Use the Prisma's [Accelerate](https://pris.ly/d/accelerate) feature
 - Follow our [Edge Compatibility](/guides/edge-compatibility) page as the workaround. This uses the `jwt` session strategy and separates the `auth.ts` configuration into two files.
 
-Using Prisma with the `jwt` session strategy and `@prisma/client@5.9.1` or above doesn't require any additional modifications, other than ensuring you don't do any database queries in your middleware.
+Using Prisma with the `jwt` session strategy and `@prisma/client@5.9.1` or above doesn't require any additional modifications, other than ensuring you don't do any database queries in your proxy (or middleware in older Next.js versions).
 
-Since `@prisma/client@5.9.1`, Prisma no longer throws about being incompatible with the edge runtime at instantiation, but at query time. Therefore, it is possible to import it in files being used in your middleware as long as you do not execute any queries in your middleware.
+Since `@prisma/client@5.9.1`, Prisma no longer throws about being incompatible with the edge runtime at instantiation, but at query time. Therefore, it is possible to import it in files being used in your proxy as long as you do not execute any queries in your proxy.
 
 ### Schema
 
