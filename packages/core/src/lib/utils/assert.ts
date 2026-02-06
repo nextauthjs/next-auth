@@ -44,10 +44,6 @@ function isSemverString(version: string): version is SemverString {
   return /^v\d+(?:\.\d+){0,2}$/.test(version)
 }
 
-let hasCredentials = false
-let hasEmail = false
-let hasWebAuthn = false
-
 const emailMethods: (keyof Adapter)[] = [
   "createVerificationToken",
   "useVerificationToken",
@@ -90,6 +86,10 @@ export function assertConfig(
 ): ConfigError | WarningCode[] {
   const { url } = request
   const warnings: WarningCode[] = []
+
+  let hasCredentials = false
+  let hasEmail = false
+  let hasWebAuthn = false
 
   if (!warned && options.debug) warnings.push("debug-enabled")
 
