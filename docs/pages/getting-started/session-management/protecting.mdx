@@ -240,12 +240,19 @@ API Routes are protected in the same way as any other route in Express, see [the
 </Code.Express>
 </Code>
 
-### Next.js Middleware
+### Next.js Proxy
 
-With Next.js 12+, the easiest way to protect a set of pages is using the middleware file. You can create a `middleware.ts` file in your root pages directory with the following contents.
+With Next.js 16+, the easiest way to protect a set of pages is using the proxy file. You can create a `proxy.ts` file in your root pages directory with the following contents.
 
-```ts filename="middleware.ts"
-export { auth as middleware } from "@/auth"
+<Callout type="info">
+  As of Next.js 16, `middleware.ts` has been renamed to `proxy.ts` and the
+  exported function has been renamed from `middleware` to `proxy`. If you are
+  using an older version of Next.js, use `middleware.ts` and export `auth` as
+  `middleware` instead.
+</Callout>
+
+```ts filename="proxy.ts"
+export { auth as proxy } from "@/auth"
 ```
 
 Then define `authorized` callback in your `auth.ts` file. For more details check out the [reference docs](/reference/nextjs#authorized).
@@ -263,12 +270,12 @@ export const { auth, handlers } = NextAuth({
 })
 ```
 
-You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the middleware.
+You can also use the `auth` method as a wrapper if you'd like to implement more logic inside the proxy.
 
-```ts filename="middleware.ts"
+```ts filename="proxy.ts"
 import { auth } from "@/auth"
 
-export default auth((req) => {
+export const proxy = auth((req) => {
   if (!req.auth && req.nextUrl.pathname !== "/login") {
     const newUrl = new URL("/login", req.nextUrl.origin)
     return Response.redirect(newUrl)
@@ -276,17 +283,17 @@ export default auth((req) => {
 })
 ```
 
-You can also use a regex to match multiple routes or you can negate certain routes in order to protect all remaining routes. The following example avoids running the middleware on paths such as the favicon or static images.
+You can also use a regex to match multiple routes or you can negate certain routes in order to protect all remaining routes. The following example avoids running the proxy on paths such as the favicon or static images.
 
-```ts filename="middleware.ts"
+```ts filename="proxy.ts"
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
 ```
 
-Middleware will protect pages as defined by the `matcher` config export. For more details about the matcher, check out the [Next.js docs](https://nextjs.org/docs/pages/building-your-application/routing/middleware#matching-paths).
+The proxy will protect pages as defined by the `matcher` config export. For more details about the matcher, check out the [Next.js docs](https://nextjs.org/docs/app/api-reference/file-conventions/proxy).
 
 <Callout>
-  You should not rely on middleware exclusively for authorization. Always ensure
+  You should not rely on the proxy exclusively for authorization. Always ensure
   that the session is verified as close to your data fetching as possible.
 </Callout>

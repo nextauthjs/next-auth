@@ -42,7 +42,7 @@ npm install next-auth@beta
 - OAuth 1.0 support is deprecated.
 - The minimum required Next.js version is now [14.0](https://nextjs.org/14).
 - The import `next-auth/next` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
-- The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details.
+- The import `next-auth/middleware` is replaced. See [Authenticating server-side](#authenticating-server-side) for more details. As of Next.js 16, `middleware.ts` has been renamed to `proxy.ts`.
 - When the `idToken: boolean` option is set to `false`, it won't entirely disable the ID token. Instead, it signals `next-auth` to also visit the `userinfo_endpoint` for the final user data. Previously, `idToken: false` opted out to check the `id_token` validity at all.
 
 ## Migration
@@ -92,7 +92,7 @@ See the table below for a summary of the changes. Below that are `diff` examples
 | Where                   | v4                                                    | v5                               |
 | ----------------------- | ----------------------------------------------------- | -------------------------------- |
 | **Server Component**    | `getServerSession(authOptions)`                       | `auth()` call                    |
-| **Middleware**          | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
+| **Proxy (Middleware)**  | `withAuth(middleware, subset of authOptions)` wrapper | `auth` export / `auth()` wrapper |
 | **Client Component**    | `useSession()` hook                                   | `useSession()` hook              |
 | **Route Handler**       | _Previously not supported_                            | `auth()` wrapper                 |
 | **API Route (Edge)**    | _Previously not supported_                            | `auth()` wrapper                 |
@@ -145,27 +145,27 @@ const ClientComponent = () => {
 </Tabs.Tab>
 <Tabs.Tab>
 
-```diff filename="middleware.ts"
+```diff filename="proxy.ts (middleware.ts in Next.js < 16)"
 - export { default } from "next-auth/middleware"
-+ export { auth as middleware } from "@/auth"
++ export { auth as proxy } from "@/auth"
 ```
 
-For advanced use cases, you can use `auth` as a wrapper for your Middleware:
+For advanced use cases, you can use `auth` as a wrapper for your Proxy:
 
-```ts filename="middleware.ts"
+```ts filename="proxy.ts"
 import { auth } from "@/auth"
 
-export default auth((req) => {
+export const proxy = auth((req) => {
   // req.auth
 })
 
-// Optionally, don't invoke Middleware on some paths
+// Optionally, don't invoke Proxy on some paths
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
 ```
 
-Check out additional [Middleware docs](/getting-started/session-management/protecting#nextjs-middleware) for more details.
+Check out additional [Proxy docs](/getting-started/session-management/protecting#nextjs-proxy) for more details.
 
 </Tabs.Tab>
 <Tabs.Tab>
@@ -258,7 +258,7 @@ While Auth.js strictly uses standard [Web APIs](https://developer.mozilla.org/en
 
 Auth.js supports two [session strategies](/concepts/session-strategies). When you are using an adapter, it will default to the `database` strategy. **Unless your database and its adapter is compatible with the Edge runtime/infrastructure, you will not be able to use the `"database"` session strategy**.
 
-So for example, if you are using an adapter that relies on an ORM/library that is not yet compatible with Edge runtime(s) below is an example where we force the `jwt` strategy and split up the configuration so the library doesn't attempt to access the database in edge environments, like in the middleware.
+So for example, if you are using an adapter that relies on an ORM/library that is not yet compatible with Edge runtime(s) below is an example where we force the `jwt` strategy and split up the configuration so the library doesn't attempt to access the database in edge environments, like in the proxy (or middleware for older Next.js versions).
 
 <Callout>
   The following filenames are only a convention, they can be named anything you
@@ -291,24 +291,24 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 })
 ```
 
-3. In your middleware file, import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, initialize Auth.js separately with all of your common options, but **without the edge incompatible adapter**.
+3. In your proxy file (or middleware file for older Next.js versions), import the configuration object from your first `auth.config.ts` file and use it to lazily initialize Auth.js there. In effect, initialize Auth.js separately with all of your common options, but **without the edge incompatible adapter**.
 
-```ts filename="middleware.ts" {1} /NextAuth/
+```ts filename="proxy.ts" {1} /NextAuth/
 import authConfig from "./auth.config"
 import NextAuth from "next-auth"
 
-// Use only one of the two middleware options below
-// 1. Use middleware directly
-// export const { auth: middleware } = NextAuth(authConfig)
+// Use only one of the two proxy options below
+// 1. Use proxy directly
+// export const { auth: proxy } = NextAuth(authConfig)
 
-// 2. Wrapped middleware option
+// 2. Wrapped proxy option
 const { auth } = NextAuth(authConfig)
-export default auth(async function middleware(req: NextRequest) {
-  // Your custom middleware logic goes here
+export const proxy = auth(async function proxy(req: NextRequest) {
+  // Your custom proxy logic goes here
 })
 ```
 
-The above is just an example. **The main idea**, is to separate the part of the configuration that is edge-compatible from the rest, and only import the edge-compatible part in Middleware/Edge pages/routes. You can read more about this workaround in the [Prisma docs](/getting-started/adapters/prisma), for example.
+The above is just an example. **The main idea**, is to separate the part of the configuration that is edge-compatible from the rest, and only import the edge-compatible part in Proxy/Edge pages/routes. You can read more about this workaround in the [Prisma docs](/getting-started/adapters/prisma), for example.
 
 Please follow up with your library/database/ORM's maintainer to see if they are planning to support the Edge runtime/infrastructure.
 
