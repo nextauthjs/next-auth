@@ -1,5 +1,6 @@
 import Apple from "@auth/express/providers/apple"
 import Auth0 from "@auth/express/providers/auth0"
+import AuthKit from "@auth/express/providers/authkit"
 import AzureB2C from "@auth/express/providers/azure-ad-b2c"
 import BoxyHQSAML from "@auth/express/providers/boxyhq-saml"
 import Cognito from "@auth/express/providers/cognito"
@@ -30,6 +31,7 @@ export const authConfig = {
   providers: [
     Apple,
     Auth0,
+    AuthKit,
     AzureB2C({
       clientId: process.env.AUTH_AZURE_AD_B2C_ID,
       clientSecret: process.env.AUTH_AZURE_AD_B2C_SECRET,

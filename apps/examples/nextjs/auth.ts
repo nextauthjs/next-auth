@@ -4,6 +4,7 @@ import "next-auth/jwt"
 import Apple from "next-auth/providers/apple"
 // import Atlassian from "next-auth/providers/atlassian"
 import Auth0 from "next-auth/providers/auth0"
+import AuthKit from "next-auth/providers/authkit"
 import AzureB2C from "next-auth/providers/azure-ad-b2c"
 import BankIDNorway from "next-auth/providers/bankid-no"
 import BoxyHQSAML from "next-auth/providers/boxyhq-saml"
@@ -56,6 +57,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Apple,
     // Atlassian,
     Auth0,
+    AuthKit,
     AzureB2C,
     BankIDNorway,
     BoxyHQSAML({
