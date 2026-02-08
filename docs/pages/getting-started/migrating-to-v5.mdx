@@ -96,8 +96,8 @@ See the table below for a summary of the changes. Below that are `diff` examples
 | **Client Component**    | `useSession()` hook                                   | `useSession()` hook              |
 | **Route Handler**       | _Previously not supported_                            | `auth()` wrapper                 |
 | **API Route (Edge)**    | _Previously not supported_                            | `auth()` wrapper                 |
-| **API Route (Node.js)** | `getServerSession(req, res, authOptions)`             | `auth(req, res)` call            |
-| **API Route (Node.js)** | `getToken(req)` (No session rotation)                 | `auth(req, res)` call            |
+| **API Route (Node.js)** | `getServerSession(req, res, authOptions)`             | `auth({req, res})` call          |
+| **API Route (Node.js)** | `getToken(req)` (No session rotation)                 | `auth({req, res})` call          |
 | **getServerSideProps**  | `getServerSession(ctx.req, ctx.res, authOptions)`     | `auth(ctx)` call                 |
 | **getServerSideProps**  | `getToken(ctx.req)` (No session rotation)             | `auth(req, res)` call            |
 
