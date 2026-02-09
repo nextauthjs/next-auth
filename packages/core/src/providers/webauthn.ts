@@ -72,7 +72,7 @@ type ConfigurableVerifyAuthenticationOptions = Omit<
   | "expectedChallenge"
   | "expectedOrigin"
   | "expectedRPID"
-  | "authenticator"
+  | "credential"
   | "response"
 >
 type ConfigurableVerifyRegistrationOptions = Omit<
@@ -162,6 +162,16 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  *
  * ### Setup
  *
+ * Install the optional peer dependencies (SimpleWebAuthn v13):
+ *
+ * ```bash npm2yarn
+ * npm install @simplewebauthn/browser@^13.2.2 @simplewebauthn/server@^13.2.2
+ * ```
+ *
+ * The browser package is used for the sign-in page script; the server package for
+ * generating and verifying options. As of v13, types come from those packages
+ * (no separate `@simplewebauthn/types`).
+ *
  * #### Configuration
  * ```ts
  * import { Auth } from "@auth/core"
@@ -177,6 +187,12 @@ export interface WebAuthnConfig extends CommonProviderOptions {
  * - [SimpleWebAuthn - Server side](https://simplewebauthn.dev/docs/packages/server)
  * - [SimpleWebAuthn - Client side](https://simplewebauthn.dev/docs/packages/client)
  * - [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/webauthn.ts)
+ *
+ * **SimpleWebAuthn v13:** This provider targets the v13 API: credential IDs in
+ * `allowCredentials`/`excludeCredentials` are base64 strings; authentication
+ * verification uses a `credential` object (id, publicKey, counter); registration
+ * verification returns `registrationInfo.credential`; and the default browser
+ * script uses the v13 options shape (`optionsJSON`, `useBrowserAutofill`).
  *
  * :::tip
  *
