@@ -33,6 +33,7 @@ import { randomString } from "./web.js"
 import type {
   VerifiedAuthenticationResponse,
   VerifiedRegistrationResponse,
+  WebAuthnCredential,
 } from "@simplewebauthn/server"
 
 export type WebAuthnRegister = "register"
@@ -249,7 +250,7 @@ export async function verifyAuthenticate(
       ...provider.verifyAuthenticationOptions,
       expectedChallenge,
       response: data as AuthenticationResponseJSON,
-      authenticator: fromAdapterAuthenticator(authenticator),
+      credential: adapterAuthenticatorToWebAuthnCredential(authenticator),
       expectedOrigin: relayingParty.origin,
       expectedRPID: relayingParty.id,
     })
@@ -369,9 +370,12 @@ export async function verifyRegister(
     )
   }
 
+  const { credential, credentialDeviceType, credentialBackedUp } =
+    verification.registrationInfo
+
   // Build a new account
   const account = {
-    providerAccountId: toBase64(verification.registrationInfo.credentialID),
+    providerAccountId: credential.id,
     provider: options.provider.id,
     type: provider.type,
   }
@@ -379,13 +383,11 @@ export async function verifyRegister(
   // Build a new authenticator
   const authenticator = {
     providerAccountId: account.providerAccountId,
-    counter: verification.registrationInfo.counter,
-    credentialID: toBase64(verification.registrationInfo.credentialID),
-    credentialPublicKey: toBase64(
-      verification.registrationInfo.credentialPublicKey
-    ),
-    credentialBackedUp: verification.registrationInfo.credentialBackedUp,
-    credentialDeviceType: verification.registrationInfo.credentialDeviceType,
+    counter: credential.counter,
+    credentialID: credential.id,
+    credentialPublicKey: toBase64(credential.publicKey),
+    credentialBackedUp,
+    credentialDeviceType,
     transports: transportsToString(
       (data as RegistrationResponseJSON).response
         .transports as AuthenticatorTransport[]
@@ -495,16 +497,15 @@ export function assertInternalOptionsWebAuthn(
   return { ...options, provider, adapter }
 }
 
-function fromAdapterAuthenticator(
+function adapterAuthenticatorToWebAuthnCredential(
   authenticator: AdapterAuthenticator
-): InternalAuthenticator {
+): WebAuthnCredential {
+  const publicKeyBytes = fromBase64(authenticator.credentialPublicKey)
   return {
-    ...authenticator,
-    credentialDeviceType:
-      authenticator.credentialDeviceType as InternalAuthenticator["credentialDeviceType"],
+    id: authenticator.credentialID,
+    publicKey: new Uint8Array(publicKeyBytes),
+    counter: authenticator.counter,
     transports: stringToTransports(authenticator.transports),
-    credentialID: fromBase64(authenticator.credentialID),
-    credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
   }
 }
 
