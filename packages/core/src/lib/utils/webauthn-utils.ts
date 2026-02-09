@@ -17,12 +17,12 @@ import {
   WebAuthnVerificationError,
 } from "../../errors.js"
 import { webauthnChallenge } from "../actions/callback/oauth/checks.js"
-import {
-  type AuthenticationResponseJSON,
-  type PublicKeyCredentialCreationOptionsJSON,
-  type PublicKeyCredentialRequestOptionsJSON,
-  type RegistrationResponseJSON,
-} from "@simplewebauthn/types"
+import type {
+  AuthenticationResponseJSON,
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON,
+  RegistrationResponseJSON,
+} from "@simplewebauthn/server"
 import type {
   Adapter,
   AdapterAccount,
@@ -428,7 +428,7 @@ async function getAuthenticationOptions(
     ...provider.authenticationOptions,
     rpID: relayingParty.id,
     allowCredentials: authenticators?.map((a) => ({
-      id: fromBase64(a.credentialID),
+      id: a.credentialID,
       type: "public-key",
       transports: stringToTransports(a.transports),
     })),
@@ -459,7 +459,7 @@ async function getRegistrationOptions(
   // We can do this because we don't use this user ID to link the
   // credential to the user. Instead, we store actual userID in the
   // Authenticator object and fetch it via it's credential ID.
-  const userID = randomString(32)
+  const userID = new TextEncoder().encode(randomString(32))
 
   const relayingParty = provider.getRelayingParty(options, request)
 
@@ -472,7 +472,7 @@ async function getRegistrationOptions(
     rpID: relayingParty.id,
     rpName: relayingParty.name,
     excludeCredentials: authenticators?.map((a) => ({
-      id: fromBase64(a.credentialID),
+      id: a.credentialID,
       type: "public-key",
       transports: stringToTransports(a.transports),
     })),

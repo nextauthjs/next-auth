@@ -45,7 +45,7 @@ import {
   WebAuthnVerificationError,
 } from "../src/errors"
 import { randomString } from "../src/lib/utils/web"
-import { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/server/script/deps"
+import type { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/server"
 import { Cookie } from "../src/lib/utils/cookie"
 import { randomInt } from "crypto"
 
@@ -131,7 +131,9 @@ function getExpectedResponse(
  */
 function prepareVerifyTest(
   action: WebAuthnAction,
-  requestData?: Record<string, unknown>
+  requestData?: Record<string, unknown> & {
+    response?: { transports?: AuthenticatorTransport[] }
+  }
 ) {
   const options = getMockOptions()
   const credentialID = toBase64(new Uint8Array([1, 2, 3, 4, 5]))
@@ -146,12 +148,12 @@ function prepareVerifyTest(
   } as unknown as RequestInternal
   const cookies = [{ name: "other", value: "value", options: {} }]
 
+  const responseTransports = requestData.response?.transports
   const authenticator = createAuthenticator({
     credentialID,
     providerAccountId: credentialID,
-    // @ts-expect-error
-    transports: requestData.response?.transports
-      ? transportsToString(requestData.response?.transports)
+    transports: responseTransports
+      ? transportsToString(responseTransports)
       : "usb,ble,nfc",
   })
   vi.mocked(options.adapter.getAuthenticator).mockResolvedValue(authenticator)
@@ -539,19 +541,19 @@ describe("getRegistrationResponse", () => {
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
-    }
+    } as GenerateRegistrationOptionsOpts
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse(
       "register",
@@ -609,15 +611,15 @@ describe("getRegistrationResponse", () => {
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -627,7 +629,7 @@ describe("getRegistrationResponse", () => {
         requireResidentKey: true,
       },
       supportedAlgorithmIDs: [1, 2, 3],
-    }
+    } as GenerateRegistrationOptionsOpts
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
     expect(
@@ -661,7 +663,7 @@ describe("getRegistrationResponse", () => {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: undefined,
@@ -697,7 +699,7 @@ describe("getRegistrationResponse", () => {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: undefined,
       excludeCredentials: undefined,
@@ -735,15 +737,15 @@ describe("getAuthenticationResponse", () => {
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
       allowCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
-    }
+    } as GenerateAuthenticationOptionsOpts
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse(
       "authenticate",
@@ -797,11 +799,11 @@ describe("getAuthenticationResponse", () => {
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
       allowCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: a.credentialID,
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -810,7 +812,7 @@ describe("getAuthenticationResponse", () => {
       extensions: {
         appid: "test",
       },
-    }
+    } as GenerateAuthenticationOptionsOpts
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse(
       "authenticate",
