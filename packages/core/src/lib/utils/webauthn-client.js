@@ -8,9 +8,9 @@
 /**
  * @template {WebAuthnOptionsAction} T
  * @typedef {T extends WebAuthnAuthenticate ?
- *  { options: import("@simplewebauthn/types").PublicKeyCredentialRequestOptionsJSON; action: "authenticate" } :
+ *  { options: import("@simplewebauthn/server").PublicKeyCredentialRequestOptionsJSON; action: "authenticate" } :
  *  T extends WebAuthnRegister ?
- *  { options: import("@simplewebauthn/types").PublicKeyCredentialCreationOptionsJSON; action: "register" } :
+ *  { options: import("@simplewebauthn/server").PublicKeyCredentialCreationOptionsJSON; action: "register" } :
  * never
  * } WebAuthnOptionsReturn
  */
@@ -125,10 +125,10 @@ export async function webauthnScript(authURL, providerID) {
    */
   async function authenticationFlow(options, autofill) {
     // Start authentication
-    const authResp = await WebAuthnBrowser.startAuthentication(
-      options,
-      autofill
-    )
+    const authResp = await WebAuthnBrowser.startAuthentication({
+      optionsJSON: options,
+      useBrowserAutofill: autofill ?? false,
+    })
 
     // Submit authentication response to server
     return await submitForm("authenticate", authResp)
@@ -147,7 +147,9 @@ export async function webauthnScript(authURL, providerID) {
     })
 
     // Start registration
-    const regResp = await WebAuthnBrowser.startRegistration(options)
+    const regResp = await WebAuthnBrowser.startRegistration({
+      optionsJSON: options,
+    })
 
     // Submit registration response to server
     return await submitForm("register", regResp)
