@@ -74,8 +74,8 @@
     "preact-render-to-string": "6.5.11"
   },
   "peerDependencies": {
-    "@simplewebauthn/browser": "^9.0.1",
-    "@simplewebauthn/server": "^9.0.2",
+    "@simplewebauthn/browser": "^13.2.2",
+    "@simplewebauthn/server": "^13.2.2",
     "nodemailer": "^7.0.7"
   },
   "peerDependenciesMeta": {
@@ -99,9 +99,8 @@
     "providers": "node scripts/generate-providers"
   },
   "devDependencies": {
-    "@simplewebauthn/browser": "9.0.1",
-    "@simplewebauthn/server": "9.0.3",
-    "@simplewebauthn/types": "^9.0.1",
+    "@simplewebauthn/browser": "^13.2.2",
+    "@simplewebauthn/server": "^13.2.2",
     "@types/node": "18.11.10",
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
