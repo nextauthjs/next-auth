@@ -45,7 +45,10 @@ import {
   WebAuthnVerificationError,
 } from "../src/errors"
 import { randomString } from "../src/lib/utils/web"
-import type { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/server"
+import type {
+  CredentialDeviceType,
+  PublicKeyCredentialCreationOptionsJSON,
+} from "@simplewebauthn/server"
 import { Cookie } from "../src/lib/utils/cookie"
 import { randomInt } from "crypto"
 
@@ -174,14 +177,18 @@ function prepareVerifyTest(
     vi.mocked(verifyRegistrationResponse).mockResolvedValue({
       verified: true,
       registrationInfo: {
-        counter: authenticator.counter,
-        credentialID: fromBase64(authenticator.credentialID),
-        credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
+        credential: {
+          id: authenticator.credentialID,
+          publicKey: new Uint8Array(
+            fromBase64(authenticator.credentialPublicKey)
+          ),
+          counter: authenticator.counter,
+        },
         credentialBackedUp: authenticator.credentialBackedUp,
-        // @ts-expect-error
-        credentialDeviceType: authenticator.credentialDeviceType,
+        credentialDeviceType:
+          authenticator.credentialDeviceType as CredentialDeviceType,
       },
-    })
+    } as Awaited<ReturnType<typeof verifyRegistrationResponse>>)
   }
 
   const account = {
@@ -203,11 +210,11 @@ function prepareVerifyTest(
     ...defaultWebAuthnConfig.verifyAuthenticationOptions,
     expectedChallenge: challenge,
     response: requestData,
-    authenticator: {
-      ...authenticator,
-      credentialID: fromBase64(authenticator.credentialID),
+    credential: {
+      id: authenticator.credentialID,
+      publicKey: new Uint8Array(fromBase64(authenticator.credentialPublicKey)),
+      counter: authenticator.counter,
       transports: stringToTransports(authenticator.transports),
-      credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
     },
     expectedOrigin: rp.origin,
     expectedRPID: rp.id,
