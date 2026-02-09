@@ -178,13 +178,29 @@ export interface GetSessionParams {
   broadcast?: boolean
 }
 
-export async function getSession(params?: GetSessionParams) {
-  const session = await fetchData<Session>(
+async function _fetchSession(params?: GetSessionParams) {
+  return fetchData<Session>(
     "session",
     __NEXTAUTH,
     logger,
     params
   )
+}
+
+// https://github.com/nextauthjs/next-auth/issues/10244#issuecomment-3029947368
+async function _getSession(params?: GetSessionParams) {
+  const session = await _fetchSession(params)
+  if (params?.broadcast ?? true) {
+    broadcast().postMessage({
+      event: "session",
+      data: { trigger: "getSession" },
+    })
+  }
+  return session
+}
+
+export async function getSession(params?: GetSessionParams) {
+  const session = await _fetchSession(params)
   if (params?.broadcast ?? true) {
     // https://github.com/nextauthjs/next-auth/pull/11470
     getNewBroadcastChannel().postMessage({
@@ -413,7 +429,7 @@ export function SessionProvider(props: SessionProviderProps) {
         // or if there are events from other tabs/windows
         if (storageEvent || __NEXTAUTH._session === undefined) {
           __NEXTAUTH._lastSync = now()
-          __NEXTAUTH._session = await getSession({
+          __NEXTAUTH._session = await _getSession({
             broadcast: !storageEvent,
           })
           setSession(__NEXTAUTH._session)
@@ -438,7 +454,7 @@ export function SessionProvider(props: SessionProviderProps) {
 
         // An event or session staleness occurred, update the client session.
         __NEXTAUTH._lastSync = now()
-        __NEXTAUTH._session = await getSession()
+        __NEXTAUTH._session = await _getSession()
         setSession(__NEXTAUTH._session)
       } catch (error) {
         logger.error(
