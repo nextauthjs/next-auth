@@ -145,6 +145,7 @@ export default function Discord<P extends DiscordProfile>(
   return {
     id: "discord",
     name: "Discord",
+    issuer: "https://discord.com",
     type: "oauth",
     authorization: {
       url: "https://discord.com/api/oauth2/authorize",
