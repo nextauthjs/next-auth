@@ -543,6 +543,16 @@ importers:
         specifier: ^8.7.1
         version: 8.11.3
 
+  packages/adapter-postgresjs:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      postgres:
+        specifier: ^3.4.3
+        version: 3.4.3
+
   packages/adapter-pouchdb:
     dependencies:
       '@auth/core':
