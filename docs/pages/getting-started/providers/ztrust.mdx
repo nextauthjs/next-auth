@@ -1,0 +1,105 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/ztrust.svg" height="64" width="64" />
+
+# Ztrust Provider
+
+## Resources
+
+- [Ztrust OIDC documentation](https://ztrust.gitbook.io/ztrust-documentation/user-manual-ztrust-v4.1/5.-securing-applications)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/ztrust
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/ztrust
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/ztrust
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ZTRUST_ID
+AUTH_ZTRUST_SECRET
+AUTH_ZTRUST_ISSUER
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Ztrust from "next-auth/providers/ztrust"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Ztrust],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Ztrust from "@auth/qwik/providers/ztrust"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Ztrust],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Ztrust from "@auth/sveltekit/providers/ztrust"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Ztrust],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Ztrust from "@auth/express/providers/ztrust"
+
+app.use("/auth/*", ExpressAuth({ providers: [Ztrust] }))
+```
+
+  </Code.Express>
+</Code>
+
+Enable the "Client Authentication" option to retrieve your client secret in the Credentials tab.
+
+Prior to v20, create an `openid-connect` client in ztrust with "confidential" as the "Access Type".
+
+- Issuer should include the realm – e.g. `https://my-ztrust-domain.com/realms/My_Realm`
