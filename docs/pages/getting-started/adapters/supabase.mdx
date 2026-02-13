@@ -38,6 +38,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: SupabaseAdapter({
     url: process.env.SUPABASE_URL,
     secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    schema: "next_auth"
   }),
 })
 ```
@@ -102,7 +103,7 @@ app.use(
 </Code>
 
 <Callout>
-This adapter is developed by the community and not officially maintained or supported by Supabase. It uses the Supabase Database to store user and session data in a separate `next_auth` schema. It is a standalone Auth server that does not interface with Supabase Auth and therefore provides a different feature set.
+This adapter is developed by the community and not officially maintained or supported by Supabase. By default, it uses the Supabase Database to store user and session data in a separate `next_auth` schema. You can customize the schema name by setting the `schema` option (e.g. `schema: "public"` to use the public schema). It is a standalone Auth server that does not interface with Supabase Auth and therefore provides a different feature set.
 
 If you're looking for an officially maintained Auth server with additional features like [built-in email server](https://supabase.com/docs/guides/auth/auth-email#configure-email-settings?utm_source=authjs-docs&medium=referral&campaign=authjs), [phone auth](https://supabase.com/docs/guides/auth/auth-twilio?utm_source=authjs-docs&medium=referral&campaign=authjs), and [Multi Factor Authentication (MFA / 2FA)](https://supabase.com/contact/mfa?utm_source=authjs-docs&medium=referral&campaign=authjs), please use [Supabase Auth](https://supabase.com/auth) with the [Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/auth-helpers/nextjs?utm_source=authjs-docs&medium=referral&campaign=authjs).
 
