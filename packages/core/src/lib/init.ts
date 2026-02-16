@@ -123,7 +123,7 @@ export async function init({
     // JWT options
     jwt: {
       secret: config.secret!, // Asserted in assert.ts
-      maxAge: config.session?.maxAge ?? maxAge, // default to same as `session.maxAge`
+      maxAge: config.session?.maxAge ?? maxAge, // default to same as `session.maxAge` or function
       encode: jwt.encode,
       decode: jwt.decode,
       ...config.jwt,

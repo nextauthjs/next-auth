@@ -274,4 +274,156 @@ describe("assert GET session action", () => {
       assertNoCacheResponseHeaders(response)
     })
   })
+
+  describe("Dynamic session maxAge", () => {
+    it("should create a session cookie when maxAge is 'session'", async () => {
+      const authConfig = testConfig({
+        session: {
+          maxAge: "session" as const,
+        },
+      })
+
+      const expectedUser = {
+        name: "test",
+        email: "test@test.com",
+        picture: "https://test.com/test.png",
+      }
+
+      const expectedToken = {
+        ...expectedUser,
+        exp: expect.any(Number),
+        iat: expect.any(Number),
+        jti: expect.any(String),
+        sub: expect.any(String),
+      }
+
+      const salt = SESSION_COOKIE_NAME
+      const encodedToken = await encode({
+        salt,
+        secret: AUTH_SECRET,
+        token: expectedToken,
+      })
+
+      const { response } = await makeAuthRequest({
+        action: "session",
+        cookies: { [SESSION_COOKIE_NAME]: encodedToken },
+        config: authConfig,
+      })
+
+      const cookies = response.headers.getSetCookie()
+      const sessionCookie = cookies.find((c) =>
+        c.includes(SESSION_COOKIE_NAME)
+      )
+
+      // Session cookie should not have Max-Age or Expires
+      expect(sessionCookie).toBeDefined()
+      expect(sessionCookie).not.toContain("Max-Age")
+      expect(sessionCookie).not.toContain("Expires")
+    })
+
+    it("should handle dynamic maxAge based on token data", async () => {
+      const dynamicMaxAge = vi.fn(async ({ token }) => {
+        return token?.rememberMe ? 30 * 24 * 60 * 60 : "session"
+      })
+
+      const authConfig = testConfig({
+        session: {
+          maxAge: dynamicMaxAge,
+        },
+      })
+
+      const expectedUser = {
+        name: "test",
+        email: "test@test.com",
+        picture: "https://test.com/test.png",
+      }
+
+      const expectedToken = {
+        ...expectedUser,
+        rememberMe: false,
+        exp: expect.any(Number),
+        iat: expect.any(Number),
+        jti: expect.any(String),
+        sub: expect.any(String),
+      }
+
+      const salt = SESSION_COOKIE_NAME
+      const encodedToken = await encode({
+        salt,
+        secret: AUTH_SECRET,
+        token: expectedToken,
+      })
+
+      const { response } = await makeAuthRequest({
+        action: "session",
+        cookies: { [SESSION_COOKIE_NAME]: encodedToken },
+        config: authConfig,
+      })
+
+      const cookies = response.headers.getSetCookie()
+      const sessionCookie = cookies.find((c) =>
+        c.includes(SESSION_COOKIE_NAME)
+      )
+
+      // Should create session cookie when rememberMe is false
+      expect(dynamicMaxAge).toHaveBeenCalledWith({
+        token: expect.objectContaining({ rememberMe: false }),
+        trigger: undefined,
+        session: undefined,
+      })
+      expect(sessionCookie).toBeDefined()
+      expect(sessionCookie).not.toContain("Max-Age")
+      expect(sessionCookie).not.toContain("Expires")
+    })
+
+    it("should handle dynamic maxAge with persistent cookie", async () => {
+      const dynamicMaxAge = vi.fn(async ({ token }) => {
+        return token?.rememberMe ? 30 * 24 * 60 * 60 : "session"
+      })
+
+      const authConfig = testConfig({
+        session: {
+          maxAge: dynamicMaxAge,
+        },
+      })
+
+      const expectedToken = {
+        name: "test",
+        email: "test@test.com",
+        picture: "https://test.com/test.png",
+        rememberMe: true,
+        exp: expect.any(Number),
+        iat: expect.any(Number),
+        jti: expect.any(String),
+        sub: expect.any(String),
+      }
+
+      const salt = SESSION_COOKIE_NAME
+      const encodedToken = await encode({
+        salt,
+        secret: AUTH_SECRET,
+        token: expectedToken,
+      })
+
+      const { response } = await makeAuthRequest({
+        action: "session",
+        cookies: { [SESSION_COOKIE_NAME]: encodedToken },
+        config: authConfig,
+      })
+
+      const cookies = response.headers.getSetCookie()
+      const sessionCookie = cookies.find((c) =>
+        c.includes(SESSION_COOKIE_NAME)
+      )
+
+      // Should create persistent cookie when rememberMe is true
+      expect(dynamicMaxAge).toHaveBeenCalledWith({
+        token: expect.objectContaining({ rememberMe: true }),
+        trigger: undefined,
+        session: undefined,
+      })
+      expect(sessionCookie).toBeDefined()
+      expect(sessionCookie).toContain("Max-Age=2592000") // 30 days
+    })
+  })
 })

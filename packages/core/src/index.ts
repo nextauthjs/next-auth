@@ -253,11 +253,29 @@ export interface AuthConfig {
      */
     strategy?: "jwt" | "database"
     /**
-     * Relative time from now in seconds when to expire the session
+     * Relative time from now in seconds when to expire the session,
+     * or "session" to create a session cookie that expires when the browser closes.
+     * Can also be a function that returns the value dynamically.
      *
      * @default 2592000 // 30 days
+     * @example
+     * ```ts
+     * // Static session cookie (browser session)
+     * maxAge: "session"
+     * 
+     * // Dynamic based on user preferences  
+     * maxAge: async ({ token }) => {
+     *   return token?.rememberMe ? 30 * 24 * 60 * 60 : "session"
+     * }
+     * ```
      */
-    maxAge?: number
+    maxAge?: number | "session" | ((params: {
+      user?: import("./types.js").User
+      token?: import("./jwt.js").JWT
+      trigger?: "signIn" | "signUp" | "update"
+      isNewUser?: boolean
+      session?: any
+    }) => number | "session" | PromiseLike<number | "session">)
     /**
      * How often the session should be updated in seconds.
      * If set to `0`, session is updated every time.
