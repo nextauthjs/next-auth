@@ -11,11 +11,15 @@ In order to override Auth.js's `/api/auth/error` page we have to define our cust
 <Code.Next>
 
 ```ts filename="./auth.ts"
+import type { NextAuthConfig } from "next-auth"
+
+const configPages: NextAuthConfig["pages"] = {
+  error: "/error"
+}
+
 const authConfig: NextAuthConfig = {
 ...
-  pages: {
-    error: "/error",
-  }
+  pages: configPages
 ...
 };
 ```
@@ -39,12 +43,13 @@ export default function AuthErrorPage() {
 
 Auth.js forwards the following errors as error query parameters in the URL to our custom error page:
 
-| Query Param     | Example URL                       | Description                                                                                   |
-| --------------- | --------------------------------- | --------------------------------------------------------------------------------------------- |
-| `Configuration` | `/auth/error?error=Configuration` | There is a problem with the server configuration. Check if your options are correct.          |
-| `AccessDenied`  | `/auth/error?error=AccessDenied`  | Usually occurs, when you restricted access through the signIn callback, or redirect callback. |
-| `Verification`  | `/auth/error?error=Verification`  | Related to the Email provider. The token has expired or has already been used.                |
-| `Default`       | `/auth/error?error=Default`       | Catch all, will apply, if none of the above matched.                                          |
+| Query Param         | Example URL                           | Description                                                                                   |
+| ------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `Configuration`     | `/auth/error?error=Configuration`     | There is a problem with the server configuration. Check if your options are correct.          |
+| `AccessDenied`      | `/auth/error?error=AccessDenied`      | Usually occurs, when you restricted access through the signIn callback, or redirect callback. |
+| `CredentialsSignin` | `/auth/error?error=CredentialsSignin` | The user's credentials were rejected by `authorize`                                           |
+| `Verification`      | `/auth/error?error=Verification`      | Related to the Email provider. The token has expired or has already been used.                |
+| `Default`           | `/auth/error?error=Default`           | Catch all, will apply, if none of the above matched.                                          |
 
 So now we can update our custom error page with it:
 
@@ -54,25 +59,34 @@ So now we can update our custom error page with it:
 ```tsx filename="app/error/page.tsx"
 "use client"
 
+import type { ReactNode } from "react"
 import { useSearchParams } from "next/navigation"
+import type { SignInPageErrorParam, ErrorPageParam } from "next-auth"
 
-enum Error {
-  Configuration = "Configuration",
-}
+type AuthErrorKey = SignInPageErrorParam | ErrorPageParam
 
-const errorMap = {
-  [Error.Configuration]: (
+const errorMap: Partial<Record<AuthErrorKey, ReactNode>> = {
+  Configuration: (
     <p>
       There was a problem when trying to authenticate. Please contact us if this
       error persists. Unique error code:{" "}
       <code className="rounded-sm bg-slate-100 p-1 text-xs">Configuration</code>
     </p>
   ),
+  CredentialsSignin: (
+    <p>
+      There was a problem when trying to sign in with your credentials. Please
+      contact us if this error persists. Unique error code:{" "}
+      <code className="rounded-sm bg-slate-100 p-1 text-xs">
+        CredentialsSignin
+      </code>
+    </p>
+  ),
 }
 
 export default function AuthErrorPage() {
   const search = useSearchParams()
-  const error = search.get("error") as Error
+  const error = search.get("error") as AuthErrorKey | null
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center">

@@ -198,10 +198,33 @@ export interface CookiesOptions {
   webauthnChallenge: Partial<CookieOption>
 }
 
-/** TODO: Check if all these are used/correct */
+/**
+ * Error types that can occur during the authentication workflow.
+ *
+ * These help identify and handle specific issues:
+ *
+ * - "Configuration": The authentication setup is misconfigured or missing required options.
+ * - "AccessDenied": The user doesn’t have permission to access the requested resource.
+ * - "Verification": Token verification failed—could be expired, malformed, or invalid.
+ */
 export type ErrorPageParam = "Configuration" | "AccessDenied" | "Verification"
 
-/** TODO: Check if all these are used/correct */
+/**
+ * Sign-in error types used to determine which message to show the user.
+ *
+ * These errors help identify what went wrong during the authentication flow:
+ *
+ * - "Signin": Something went wrong during the general sign-in process.
+ * - "OAuthSignin": Couldn't start the OAuth sign-in flow.
+ * - "OAuthCallbackError": Issue occurred during the OAuth callback.
+ * - "OAuthCreateAccount": Failed to create a new account using OAuth.
+ * - "EmailCreateAccount": Failed to create a new account via email provider.
+ * - "EmailSignin": Problem signing in with email.
+ * - "Callback": Error during the authentication callback phase.
+ * - "OAuthAccountNotLinked": Tried to sign in with an OAuth account that isn't linked.
+ * - "CredentialsSignin": Provided credentials are invalid.
+ * - "SessionRequired": A session is required but none was found.
+ */
 export type SignInPageErrorParam =
   | "Signin"
   | "OAuthSignin"
