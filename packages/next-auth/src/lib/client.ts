@@ -16,6 +16,7 @@ export interface AuthClientConfig {
   basePath: string
   baseUrlServer: string
   basePathServer: string
+  fetchOptions: RequestInit
   /** Stores last session response */
   _session?: Session | null | undefined
   /** Used for timestamp since last sycned (in seconds) */
@@ -109,6 +110,10 @@ export interface SessionProviderProps {
   baseUrl?: string
   basePath?: string
   /**
+   *  Allows for customizing underlying fetch calls made to next-auth APIs
+   */
+  fetchOptions: RequestInit
+  /**
    * A time interval (in seconds) after which the session will be re-fetched.
    * If set to `0` (default), the session is not polled.
    */
@@ -145,7 +150,9 @@ export async function fetchData<T = any>(
   const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`
   try {
     const options: RequestInit = {
+      ...__NEXTAUTH.fetchOptions,
       headers: {
+        ...(__NEXTAUTH.fetchOptions.headers || {}),
         "Content-Type": "application/json",
         ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
       },
