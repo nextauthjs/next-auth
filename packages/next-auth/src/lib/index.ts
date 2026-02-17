@@ -60,12 +60,17 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
 }
 
 async function getSession(headers: Headers, config: NextAuthConfig) {
+  // Allows Next.js to replace the env variables with their values at build time
+  const envObject = {
+    AUTH_URL: process.env.AUTH_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL
+  }
   const url = createActionURL(
     "session",
     // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
     headers.get("x-forwarded-proto"),
     headers,
-    process.env,
+    envObject,
     config
   )
   const request = new Request(url, {
