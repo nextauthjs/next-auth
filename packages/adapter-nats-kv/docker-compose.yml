@@ -1,0 +1,6 @@
+services:
+  nats:
+    image: nats:latest
+    command: -js -p 5222
+    ports:
+      - "5222:5222"

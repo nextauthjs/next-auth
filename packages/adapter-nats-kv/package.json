@@ -1,0 +1,56 @@
+{
+  "name": "@auth/nats-kv-adapter",
+  "version": "1.0.0",
+  "description": "NATS KeyValue-store adapter for Auth.js.",
+  "homepage": "https://authjs.dev",
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "author": "Team Kjøttkontroll @ Mattilsynet",
+  "contributors": [
+    "github.com/eljarh",
+    "github.com/lfbergee"
+  ],
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "license": "ISC",
+  "keywords": [
+    "next-auth",
+    "next.js",
+    "oauth",
+    "NATS",
+    "nats.io"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "./test/test.sh",
+    "build": "tsc",
+    "clean": "rm -rf *.js *.d.ts*"
+  },
+  "dependencies": {
+    "@auth/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@nats-io/kv": "^3.1.0",
+    "@nats-io/transport-node": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.3",
+    "dotenv": "^17.0.0"
+  }
+}

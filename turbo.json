@@ -105,6 +105,7 @@
         "@auth/kysely-adapter#build",
         "@auth/mikro-orm-adapter#build",
         "@auth/mongodb-adapter#build",
+        "@auth/nats-kv-adapter#build",
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
         "@auth/pouchdb-adapter#build",

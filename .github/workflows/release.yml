@@ -35,6 +35,7 @@ on:
           - "@auth/kysely-adapter"
           - "@auth/mikro-orm-adapter"
           - "@auth/mongodb-adapter"
+          - "@auth/nats-kv-adapter"
           - "@auth/neo4j-adapter"
           - "@auth/pg-adapter"
           - "@auth/pouchdb-adapter"
