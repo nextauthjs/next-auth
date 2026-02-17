@@ -1,8 +1,12 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
-import { DynamoDBAdapter } from "../src"
+import {
+  DynamoDBAdapter,
+  DynamoDBAdapterOptions,
+  DynamoDBEntityTypeOptions,
+  format,
+} from "../src/index.ts"
 import { runBasicTests } from "utils/adapter"
-import { from } from "./format_util.ts"
 
 const config = {
   endpoint: "http://127.0.0.1:8000",
@@ -22,9 +26,41 @@ const client = DynamoDBDocument.from(new DynamoDB(config), {
   },
 })
 
-const adapter = DynamoDBAdapter(client)
+const TableName = "next-auth-custom-config"
 
-const TableName = "next-auth"
+const cf: Required<DynamoDBAdapterOptions> = {
+  tableName: TableName,
+  partitionKey: "primekey",
+  sortKey: "secondkey",
+  indexName: "SomeIndex",
+  indexPartitionKey: "GlobalSI1",
+  indexSortKey: "GlobalSI2",
+  entityTagName: "_et",
+  entityTags: {
+    user: "USR",
+    account: "ACT",
+    session: "SES",
+    vt: "VVT",
+  },
+  entitySlugs: {
+    user: "USR#",
+    account: "ACT#",
+    session: "SES#",
+  },
+}
+
+const from = format.from({
+  dynamoKeys: [
+    cf.partitionKey,
+    cf.sortKey,
+    cf.indexPartitionKey,
+    cf.indexSortKey,
+  ],
+  EntityTagName: cf.entityTagName,
+  EntityTags: cf.entityTags as Required<DynamoDBEntityTypeOptions>,
+})
+
+const adapter = DynamoDBAdapter(client, { ...cf })
 
 runBasicTests({
   adapter,
@@ -33,8 +69,8 @@ runBasicTests({
       const user = await client.get({
         TableName,
         Key: {
-          pk: `USER#${id}`,
-          sk: `USER#${id}`,
+          [cf.partitionKey]: `${cf.entitySlugs.user}${id}`,
+          [cf.sortKey]: `${cf.entitySlugs.user}${id}`,
         },
       })
 
@@ -43,15 +79,15 @@ runBasicTests({
     async session(token) {
       const session = await client.query({
         TableName,
-        IndexName: "GSI1",
+        IndexName: cf.indexName,
         KeyConditionExpression: "#gsi1pk = :gsi1pk AND #gsi1sk = :gsi1sk",
         ExpressionAttributeNames: {
-          "#gsi1pk": "GSI1PK",
-          "#gsi1sk": "GSI1SK",
+          "#gsi1pk": cf.indexPartitionKey,
+          "#gsi1sk": cf.indexSortKey,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `SESSION#${token}`,
-          ":gsi1sk": `SESSION#${token}`,
+          ":gsi1pk": `${cf.entitySlugs.session}${token}`,
+          ":gsi1sk": `${cf.entitySlugs.session}${token}`,
         },
       })
 
@@ -60,15 +96,15 @@ runBasicTests({
     async account({ provider, providerAccountId }) {
       const account = await client.query({
         TableName,
-        IndexName: "GSI1",
+        IndexName: cf.indexName,
         KeyConditionExpression: "#gsi1pk = :gsi1pk AND #gsi1sk = :gsi1sk",
         ExpressionAttributeNames: {
-          "#gsi1pk": "GSI1PK",
-          "#gsi1sk": "GSI1SK",
+          "#gsi1pk": cf.indexPartitionKey,
+          "#gsi1sk": cf.indexSortKey,
         },
         ExpressionAttributeValues: {
-          ":gsi1pk": `ACCOUNT#${provider}`,
-          ":gsi1sk": `ACCOUNT#${providerAccountId}`,
+          ":gsi1pk": `${cf.entitySlugs.account}${provider}`,
+          ":gsi1sk": `${cf.entitySlugs.account}${providerAccountId}`,
         },
       })
 
@@ -78,8 +114,8 @@ runBasicTests({
       const vt = await client.get({
         TableName,
         Key: {
-          pk: `VT#${identifier}`,
-          sk: `VT#${token}`,
+          [cf.partitionKey]: `VT#${identifier}`,
+          [cf.sortKey]: `VT#${token}`,
         },
       })
       return from(vt.Item)
