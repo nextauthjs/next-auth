@@ -11,6 +11,7 @@ const emailProvidersFile = [
   "forwardemail",
   "mailgun",
   "nodemailer",
+  "notificationapi",
   "passkey",
   "postmark",
   "resend",
