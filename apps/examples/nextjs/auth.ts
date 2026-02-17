@@ -28,6 +28,7 @@ import Reddit from "next-auth/providers/reddit"
 import Slack from "next-auth/providers/slack"
 import Salesforce from "next-auth/providers/salesforce"
 import Spotify from "next-auth/providers/spotify"
+import SSOJet from "next-auth/providers/ssojet"
 import Twitch from "next-auth/providers/twitch"
 import Twitter from "next-auth/providers/twitter"
 import Vipps from "next-auth/providers/vipps"
@@ -91,6 +92,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Reddit,
     Salesforce,
     Slack,
+    SSOJet({
+      clientId: process.env.AUTH_SSOJET_CLIENT_ID!,
+      clientSecret: process.env.AUTH_SSOJET_CLIENT_SECRET!,
+      issuer: process.env.AUTH_SSOJET_ISSUER!,
+    }),
     Spotify,
     Twitch,
     Twitter,

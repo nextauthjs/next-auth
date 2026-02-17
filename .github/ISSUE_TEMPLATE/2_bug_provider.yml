@@ -90,6 +90,7 @@ body:
         - "SimpleLogin"
         - "Slack"
         - "Spotify"
+        - "SSOJet"
         - "Strava"
         - "Threads"
         - "Tiktok"

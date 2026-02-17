@@ -13,6 +13,7 @@ pnpm-lock.yaml
 *.d.ts
 *.d.ts.map
 **/*.sh
+**/*.svg
 
 .svelte-kit
 .next
