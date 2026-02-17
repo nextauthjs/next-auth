@@ -166,7 +166,9 @@ export default function GitHub(
 
           if (res.ok) {
             const emails: GitHubEmail[] = await res.json()
-            profile.email = (emails.find((e) => e.primary) ?? emails[0]).email
+            if (emails.length) {
+              profile.email = (emails.find((e) => e.primary) ?? emails[0]).email
+            }
           }
         }
 
