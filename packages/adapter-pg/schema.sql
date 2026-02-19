@@ -1,18 +1,20 @@
 \set ON_ERROR_STOP true
 
-CREATE TABLE verification_token
+CREATE TABLE users
 (
-  identifier TEXT NOT NULL,
-  expires TIMESTAMPTZ NOT NULL,
-  token TEXT NOT NULL,
-
-  PRIMARY KEY (identifier, token)
+  id SERIAL,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
+  "emailVerified" TIMESTAMPTZ,
+  image TEXT,
+ 
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE accounts
 (
   id SERIAL,
-  "userId" INTEGER NOT NULL,
+  "userId" INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   type VARCHAR(255) NOT NULL,
   provider VARCHAR(255) NOT NULL,
   "providerAccountId" VARCHAR(255) NOT NULL,
@@ -23,27 +25,25 @@ CREATE TABLE accounts
   scope TEXT,
   session_state TEXT,
   token_type TEXT,
-
+ 
   PRIMARY KEY (id)
 );
-
+ 
 CREATE TABLE sessions
 (
   id SERIAL,
-  "userId" INTEGER NOT NULL,
+  "userId" INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   expires TIMESTAMPTZ NOT NULL,
-  "sessionToken" VARCHAR(255) NOT NULL,
-
+  "sessionToken" VARCHAR(255) UNIQUE NOT NULL,
+ 
   PRIMARY KEY (id)
 );
 
-CREATE TABLE users
+CREATE TABLE verification_token
 (
-  id SERIAL,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  "emailVerified" TIMESTAMPTZ,
-  image TEXT,
-
-  PRIMARY KEY (id)
+  identifier TEXT NOT NULL,
+  expires TIMESTAMPTZ NOT NULL,
+  token TEXT NOT NULL,
+ 
+  PRIMARY KEY (identifier, token)
 );
