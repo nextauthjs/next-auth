@@ -18,7 +18,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 
 ```bash npm2yarn
 npm install drizzle-orm @auth/drizzle-adapter
-npm install drizzle-kit --save-dev
+npm install drizzle-kit @auth/core --save-dev
 ```
 
 ### Environment Variables
@@ -161,7 +161,7 @@ import {
 } from "drizzle-orm/mysql-core"
 import mysql from "mysql2/promise"
 import { drizzle } from "drizzle-orm/mysql2"
-import type { AdapterAccountType } from "next-auth/adapters"
+import type { AdapterAccountType } from "@auth/core/adapters"
 
 export const connection = await mysql.createConnection({
   host: "host",
@@ -267,7 +267,7 @@ If you want to modify the schema or add additional fields, you can use the follo
 import { integer, sqliteTable, text, primaryKey } from "drizzle-orm/sqlite-core"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import type { AdapterAccountType } from "next-auth/adapters"
+import type { AdapterAccountType } from "@auth/core/adapters"
 
 const client = createClient({
   url: "DATABASE_URL",
