@@ -29,6 +29,7 @@ body:
         - "Atlassian"
         - "Auth0"
         - "Authentik"
+        - "Authgear"
         - "Azure Active Directory"
         - "Azure Active Directory B2C"
         - "Azure DevOps"
