@@ -38,7 +38,19 @@ await fs.cp(sourceDir, destinationDir, { recursive: true })
 
 // Delete node_modules & providers
 await fs.rm(path.join(destinationDir, "node_modules"), { recursive: true })
-await fs.rm(path.join(destinationDir, "providers"), { recursive: true })
+
+try {
+  const folderPath = path.join(destinationDir, "providers")
+  // Check if the folder exists
+  await fs.access(folderPath)
+
+  // The folder exists, so delete it
+  await fs.rm(folderPath, { recursive: true })
+} catch (error) {
+  console.log(
+    "Skipping the deletion of `providers` folder as it does not exist"
+  )
+}
 
 // Replace placeholders in files
 const files = await fs.readdir(destinationDir, { withFileTypes: true })
@@ -63,7 +75,7 @@ await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2))
 const vercelJsonPath = path.join(__dirname, "../../..", "docs", "vercel.json")
 let vercelJson = JSON.parse(await fs.readFile(vercelJsonPath, "utf8"))
 vercelJson.redirects = [
-  ...vercelJson.redirects,
+  ...(vercelJson.redirects ? vercelJson.redirects : []),
   {
     source: "/",
     has: [{ type: "host", value: `${id}.authjs.dev` }],
