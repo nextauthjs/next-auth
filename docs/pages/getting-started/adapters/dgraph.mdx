@@ -113,6 +113,15 @@ app.use(
 </Code.Express>
 </Code>
 
+### Schema
+
+<Callout type="warning">
+  Note that this adapter is designed so that it uses Dgraph internal ID's, if
+  you are interested in using external id's you should modify your schema `id:
+  ID` to `id: String @id` for instance and modify the adapter
+  methods(createUser, linkAccount...).
+</Callout>
+
 ### Unsecure Schema
 
 The quickest way to use Dgraph is by applying the unsecure schema to your [local](https://dgraph.io/docs/graphql/admin/#modifying-a-schema) Dgraph instance or if using Dgraph [cloud](https://dgraph.io/docs/cloud/cloud-quick-start/#the-schema) you can paste the schema in the codebox to update.
@@ -256,7 +265,7 @@ type VerificationToken
   expires: DateTime
 }
 
-# Dgraph.Authorization {"VerificationKey":"<YOUR JWT SECRET HERE>","Header":"<YOUR AUTH HEADER HERE>","Namespace":"<YOUR CUSTOM NAMESPACE HERE>","Algo":"HS256"}
+# Dgraph.Authorization {"VerificationKey":"<YOUR JWT SECRET HERE>","Header":"<YOUR AUTH HEADER HERE>","Namespace":"<YOUR CUSTOM NAMESPACE HERE>","Algo":"HS512"}
 ```
 
 ### Dgraph.Authorization
@@ -265,7 +274,7 @@ In order to secure your graphql backend define the `Dgraph.Authorization` object
 bottom of your schema and provide `authHeader` and `jwtSecret` values to the DgraphClient.
 
 ```js
-# Dgraph.Authorization {"VerificationKey":"<YOUR JWT SECRET HERE>","Header":"<YOUR AUTH HEADER HERE>","Namespace":"YOUR CUSTOM NAMESPACE HERE","Algo":"HS256"}
+# Dgraph.Authorization {"VerificationKey":"<YOUR JWT SECRET HERE>","Header":"<YOUR AUTH HEADER HERE>","Namespace":"YOUR CUSTOM NAMESPACE HERE","Algo":"HS512"}
 ```
 
 ### VerificationKey and jwtSecret
@@ -297,31 +306,4 @@ type VerificationRequest
 
 ### JWT session and `@auth` directive
 
-Dgraph only works with HS256 or RS256 algorithms. If you want to use session jwt to securely interact with your dgraph
-database you must customize next-auth `encode` and `decode` functions, as the default algorithm is HS512. You can
-further customize the jwt with roles if you want to implement [`RBAC logic`](https://dgraph.io/docs/graphql/authorization/directive/#role-based-access-control).
-
-```js filename="./auth.js"
-import NextAuth from "next-auth"
-import * as jwt from "jsonwebtoken"
-
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: {
-    strategy: "jwt",
-  },
-  jwt: {
-    secret: process.env.SECRET,
-    encode: async ({ secret, token }) => {
-      return jwt.sign({ ...token, userId: token.id }, secret, {
-        algorithm: "HS256",
-        expiresIn: 30 * 24 * 60 * 60, // 30 days
-      })
-    },
-    decode: async ({ secret, token }) => {
-      return jwt.verify(token, secret, { algorithms: ["HS256"] })
-    },
-  },
-})
-```
-
-Once your `Dgraph.Authorization` is defined in your schema and the JWT settings are set, this will allow you to define [`@auth rules`](https://dgraph.io/docs/graphql/authorization/authorization-overview/) for every part of your schema.
+Once your `Dgraph.Authorization` is defined in your schema and the JWT settings are set, this will allow you to define [`@auth rules`](https://dgraph.io/docs/graphql/schema/directives/auth/) for every part of your schema.
