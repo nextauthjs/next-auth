@@ -70,7 +70,7 @@ export async function AuthInternal(
     const { csrfTokenVerified } = options
     switch (action) {
       case "callback":
-        if (options.provider.type === "credentials")
+        if (options.provider?.type === "credentials")
           // Verified CSRF Token required for credentials providers only
           validateCSRF(action, csrfTokenVerified)
         return await actions.callback(request, options, sessionStore, cookies)
