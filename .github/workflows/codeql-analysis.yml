@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: "43 17 * * 2"
 
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 jobs:
   analyze:
     name: Verify
