@@ -57,8 +57,10 @@ export interface ScalekitProfile extends Record<string, any> {
  *
  * ### Resources
  *
- * - [Scalekit Single Sign-On documentation](https://docs.scalekit.com/sso/quickstart)
- * - [Scalekit OIDC documentation](https://docs.scalekit.com/sso/oidc)
+ * - [Add modular SSO with Scalekit](https://docs.scalekit.com/authenticate/sso/add-modular-sso/)
+ * - [Scalekit SSO code samples](https://docs.scalekit.com/authenticate/sso/code-samples/)
+ * - [Onboard enterprise customers](https://docs.scalekit.com/sso/guides/onboard-enterprise-customers/)
+ * - [SSO integrations guide](https://docs.scalekit.com/guides/integrations/sso-integrations/)
  *
  * ### SSO Routing
  *
