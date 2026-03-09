@@ -1,0 +1,201 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/scalekit.png" height="64" width="64" />
+
+# Scalekit Provider
+
+## Resources
+
+- [Scalekit Single Sign-On documentation](https://docs.scalekit.com/sso/quickstart)
+- [Scalekit OIDC documentation](https://docs.scalekit.com/sso/oidc)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/scalekit
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/scalekit
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/scalekit
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```bash
+https://example.com/auth/callback/scalekit
+```
+
+  </Code.Express>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_SCALEKIT_ID
+AUTH_SCALEKIT_SECRET
+AUTH_SCALEKIT_ISSUER
+```
+
+`AUTH_SCALEKIT_ISSUER` is your Scalekit environment URL (e.g. `https://yourenv.scalekit.dev`).
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Scalekit from "next-auth/providers/scalekit"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Scalekit],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Scalekit from "@auth/qwik/providers/scalekit"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Scalekit],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Scalekit from "@auth/sveltekit/providers/scalekit"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Scalekit],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Scalekit from "@auth/express/providers/scalekit"
+
+app.use("/auth/*", ExpressAuth({ providers: [Scalekit] }))
+```
+
+  </Code.Express>
+</Code>
+
+### SSO Routing
+
+Scalekit supports multiple ways to route users to their SSO connection. You can pass optional routing parameters to target a specific connection:
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Scalekit from "next-auth/providers/scalekit"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Scalekit({
+      // pick one of the following routing strategies:
+      connectionId: "conn_...", // exact connection (highest precedence)
+      organizationId: "org_...", // org's active SSO connection
+      domain: "acme.com", // resolve org from email domain
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Scalekit from "@auth/qwik/providers/scalekit"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Scalekit({
+        connectionId: "conn_...",
+        organizationId: "org_...",
+        domain: "acme.com",
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Scalekit from "@auth/sveltekit/providers/scalekit"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Scalekit({
+      connectionId: "conn_...",
+      organizationId: "org_...",
+      domain: "acme.com",
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Scalekit from "@auth/express/providers/scalekit"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Scalekit({
+        connectionId: "conn_...",
+        organizationId: "org_...",
+        domain: "acme.com",
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+<Callout>
+  Scalekit is an OIDC-compliant platform — Auth.js automatically discovers all
+  endpoints from your `AUTH_SCALEKIT_ISSUER` URL via
+  `/.well-known/openid-configuration`. No manual endpoint configuration is
+  required.
+</Callout>
