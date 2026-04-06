@@ -21,6 +21,7 @@ import {
   parseUrl,
   useOnline,
 } from "./lib/client.js"
+import { getSkewProtectionHeaderInit } from "./lib/vercel-skew-protection.js"
 
 import type { ProviderId } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
@@ -288,6 +289,7 @@ export async function signIn<Redirect extends boolean = true>(
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "X-Auth-Return-Redirect": "1",
+        ...getSkewProtectionHeaderInit(),
       },
       body: new URLSearchParams({
         ...signInParams,
@@ -349,6 +351,7 @@ export async function signOut<R extends boolean = true>(
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
+      ...getSkewProtectionHeaderInit(),
     },
     body: new URLSearchParams({ csrfToken, callbackUrl: redirectTo }),
   })

@@ -5,6 +5,8 @@ import type { ProviderId, ProviderType } from "@auth/core/providers"
 import type { LoggerInstance, Session } from "@auth/core/types"
 import { AuthError } from "@auth/core/errors"
 
+import { getSkewProtectionHeaderInit } from "./vercel-skew-protection.js"
+
 /** @todo */
 class ClientFetchError extends AuthError {}
 
@@ -148,6 +150,7 @@ export async function fetchData<T = any>(
       headers: {
         "Content-Type": "application/json",
         ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
+        ...getSkewProtectionHeaderInit(),
       },
     }
 
