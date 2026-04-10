@@ -139,6 +139,7 @@ export default function GitHub(
     id: "github",
     name: "GitHub",
     type: "oauth",
+    issuer: `${baseUrl}/login/oauth`,
     authorization: {
       url: `${baseUrl}/login/oauth/authorize`,
       params: { scope: "read:user user:email" },
