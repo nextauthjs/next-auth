@@ -63,6 +63,7 @@ export default function Github<P extends GithubProfile>(
     id: "github",
     name: "GitHub",
     type: "oauth",
+    issuer: `https://github.com/login/oauth`,
     authorization: {
       url: "https://github.com/login/oauth/authorize",
       params: { scope: "read:user user:email" },
