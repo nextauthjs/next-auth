@@ -1,6 +1,7 @@
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Apple from "@auth/sveltekit/providers/apple"
 import Auth0 from "@auth/sveltekit/providers/auth0"
+import AuthKit from "@auth/sveltekit/providers/authkit"
 import AzureB2C from "@auth/sveltekit/providers/azure-ad-b2c"
 import BoxyHQSAML from "@auth/sveltekit/providers/boxyhq-saml"
 import Cognito from "@auth/sveltekit/providers/cognito"
@@ -32,6 +33,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
     Apple,
     Auth0,
+    AuthKit,
     AzureB2C({
       clientId: env.AUTH_AZURE_AD_B2C_ID,
       clientSecret: env.AUTH_AZURE_AD_B2C_SECRET,
