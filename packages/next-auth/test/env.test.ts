@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { NextRequest } from "next/server.js"
 
-import { reqWithEnvURL, setEnvDefaults } from "../lib/env"
+import { reqWithBasePathURL, reqWithEnvURL, setEnvDefaults } from "../lib/env"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 import type { NextAuthConfig } from "../lib/index.js"
 
@@ -162,6 +162,96 @@ describe("env", () => {
 
       expect(config.basePath).toBe("/api/auth")
       expect(coreSetEnvDefaults).toHaveBeenCalledWith(process.env, config, true)
+    })
+  })
+
+  describe("reqWithBasePathURL", () => {
+    it("should return the original request if nextJsBasePath is not set", () => {
+      const mockReq = {
+        nextUrl: {
+          href: "http://example.com/api/auth/session",
+          pathname: "/api/auth/session",
+        },
+      }
+      const config = {} as NextAuthConfig
+
+      const result = reqWithBasePathURL(mockReq as NextRequest, config)
+
+      expect(result).toBe(mockReq)
+    })
+
+    it("should add nextJsBasePath to the request URL", () => {
+      const mockReq = {
+        nextUrl: {
+          href: "http://example.com/api/auth/session",
+          pathname: "/api/auth/session",
+        },
+      }
+      const config = { nextJsBasePath: "/my-app" } as NextAuthConfig
+      const mockNewReq = {}
+      vi.mocked(NextRequest).mockReturnValue(mockNewReq as NextRequest)
+
+      const result = reqWithBasePathURL(mockReq as NextRequest, config)
+
+      expect(NextRequest).toHaveBeenCalledWith(
+        "http://example.com/my-app/api/auth/session",
+        mockReq
+      )
+      expect(result).toBe(mockNewReq)
+    })
+
+    it("should handle root path correctly", () => {
+      const mockReq = {
+        nextUrl: {
+          href: "http://example.com/api/auth",
+          pathname: "/api/auth",
+        },
+      }
+      const config = { nextJsBasePath: "/base" } as NextAuthConfig
+      const mockNewReq = {}
+      vi.mocked(NextRequest).mockReturnValue(mockNewReq as NextRequest)
+
+      const result = reqWithBasePathURL(mockReq as NextRequest, config)
+
+      expect(NextRequest).toHaveBeenCalledWith(
+        "http://example.com/base/api/auth",
+        mockReq
+      )
+      expect(result).toBe(mockNewReq)
+    })
+
+    it("should handle nextJsBasePath with trailing slash", () => {
+      const mockReq = {
+        nextUrl: {
+          href: "http://example.com/api/auth/callback",
+          pathname: "/api/auth/callback",
+        },
+      }
+      const config = { nextJsBasePath: "/my-app/" } as NextAuthConfig
+      const mockNewReq = {}
+      vi.mocked(NextRequest).mockReturnValue(mockNewReq as NextRequest)
+
+      const result = reqWithBasePathURL(mockReq as NextRequest, config)
+
+      expect(NextRequest).toHaveBeenCalledWith(
+        "http://example.com/my-app//api/auth/callback",
+        mockReq
+      )
+      expect(result).toBe(mockNewReq)
+    })
+
+    it("should not add basePath if already included in pathname", () => {
+      const mockReq = {
+        nextUrl: {
+          href: "http://example.com/my-app/api/auth/session",
+          pathname: "/my-app/api/auth/session",
+        },
+      }
+      const config = { nextJsBasePath: "/my-app" } as NextAuthConfig
+
+      const result = reqWithBasePathURL(mockReq as NextRequest, config)
+
+      expect(result).toBe(mockReq)
     })
   })
 })

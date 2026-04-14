@@ -3,6 +3,23 @@ import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
+/** If Next.js base path is set, add it to the request's URL. */
+export function reqWithBasePathURL(
+  req: NextRequest,
+  config: NextAuthConfig
+): NextRequest {
+  if (!config.nextJsBasePath) return req
+  const url = new URL(req.nextUrl.href)
+
+  // Check if basePath is already included in the pathname
+  if (url.pathname.startsWith(config.nextJsBasePath + "/")) {
+    return req
+  }
+
+  url.pathname = config.nextJsBasePath + url.pathname
+  return new NextRequest(url.toString(), req)
+}
+
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
 export function reqWithEnvURL(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL

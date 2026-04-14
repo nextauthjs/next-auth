@@ -3,7 +3,7 @@ import { Auth, createActionURL, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { NextResponse } from "next/server"
-import { reqWithEnvURL } from "./env.js"
+import { reqWithBasePathURL, reqWithEnvURL } from "./env.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
@@ -17,6 +17,24 @@ import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server"
 
 /** Configure NextAuth.js. */
 export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
+  /**
+   * The base path configured in your Next.js application (next.config.js).
+   * If you have set `basePath` in your Next.js config, you must provide the same value here.
+   *
+   * @example
+   * ```ts
+   * // next.config.js
+   * module.exports = { basePath: "/my-app" }
+   *
+   * // auth.ts
+   * export const { handlers, auth } = NextAuth({
+   *   basePath: "/my-app/api/auth",
+   *   nextJsBasePath: "/my-app",
+   *   // ...
+   * })
+   * ```
+   */
+  nextJsBasePath?: string
   /**
    * Callbacks are asynchronous functions you can use to control what happens when an auth-related action is performed.
    * Callbacks **allow you to implement access controls without a database** or to **integrate with external databases or APIs**.
@@ -234,7 +252,7 @@ async function handleAuth(
   config: NextAuthConfig,
   userMiddlewareOrRoute?: NextAuthMiddleware | AppRouteHandlerFn
 ) {
-  const request = reqWithEnvURL(args[0])
+  const request = reqWithBasePathURL(reqWithEnvURL(args[0]), config)
   const sessionResponse = await getSession(request.headers, config)
   const auth = await sessionResponse.json()
 
