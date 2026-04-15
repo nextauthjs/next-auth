@@ -122,6 +122,11 @@ export interface GetTokenParams<R extends boolean = false>
    * or not set (e.g. development or test instance) case use unprefixed name
    */
   secureCookie?: boolean
+  /**
+   * Set the `SameSite` attribute to `Strict`  if this is set to `true`
+   * Otherwise, it will be set to `Lax`
+   */
+  strictCookie?: boolean
   /** If the JWT is in the cookie, what name `getToken()` should look for. */
   cookieName?: string
   /**
@@ -146,7 +151,9 @@ export async function getToken(
 ): Promise<string | JWT | null> {
   const {
     secureCookie,
-    cookieName = defaultCookies(secureCookie ?? false).sessionToken.name,
+    strictCookie,
+    cookieName = defaultCookies(secureCookie ?? false, strictCookie ?? false)
+      .sessionToken.name,
     decode: _decode = decode,
     salt = cookieName,
     secret,
