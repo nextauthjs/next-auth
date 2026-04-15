@@ -1,0 +1,47 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+# Heavstal
+
+Heavstal is a developer infrastructure platform providing secure OAuth2 and OpenID Connect (OIDC) identity services.
+
+## Resources
+
+- [Heavstal Developer Console](https://heavstal-tech.vercel.app/oauth/apps)
+- [Heavstal Documentation](https://heavstal-tech.vercel.app/docs/api/oauth-guide)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <CopyButton />
+  <span className="code-block">https://example.com/api/auth/callback/heavstal</span>
+</Code>
+
+### Environment Variables
+
+<Callout type="info">
+  Heavstal supports OIDC discovery. You do not need to configure endpoints manually.
+</Callout>
+
+```env filename=".env"
+AUTH_HEAVSTAL_ID=ht_id_...
+AUTH_HEAVSTAL_SECRET=ht_secret_...
+```
+
+### Configuration
+
+<Code>
+  <CopyButton />
+  ```ts filename="auth.ts"
+  import NextAuth from "next-auth"
+  import Heavstal from "next-auth/providers/heavstal"
+
+  export const { handlers, auth, signIn, signOut } = NextAuth({
+    providers: [
+      Heavstal
+    ],
+  })
+  ```
+</Code>
