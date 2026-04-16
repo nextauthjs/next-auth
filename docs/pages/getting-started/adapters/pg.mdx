@@ -226,7 +226,8 @@ CREATE TABLE accounts
   session_state TEXT,
   token_type TEXT,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  CONSTRAINT accounts_provider_providerAccountId_unique UNIQUE (provider, "providerAccountId")
 );
 
 CREATE TABLE sessions
