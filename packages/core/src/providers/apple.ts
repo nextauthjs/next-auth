@@ -175,9 +175,10 @@ export default function Apple(
     // It adds the `name` object to the `profile`, with `firstName` and `lastName` fields.
     [conformInternal]: true,
     profile(profile) {
-      const name = profile.user
-        ? `${profile.user.name.firstName} ${profile.user.name.lastName}`
-        : profile.email
+      const name =
+        profile.user?.name?.firstName && profile.user?.name?.lastName
+          ? `${profile.user.name.firstName} ${profile.user.name.lastName}`
+          : profile.email
       return {
         id: profile.sub,
         name: name,
