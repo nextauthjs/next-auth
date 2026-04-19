@@ -428,3 +428,7 @@ export interface InternalOptions<TProviderType = ProviderType> {
   experimental: NonNullable<AuthConfig["experimental"]>
   basePath: string
 }
+
+export type AuthConfigInternal = Omit<AuthConfig, "logger"> & {
+  logger: LoggerInstance
+}
