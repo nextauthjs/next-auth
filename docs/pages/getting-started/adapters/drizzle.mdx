@@ -204,11 +204,11 @@ export const accounts = mysqlTable(
     id_token: varchar("id_token", { length: 2048 }),
     session_state: varchar("session_state", { length: 255 }),
   },
-  (account) => ({
-    compoundKey: primaryKey({
+  (account) => [
+    primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-  })
+  ]
 )
 
 export const sessions = mysqlTable("session", {
@@ -226,11 +226,11 @@ export const verificationTokens = mysqlTable(
     token: varchar("token", { length: 255 }).notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (verificationToken) => ({
-    compositePk: primaryKey({
+  (verificationToken) => [
+    primaryKey({
       columns: [verificationToken.identifier, verificationToken.token],
     }),
-  })
+  ]
 )
 
 export const authenticators = mysqlTable(
@@ -251,11 +251,11 @@ export const authenticators = mysqlTable(
     credentialBackedUp: boolean("credentialBackedUp").notNull(),
     transports: varchar("transports", { length: 255 }),
   },
-  (authenticator) => ({
-    compositePk: primaryKey({
+  (authenticator) => [
+    primaryKey({
       columns: [authenticator.userId, authenticator.credentialID],
     }),
-  })
+  ]
 )
 ```
 
