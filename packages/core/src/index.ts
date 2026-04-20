@@ -275,6 +275,14 @@ export interface AuthConfig {
     generateSessionToken?: () => string
   }
   /**
+   * Enable legacy mode to maintain compatibility with v4 behavior.
+   * This flag allows applications to continue working with v4 patterns
+   * while transitioning to v5.
+   *
+   * @default false
+   */
+  legacy?: boolean
+  /**
    * JSON Web Tokens are enabled by default if you have not specified an {@link AuthConfig.adapter}.
    * JSON Web Tokens are encrypted (JWE) by default. We recommend you keep this behaviour.
    */

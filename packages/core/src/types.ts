@@ -51,14 +51,6 @@
  * @module types
  */
 
-import type { SerializeOptions } from "./lib/vendored/cookie.js"
-import type { TokenEndpointResponse } from "oauth4webapi"
-import type { Adapter } from "./adapters.js"
-import { AuthConfig } from "./index.js"
-import type { JWTOptions } from "./jwt.js"
-import type { Cookie } from "./lib/utils/cookie.js"
-import type { LoggerInstance } from "./lib/utils/logger.js"
-import type { WarningCode } from "./warnings.js"
 import type {
   CredentialsConfig,
   EmailConfig,
@@ -70,6 +62,15 @@ import type {
   WebAuthnConfig,
   WebAuthnProviderType,
 } from "./providers/webauthn.js"
+
+import type { Adapter } from "./adapters.js"
+import { AuthConfig } from "./index.js"
+import type { Cookie } from "./lib/utils/cookie.js"
+import type { JWTOptions } from "./jwt.js"
+import type { LoggerInstance } from "./lib/utils/logger.js"
+import type { SerializeOptions } from "./lib/vendored/cookie.js"
+import type { TokenEndpointResponse } from "oauth4webapi"
+import type { WarningCode } from "./warnings.js"
 
 export type { WebAuthnOptionsResponseBody } from "./lib/utils/webauthn-utils.js"
 export type { AuthConfig } from "./index.js"
@@ -427,4 +428,8 @@ export interface InternalOptions<TProviderType = ProviderType> {
   isOnRedirectProxy: boolean
   experimental: NonNullable<AuthConfig["experimental"]>
   basePath: string
+  /**
+   * If true, enables legacy behavior to maintain compatibility with v4.
+   */
+  legacy?: boolean
 }
