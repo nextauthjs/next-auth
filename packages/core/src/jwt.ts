@@ -36,7 +36,6 @@
  * @module jwt
  */
 
-import { hkdf } from "@panva/hkdf"
 import { EncryptJWT, base64url, calculateJwkThumbprint, jwtDecrypt } from "jose"
 import { defaultCookies, SessionStore } from "./lib/utils/cookie.js"
 import { Awaitable } from "./types.js"
@@ -191,8 +190,8 @@ export async function getToken(
 
 async function getDerivedEncryptionKey(
   enc: string,
-  keyMaterial: Parameters<typeof hkdf>[1],
-  salt: Parameters<typeof hkdf>[2]
+  keyMaterial: string | Uint8Array,
+  salt: string | Uint8Array
 ) {
   let length: number
   switch (enc) {
@@ -205,13 +204,28 @@ async function getDerivedEncryptionKey(
     default:
       throw new Error("Unsupported JWT Content Encryption Algorithm")
   }
-  return await hkdf(
-    "sha256",
-    keyMaterial,
-    salt,
-    `Auth.js Generated Encryption Key (${salt})`,
-    length
+
+  // from: https://github.com/panva/hkdf
+  const derivedKey = new Uint8Array(
+    await globalThis.crypto.subtle.deriveBits(
+      {
+        name: "HKDF",
+        hash: "SHA-256",
+        salt: Buffer.from(salt),
+        info: Buffer.from(`Auth.js Generated Encryption Key (${salt})`),
+      },
+      await globalThis.crypto.subtle.importKey(
+        "raw",
+        Buffer.from(keyMaterial),
+        "HKDF",
+        false,
+        ["deriveBits"]
+      ),
+      length << 3
+    )
   )
+
+  return derivedKey
 }
 
 export interface DefaultJWT extends Record<string, unknown> {
