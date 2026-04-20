@@ -249,7 +249,7 @@ importers:
         version: 3.8.3(@algolia/client-search@5.20.0)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.2)
       '@inkeep/widgets':
         specifier: ^0.2.289
-        version: 0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        version: 0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
       '@next/third-parties':
         specifier: ^14.2.15
         version: 14.2.15(next@14.2.21(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)
@@ -500,6 +500,25 @@ importers:
       mongodb:
         specifier: ^6.0.0
         version: 6.9.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0)(socks@2.7.1)
+
+  packages/adapter-nats-kv:
+    dependencies:
+      '@auth/core':
+        specifier: workspace:*
+        version: link:../core
+      '@nats-io/kv':
+        specifier: ^3.1.0
+        version: 3.1.0
+      '@nats-io/transport-node':
+        specifier: ^3.1.0
+        version: 3.1.0
+    devDependencies:
+      '@types/uuid':
+        specifier: ^8.3.3
+        version: 8.3.4
+      dotenv:
+        specifier: ^17.0.0
+        version: 17.2.1
 
   packages/adapter-neo4j:
     dependencies:
@@ -3858,6 +3877,27 @@ packages:
   '@napi-rs/simple-git@0.1.16':
     resolution: {integrity: sha512-C5wRPw9waqL2jk3jEDeJv+f7ScuO3N0a39HVdyFLkwKxHH4Sya4ZbzZsu2JLi6eEqe7RuHipHL6mC7B2OfYZZw==}
     engines: {node: '>= 10'}
+
+  '@nats-io/jetstream@3.1.0':
+    resolution: {integrity: sha512-L+IEqEo2Bb8533tGNCsfsFW1kArYrQIkq3YMz8KDzBXJUjH3e5pFNaL2j7xeN/klToYFFLmuhsM6FwRYarkR0w==}
+
+  '@nats-io/kv@3.1.0':
+    resolution: {integrity: sha512-PqtJMF8vKqnnDngN8ITYSChSchUHGdFZOO6pV3lxSS/SxXgvhaJ8FTAoC/70mSZNOmHu3ISB5SbH86gyQIugXQ==}
+
+  '@nats-io/nats-core@3.1.0':
+    resolution: {integrity: sha512-xsSkLEGGcqNF+Ru8dMjPmKtfbBeq/U4meuJJX4Zi+5TBHpjpjNjs4YkCBC/pGYWnEum1/vdNPizjE1RdNHCyBg==}
+
+  '@nats-io/nkeys@2.0.3':
+    resolution: {integrity: sha512-JVt56GuE6Z89KUkI4TXUbSI9fmIfAmk6PMPknijmuL72GcD+UgIomTcRWiNvvJKxA01sBbmIPStqJs5cMRBC3A==}
+    engines: {node: '>=18.0.0'}
+
+  '@nats-io/nuid@2.0.3':
+    resolution: {integrity: sha512-TpA3HEBna/qMVudy+3HZr5M3mo/L1JPofpVT4t0HkFGkz2Cn9wrlrQC8tvR8Md5Oa9//GtGG26eN0qEWF5Vqew==}
+    engines: {node: '>= 18.x'}
+
+  '@nats-io/transport-node@3.1.0':
+    resolution: {integrity: sha512-k5pH7IOKUetwXOMraVgcB5zG0wibcHOwJJuyuY1/5Q4K0XfBJDnb/IbczP5/JJWwMYfxSL9O+46ojtdBHvHRSw==}
+    engines: {node: '>= 18.0.0'}
 
   '@neon-rs/load@0.0.4':
     resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
@@ -7692,6 +7732,10 @@ packages:
 
   dotenv@16.4.1:
     resolution: {integrity: sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.1:
+    resolution: {integrity: sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==}
     engines: {node: '>=12'}
 
   dotenv@8.6.0:
@@ -13091,6 +13135,9 @@ packages:
     resolution: {integrity: sha512-u9gUDkmR9dFS8b5kAYqIETK4OnzsS4l2ragJ0+soSMHh6VEeNHjTfSjk1tKxCqLyziCrPogadxP680J+v6yGHw==}
     hasBin: true
 
+  tweetnacl@1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
+
   twoslash-protocol@0.2.5:
     resolution: {integrity: sha512-oUr5ZAn37CgNa6p1mrCuuR/pINffsnGCee2aS170Uj1IObxCjsHzu6sgdPUdxGLLn6++gd/qjNH1/iR6RrfLeg==}
 
@@ -14360,7 +14407,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.2)':
+  '@ark-ui/anatomy@0.1.0(@internationalized/date@3.5.6)':
     dependencies:
       '@zag-js/accordion': 0.20.0
       '@zag-js/anatomy': 0.20.0
@@ -14371,7 +14418,7 @@ snapshots:
       '@zag-js/color-utils': 0.20.0
       '@zag-js/combobox': 0.20.0
       '@zag-js/date-picker': 0.20.0
-      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.2)
+      '@zag-js/date-utils': 0.20.0(@internationalized/date@3.5.6)
       '@zag-js/dialog': 0.20.0
       '@zag-js/editable': 0.20.0
       '@zag-js/hover-card': 0.20.0
@@ -14397,7 +14444,7 @@ snapshots:
     transitivePeerDependencies:
       - '@internationalized/date'
 
-  '@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@zag-js/accordion': 0.19.1
       '@zag-js/anatomy': 0.19.1
@@ -14409,7 +14456,7 @@ snapshots:
       '@zag-js/combobox': 0.19.1
       '@zag-js/core': 0.19.1
       '@zag-js/date-picker': 0.19.1
-      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.2)
+      '@zag-js/date-utils': 0.19.1(@internationalized/date@3.5.6)
       '@zag-js/dialog': 0.19.1
       '@zag-js/editable': 0.19.1
       '@zag-js/hover-card': 0.19.1
@@ -17293,11 +17340,11 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/components@0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.44
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
@@ -17309,9 +17356,9 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
+  '@inkeep/preset-chakra@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
     transitivePeerDependencies:
@@ -17319,10 +17366,10 @@ snapshots:
       - jsdom
       - typescript
 
-  '@inkeep/preset@0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)':
+  '@inkeep/preset@0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)':
     dependencies:
-      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.2)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@ark-ui/anatomy': 0.1.0(@internationalized/date@3.5.6)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@pandacss/dev': 0.22.1(typescript@5.6.3)
       colorjs.io: 0.4.5
@@ -17337,14 +17384,14 @@ snapshots:
 
   '@inkeep/styled-system@0.0.46': {}
 
-  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.2)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@inkeep/widgets@0.2.289(@internationalized/date@3.5.6)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
       '@apollo/client': 3.9.5(@types/react@18.2.78)(graphql-ws@5.14.3(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@ark-ui/react': 0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@inkeep/color-mode': 0.0.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
-      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
-      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.2)(typescript@5.6.3)
+      '@inkeep/components': 0.0.24(@ark-ui/react@0.15.0(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@internationalized/date@3.5.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+      '@inkeep/preset': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
+      '@inkeep/preset-chakra': 0.0.24(@internationalized/date@3.5.6)(typescript@5.6.3)
       '@inkeep/shared': 0.0.25
       '@inkeep/styled-system': 0.0.46
       '@types/lodash.isequal': 4.5.8
@@ -17861,6 +17908,32 @@ snapshots:
       '@napi-rs/simple-git-linux-x64-musl': 0.1.16
       '@napi-rs/simple-git-win32-arm64-msvc': 0.1.16
       '@napi-rs/simple-git-win32-x64-msvc': 0.1.16
+
+  '@nats-io/jetstream@3.1.0':
+    dependencies:
+      '@nats-io/nats-core': 3.1.0
+
+  '@nats-io/kv@3.1.0':
+    dependencies:
+      '@nats-io/jetstream': 3.1.0
+      '@nats-io/nats-core': 3.1.0
+
+  '@nats-io/nats-core@3.1.0':
+    dependencies:
+      '@nats-io/nkeys': 2.0.3
+      '@nats-io/nuid': 2.0.3
+
+  '@nats-io/nkeys@2.0.3':
+    dependencies:
+      tweetnacl: 1.0.3
+
+  '@nats-io/nuid@2.0.3': {}
+
+  '@nats-io/transport-node@3.1.0':
+    dependencies:
+      '@nats-io/nats-core': 3.1.0
+      '@nats-io/nkeys': 2.0.3
+      '@nats-io/nuid': 2.0.3
 
   '@neon-rs/load@0.0.4': {}
 
@@ -20817,9 +20890,9 @@ snapshots:
     dependencies:
       '@internationalized/date': 3.5.2
 
-  '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.2)':
+  '@zag-js/date-utils@0.19.1(@internationalized/date@3.5.6)':
     dependencies:
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.6
 
   '@zag-js/date-utils@0.20.0(@internationalized/date@3.5.6)':
     dependencies:
@@ -23027,6 +23100,8 @@ snapshots:
   dotenv@16.3.1: {}
 
   dotenv@16.4.1: {}
+
+  dotenv@17.2.1: {}
 
   dotenv@8.6.0: {}
 
@@ -29915,6 +29990,8 @@ snapshots:
       turbo-linux-arm64: 2.1.1
       turbo-windows-64: 2.1.1
       turbo-windows-arm64: 2.1.1
+
+  tweetnacl@1.0.3: {}
 
   twoslash-protocol@0.2.5: {}
 
