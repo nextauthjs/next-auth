@@ -1,0 +1,63 @@
+{
+  "name": "@auth/remix",
+  "description": "Authentication for Remix.",
+  "version": "0.2.0",
+  "type": "module",
+  "files": [
+    "client.*",
+    "index.*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup --config ./tsup.config.js",
+    "patch": "npm version patch --no-git-tag-version",
+    "clean": "rm -rf utils.* index.* types.*" 
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "cookie": "^0.5.0"
+  },
+  "devDependencies": {
+    "@auth/core": "workspace:*",
+    "@remix-run/react": "^2.11.2",
+    "@remix-run/serve": "^2.11.2",
+    "@types/node": "^18.7.14",
+    "next-auth": "workspace:*",
+    "react": "^18",
+    "react-dom": "^18",
+    "typescript": "^4.8.2",
+    "tsup": "^6.5.0",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6"
+  },
+  "peerDependencies": {
+    "@auth/core": "~0.2.2 || ^0.2.2",
+    "@remix-run/react": "^2.11.2",
+    "@remix-run/serve": "^2.11.2"
+  },
+  "keywords": [
+    "Remix",
+    "React",
+    "Auth"
+  ],
+  "author": {
+    "name": "Corey Jepperson",
+    "email": "corey.jepperson@gmail.com",
+    "url": "http://corey.jepperson.us"
+  },
+  "repository": "https://github.com/nextauthjs/next-auth",
+  "license": "ISC"
+}

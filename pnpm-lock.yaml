@@ -779,6 +779,35 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5(vite@5.3.1(@types/node@22.18.8)(sass@1.70.0)(terser@5.27.0))
 
+  packages/frameworks-remix:
+    specifiers:
+      '@auth/core': workspace:*
+      '@remix-run/react': ^1.10.1
+      '@remix-run/server-runtime': ^1.10.1
+      '@types/node': ^18.7.14
+      '@types/react': ^18.0.15
+      '@types/react-dom': ^18.0.6
+      cookie: ^0.5.0
+      next-auth: workspace:*
+      react: ^18
+      react-dom: ^18
+      tsup: ^6.5.0
+      typescript: ^4.8.2
+    dependencies:
+      cookie: 0.5.0
+    devDependencies:
+      '@auth/core': link:../core
+      '@remix-run/react': 1.10.1_biqbaboplfbrettd7655fr4n2y
+      '@remix-run/server-runtime': 1.10.1_biqbaboplfbrettd7655fr4n2y
+      '@types/node': 18.11.10
+      '@types/react': 18.0.26
+      '@types/react-dom': 18.0.10
+      next-auth: link:../next-auth
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      tsup: 6.5.0_typescript@4.9.4
+      typescript: 4.9.4
+
   packages/frameworks-solid-start:
     dependencies:
       '@auth/core':
