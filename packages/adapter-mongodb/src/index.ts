@@ -68,42 +68,72 @@ export const defaultCollections: Required<
   VerificationTokens: "verification_tokens",
 }
 
+
+
 export const format = {
-  /** Takes a MongoDB object and returns a plain old JavaScript object */
+  /** Takes a mongoDB object and returns a plain old JavaScript object */
   from<T = Record<string, unknown>>(object: Record<string, any>): T {
-    const newObject: Record<string, unknown> = {}
-    for (const key in object) {
-      const value = object[key]
-      if (key === "_id") {
-        newObject.id = value.toHexString()
-      } else if (key === "userId") {
-        newObject[key] = value.toHexString()
-      } else {
-        newObject[key] = value
+      const newObject: Record<string, unknown> = {}
+      for (const key in object) {
+          const value = object[key]
+          if (key === "_id") {
+              // Check if the value is an instance of ObjectId
+              if (value instanceof ObjectId) {
+                  newObject.id = value.toHexString()
+              } else {
+                  // If it's already a string, just use it directly
+                  newObject.id = value
+              }
+          } else if (key === "userId") {
+              if (value instanceof ObjectId) {
+                  newObject[key] = value.toHexString()
+              } else {
+                  newObject[key] = value
+              }
+          } else {
+              newObject[key] = value
+          }
       }
-    }
-    return newObject as T
+      return newObject as T
   },
-  /** Takes a plain old JavaScript object and turns it into a MongoDB object */
+  /** Takes a plain old JavaScript object and turns it into a mongoDB object */
   to<T = Record<string, unknown>>(object: Record<string, any>) {
-    const newObject: Record<string, unknown> = {
-      _id: _id(object.id),
-    }
-    for (const key in object) {
-      const value = object[key]
-      if (key === "userId") newObject[key] = _id(value)
-      else if (key === "id") continue
-      else newObject[key] = value
-    }
-    return newObject as T & { _id: ObjectId }
+      const newObject: Record<string, unknown> = {
+          _id: _id(object.id),
+      }
+      for (const key in object) {
+          const value = object[key]
+          if (key === "userId") {
+              newObject[key] = _id(value)
+          } else {
+              newObject[key] = value
+          }
+      }
+      return newObject as T
   },
 }
 
+
+
+
+
 /** @internal */
-export function _id(hex?: string) {
-  if (hex?.length !== 24) return new ObjectId()
-  return new ObjectId(hex)
+export function _id(value?: string | ObjectId): ObjectId {
+  if (value instanceof ObjectId) {
+      // If value is already an ObjectId, return it as is
+      return value;
+  }
+
+  if (typeof value === 'string' && value.length === 24) {
+      // If value is a string and has a length of 24, assume it is a valid hex string
+      return new ObjectId(value);
+  }
+
+  // Return a new ObjectId if no valid hex string is provided
+  return new ObjectId();
 }
+
+
 
 export function MongoDBAdapter(
   /**
@@ -247,5 +277,321 @@ export function MongoDBAdapter(
       const { _id, ...rest } = verificationToken
       return rest
     },
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const CallDataApi = async (endpoint : String, method : String, body: any) => {
+  body.dataSource = body?.dataSource ?? process.env.MONGO_CLUSTER_NAME;
+
+
+  if (body?.filter && body.filter._id) {
+      console.log('body.filter._id', body.filter._id)
+      // Match _id with either the provided string or its ObjectId equivalent
+      body.filter._id = {
+          "$in": [
+              body.filter._id,
+              { "$oid": body.filter._id }
+          ]
+      };
+  }
+
+  // Handle createdAt and updatedAt fields
+  const currentDate = { "$date": new Date().toISOString() }
+
+  if (endpoint.includes('insertOne') || endpoint.includes('insertMany')) {
+      // Set createdAt and updatedAt for inserts
+      if (endpoint.includes('insertOne')) {
+          body.document.createdAt = currentDate;
+          body.document.updatedAt = currentDate;
+      } else if (endpoint.includes('insertMany')) {
+          body.documents.forEach(doc => {
+              doc.createdAt = currentDate;
+              doc.updatedAt = currentDate;
+          });
+      }
+  } else if (endpoint.includes('updateOne') || endpoint.includes('updateMany')) {
+
+      // Set updatedAt for updates
+      if (!body.update.$set) {
+          body.update.$set = {};
+      }
+
+      body.update.$set.updatedAt = currentDate;
+
+      // Ensure createdAt is only set on insert for upserts
+      if (body.update.$setOnInsert) {
+          body.update.$setOnInsert.createdAt = currentDate;
+      } else {
+          body.update.$setOnInsert = { createdAt: currentDate };
+      }
+  }
+
+  try {
+      const response = await fetch(`https://data.mongodb-api.com/app/data-piovb/endpoint/data/v1/action/${endpoint}`, {
+          method,
+          headers: {
+              'Content-Type': 'application/ejson',
+              'Accept': 'application/json',
+              'api-Key': process.env.MONGODB_API_KEY,
+          },
+          body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+          const errorMessage = `Error: ${response.statusText}`;
+          console.error('API call failed:', errorMessage, {
+              endpoint,
+              method,
+              body,
+              status: response.status,
+              statusText: response.statusText,
+          });
+          throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+
+      if (Object?.keys(data)?.includes('document') || Object?.keys(data)?.includes('documents')) {
+          return data?.documents ?? data?.document;
+      }
+      return data
+  } catch (error) {
+      console.error('Error calling data API:', error);
+      throw error;
+  }
+};
+
+
+
+
+export function MongoDBDataApiAdapter(
+  dataApiOptions: { clusterName?: string, databaseName: string },
+  options: MongoDBAdapterOptions = {}
+): Adapter {
+  const { collections } = options
+  const { from, to } = format
+
+  const db = {
+      clusterName: dataApiOptions?.clusterName ?? process.env.MONGO_CLUSTER_NAME,
+      databaseName: dataApiOptions.databaseName,
+      collections: { ...defaultCollections, ...collections }
+  }
+
+  return {
+      async createUser(data) {
+          const user = to<AdapterUser>(data)
+          await CallDataApi('insertOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              document: user,
+          });
+          return from<AdapterUser>(user)
+      },
+      async getUser(id) {
+          const user = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { _id: _id(id) },
+          });
+          if (!user) return null
+          return from<AdapterUser>(user)
+      },
+      async getUserByEmail(email) {
+          const user = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { email },
+          });
+          if (!user) return null
+          return from<AdapterUser>(user)
+      },
+      async getUserByAccount(provider_providerAccountId) {
+          console.log('provider_providerAccountId', provider_providerAccountId)
+          const account = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Accounts,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: provider_providerAccountId
+          });
+          console.log('account', account)
+          if (!account) return null
+          const user = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              // filter: { _id: { "$oid": account.userId } },
+              filter: { _id: _id(account.userId) }
+          });
+          console.log('user', user)
+          if (!user) return null
+          return from<AdapterUser>(user)
+      },
+      async updateUser(data) {
+          const user = to<AdapterUser>(data);
+          await CallDataApi('updateOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { _id: _id(data.id) },
+              update: { $set: data },
+          });
+          const { value: updatedUser } = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { _id: _id(data.id) },
+          });
+          return from<AdapterUser>(updatedUser)
+      },
+      async deleteUser(id) {
+          const userId = _id(id);
+          await Promise.all([
+              CallDataApi('deleteMany', 'POST', {
+                  collection: db.collections.Accounts,
+                  database: db.databaseName,
+                  dataSource: db.clusterName,
+                  filter: { userId }
+              }),
+              CallDataApi('deleteMany', 'POST', {
+                  collection: db.collections.Sessions,
+                  database: db.databaseName,
+                  dataSource: db.clusterName,
+                  filter: { userId }
+              }),
+              CallDataApi('deleteOne', 'POST', {
+                  collection: db.collections.Users,
+                  database: db.databaseName,
+                  dataSource: db.clusterName,
+                  filter: { _id: userId }
+              })
+          ]);
+      },
+      async linkAccount(data) {
+          const account = to<Account>(data);
+          await CallDataApi('insertOne', 'POST', {
+              collection: db.collections.Accounts,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              document: account,
+          });
+          return account
+      },
+      async unlinkAccount(provider_providerAccountId) {
+          const { value: account } = await CallDataApi('findOneAndDelete', 'POST', {
+              collection: db.collections.Accounts,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: provider_providerAccountId,
+              returnNewDocument: true
+          });
+          return from<Account>(account!)
+      },
+      async getSessionAndUser(sessionToken) {
+          const session = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Sessions,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { sessionToken }
+          });
+          if (!session) return null
+          const user = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Users,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { _id: _id(session.userId) }
+          });
+          if (!user) return null
+          return {
+              user: from<AdapterUser>(user),
+              session: from<AdapterSession>(session),
+          }
+      },
+      async createSession(data) {
+          const session = to<AdapterSession>(data);
+          await CallDataApi('insertOne', 'POST', {
+              collection: db.collections.Sessions,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              document: session,
+          });
+          return from<AdapterSession>(session)
+      },
+      async updateSession(data) {
+          const session = to<AdapterSession>(data);
+
+          await CallDataApi('updateOne', 'POST', {
+              collection: db.collections.Sessions,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { sessionToken: data.sessionToken },
+              update: { $set: data },
+          })
+
+          const { value: updatedSession } = await CallDataApi('findOne', 'POST', {
+              collection: db.collections.Sessions,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { sessionToken: data.sessionToken },
+          })
+          return from<AdapterSession>(updatedSession)
+      },
+      async deleteSession(sessionToken) {
+          const { value: session } = await CallDataApi('findOneAndDelete', 'POST', {
+              collection: db.collections.Sessions,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: { sessionToken },
+              returnNewDocument: true
+          });
+          return from<AdapterSession>(session!)
+      },
+      async createVerificationToken(data) {
+          await CallDataApi('insertOne', 'POST', {
+              collection: db.collections.VerificationTokens,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              document: to(data)
+          });
+          return data
+      },
+      async useVerificationToken(identifier_token) {
+          const { value: verificationToken } = await CallDataApi('findOneAndDelete', 'POST', {
+              collection: db.collections.VerificationTokens,
+              database: db.databaseName,
+              dataSource: db.clusterName,
+              filter: identifier_token,
+              returnNewDocument: true
+          });
+          if (!verificationToken) return null
+          delete verificationToken._id
+          return verificationToken
+      }
   }
 }
