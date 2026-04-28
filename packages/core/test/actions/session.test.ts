@@ -27,7 +27,7 @@ describe("assert GET session action", () => {
     vi.restoreAllMocks()
   })
   describe("JWT strategy", () => {
-    it("should return a valid JWT session response", async () => {
+    it("should return a valid JWT session response without re-signing a fresh token", async () => {
       const authConfig = testConfig()
 
       const expectedExpires = getExpires()
@@ -64,24 +64,20 @@ describe("assert GET session action", () => {
       })
       const actualBodySession = await response.json()
 
-      let cookies = response.headers.getSetCookie().reduce((acc, cookie) => {
-        return { ...acc, ...parseCookie(cookie) }
-      }, {})
-      const sessionToken = cookies[SESSION_COOKIE_NAME]
-      const actualToken = await decode({
-        salt: SESSION_COOKIE_NAME,
-        secret: AUTH_SECRET,
-        token: sessionToken,
-      })
-
-      const { exp, iat, jti, ...actualUser } = actualToken || {}
+      const cookies = response.headers
+        .getSetCookie()
+        .reduce(
+          (acc, cookie) => ({ ...acc, ...parseCookie(cookie) }),
+          {} as Record<string, string>
+        )
 
       const expectedSession = {
         user: expectedUserInBody,
         expires: expectedExpires.toISOString(),
       }
 
-      expect(actualUser).toEqual(expectedUser)
+      // A fresh token is not yet due for re-signing, so no new session cookie is set
+      expect(cookies[SESSION_COOKIE_NAME]).toBeUndefined()
       expect(actualBodySession).toEqual(expectedSession)
       expect(authConfig.events?.session).toHaveBeenCalledWith({
         session: expectedSession,
@@ -97,6 +93,90 @@ describe("assert GET session action", () => {
       })
 
       assertNoCacheResponseHeaders(response)
+    })
+
+    it("should not re-sign the JWT token when within the updateAge window", async () => {
+      vi.useRealTimers()
+      vi.useFakeTimers()
+      const now = Date.now()
+      vi.setSystemTime(now)
+
+      const updateAge = 60 * 60 // 1 hour
+
+      const token = {
+        name: "test",
+        email: "test@test.com",
+        picture: "https://test.com/test.png",
+      }
+      const originalToken = await encode({
+        salt: SESSION_COOKIE_NAME,
+        secret: AUTH_SECRET,
+        token,
+      })
+
+      const { response } = await makeAuthRequest({
+        action: "session",
+        cookies: { [SESSION_COOKIE_NAME]: originalToken },
+        config: { session: { updateAge } },
+      })
+
+      const body = await response.json()
+      expect(body).not.toBeNull()
+
+      const cookies = response.headers
+        .getSetCookie()
+        .reduce(
+          (acc, cookie) => ({ ...acc, ...parseCookie(cookie) }),
+          {} as Record<string, string>
+        )
+      // Token was created at `now`, updateAge is 1 hour — should not re-sign yet
+      expect(cookies[SESSION_COOKIE_NAME]).toBeUndefined()
+
+      vi.useRealTimers()
+    })
+
+    it("should re-sign the JWT token after updateAge has elapsed", async () => {
+      vi.useRealTimers()
+      vi.useFakeTimers()
+      const now = Date.now()
+      vi.setSystemTime(now)
+
+      const updateAge = 60 * 60 // 1 hour
+
+      const token = {
+        name: "test",
+        email: "test@test.com",
+        picture: "https://test.com/test.png",
+      }
+      const originalToken = await encode({
+        salt: SESSION_COOKIE_NAME,
+        secret: AUTH_SECRET,
+        token,
+      })
+
+      // Advance time past updateAge
+      vi.setSystemTime(now + (updateAge + 1) * 1000)
+
+      const { response } = await makeAuthRequest({
+        action: "session",
+        cookies: { [SESSION_COOKIE_NAME]: originalToken },
+        config: { session: { updateAge } },
+      })
+
+      const body = await response.json()
+      expect(body).not.toBeNull()
+
+      const cookies = response.headers
+        .getSetCookie()
+        .reduce(
+          (acc, cookie) => ({ ...acc, ...parseCookie(cookie) }),
+          {} as Record<string, string>
+        )
+      // updateAge has elapsed — a new signed token should be in the Set-Cookie header
+      expect(cookies[SESSION_COOKIE_NAME]).toBeDefined()
+      expect(cookies[SESSION_COOKIE_NAME]).not.toEqual(originalToken)
+
+      vi.useRealTimers()
     })
 
     it("should return null if no JWT session in the requests cookies", async () => {
