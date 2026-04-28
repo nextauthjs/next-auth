@@ -4,7 +4,7 @@ import * as cookie from "../../src/lib/vendored/cookie.js"
 import { MemoryAdapter, initMemory } from "../memory-adapter.js"
 import { randomString } from "../../src/lib/utils/web.js"
 import type { AdapterUser } from "../../src/adapters.js"
-import { decode, encode } from "../../src/jwt.js"
+import { encode } from "../../src/jwt.js"
 import {
   callbacks,
   getExpires,
