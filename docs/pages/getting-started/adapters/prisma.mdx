@@ -15,8 +15,8 @@ import { Accordion, Accordions } from "@/components/Accordion"
 ### Installation
 
 ```bash npm2yarn
-npm install @prisma/client @prisma/extension-accelerate @auth/prisma-adapter
-npm install prisma --save-dev
+npm install @prisma/client @prisma/extension-accelerate @auth/prisma-adapter @prisma/adapter-pg dotenv pg
+npm install prisma tsx @types/pg --save-dev
 ```
 
 ### Environment Variables
@@ -47,21 +47,39 @@ Then manually configure your `DATABASE_URL` in the `.env` file.
 
 To improve performance using `Prisma ORM`, we can set up the Prisma instance to ensure only one instance is created throughout the project and then import it from any file as needed. This approach avoids recreating instances of PrismaClient every time it is used. Finally, we can import the Prisma instance from the `auth.ts` file configuration.
 
-```ts filename="prisma.ts"
-import { PrismaClient } from "../src/generated/client"
+```ts filename="./prisma.ts"
+import { PrismaClient } from "@/src/generated/prisma/client"
 import { withAccelerate } from "@prisma/extension-accelerate"
+import { PrismaPg } from "@prisma/adapter-pg"
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+})
+
 export const prisma =
-  globalForPrisma.prisma || new PrismaClient().$extends(withAccelerate())
+  globalForPrisma.prisma ||
+  new PrismaClient({ adapter }).$extends(withAccelerate())
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 ```
 
 <Callout type="info">
+  The error squiggles under `"@/src/generated/prisma/client"` (if present) will
+  get resolved once you run `prisma generate` in later steps.
+</Callout>
+
+<Callout type="info">
   If you're not using Prisma Postgres with Accelerate, you can omit the
   `withAccelerate()` extension and delete `.$extends(withAccelerate())`.
+</Callout>
+
+<Callout type="info">
+  If you are using a different database provider (MySQL, SQL Server, SQLite),
+  install the corresponding driver adapter package instead of
+  `@prisma/adapter-pg`. For more information, see [Database
+  drivers](https://www.prisma.io/docs/orm/core-concepts/supported-databases/database-drivers).
 </Callout>
 
 <Callout type="warning">
@@ -168,7 +186,6 @@ You need to use at least Prisma `2.26.0`. Create a schema file at `prisma/schema
 ```prisma filename="prisma/schema-postgres.prisma"
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -253,7 +270,6 @@ model Authenticator {
 ```prisma filename="prisma/schema-mysql.prisma"
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -353,7 +369,6 @@ model Authenticator {
 ```prisma filename="prisma/schema-sqlite.prisma"
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -440,7 +455,6 @@ model Authenticator {
 ```prisma filename="prisma/schema-mongodb.prisma"
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -561,6 +575,12 @@ Note that you will need to specify your database connection string in the enviro
 ```bash npm2yarn
 npm exec prisma generate
 ```
+
+<Callout type="info">
+  Ensure `prisma generate` runs during your deployment process (e.g., via a
+  `postinstall` script) so the Prisma Client is available in your hosting
+  environment.
+</Callout>
 
 ### Development Workflow
 
