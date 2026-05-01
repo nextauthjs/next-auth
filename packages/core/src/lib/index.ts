@@ -90,6 +90,20 @@ export async function AuthInternal(
       case "signout":
         validateCSRF(action, csrfTokenVerified)
         return await actions.signOut(cookies, sessionStore, options)
+      case "_log":
+        if (request.body) {
+          const { code, level, message } = request.body as {
+            code?: string
+            level?: "debug" | "warn" | "error"
+            message?: string
+          }
+          const logLevel = level ?? "debug"
+          options.logger[logLevel]?.(
+            code ?? "CLIENT_LOG",
+            message ?? request.body
+          )
+        }
+        return { status: 200, cookies }
       default:
     }
   }
