@@ -4,6 +4,7 @@ import { init } from "./init.js"
 import renderPage from "./pages/index.js"
 import * as actions from "./actions/index.js"
 import { validateCSRF } from "./actions/callback/oauth/csrf-token.js"
+import { setLogger } from "./utils/logger.js"
 
 import type { RequestInternal, ResponseInternal } from "../types.js"
 import type { AuthConfig } from "../index.js"
@@ -17,6 +18,23 @@ export async function AuthInternal(
   authOptions: AuthConfig
 ): Promise<ResponseInternal> {
   const { action, providerId, error, method } = request
+
+  // Handle _log action: accept client-side debug log messages.
+  // When debug is enabled, log the message server-side; always return 200.
+  if (action === "_log") {
+    const logger = setLogger(authOptions)
+    if (request.body) {
+      const { level, code, message: msg } = request.body
+      if (level === "error") {
+        logger.debug("client_error", { code, message: msg, ...request.body })
+      } else if (level === "warn") {
+        logger.debug("client_warn", { code, message: msg, ...request.body })
+      } else {
+        logger.debug("client_log", { message: msg, ...request.body })
+      }
+    }
+    return { status: 200, body: "" }
+  }
 
   const csrfDisabled = authOptions.skipCSRFCheck === skipCSRFCheck
 

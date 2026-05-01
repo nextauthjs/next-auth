@@ -76,6 +76,18 @@ describe("parse the action and provider id", () => {
       providerId: undefined,
       basePath: "/auth",
     },
+    {
+      path: "/api/auth/_log",
+      action: "_log",
+      providerId: undefined,
+      basePath: "/api/auth",
+    },
+    {
+      path: "/auth/_log",
+      action: "_log",
+      providerId: undefined,
+      basePath: "/auth",
+    },
   ])("$path", ({ path, error, basePath, action, providerId }) => {
     if (action || providerId) {
       const parsed = parseActionAndProviderId(path, basePath)
