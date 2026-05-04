@@ -136,8 +136,8 @@ export function assertConfig(
 
       let key
       if (typeof a !== "string" && !a?.url) key = "authorization"
-      else if (typeof t !== "string" && !t?.url) key = "token"
-      else if (typeof u !== "string" && !u?.url) key = "userinfo"
+      else if (typeof t !== "string" && !t?.url && !t?.request) key = "token"
+      else if (typeof u !== "string" && !u?.url && !u?.request) key = "userinfo"
 
       if (key) {
         return new InvalidEndpoints(
