@@ -686,7 +686,7 @@ importers:
         specifier: ^6.0.6
         version: 6.0.6
       nodemailer:
-        specifier: ^8.0.0
+        specifier: ^8.0.5
         version: 8.0.7
       oauth4webapi:
         specifier: ^3.3.0
@@ -810,7 +810,7 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3(encoding@0.1.13)
       nodemailer:
-        specifier: ^8.0.0
+        specifier: ^8.0.5
         version: 8.0.7
       set-cookie-parser:
         specifier: ^2.7.0
@@ -875,7 +875,7 @@ importers:
         specifier: 15.3.1
         version: 15.3.1(@opentelemetry/api@1.7.0)(@playwright/test@1.41.2)(react-dom@19.0.0-rc-935180c7e0-20240524(react@18.3.1))(react@18.3.1)(sass@1.70.0)
       nodemailer:
-        specifier: ^8.0.0
+        specifier: ^8.0.5
         version: 8.0.7
       react:
         specifier: ^18.2.0
