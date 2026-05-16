@@ -331,17 +331,28 @@ export interface VkProfile {
  *
  * :::note
  *
- * By default the provider uses 5.126 version of the API. See https://vk.com/dev/versions for more info.
- * If you want to use a different version, you can pass it to provider's options object:
+ * By default the provider uses 5.131 version of the API. See https://vk.com/dev/versions for more info.
+ *
+ * The provider disables PKCE checks (`checks: []`) because VK's OAuth endpoint
+ * does not support PKCE for server-side authorization. A `token.conform` callback
+ * ensures the token response includes a `token_type` field, which VK may omit.
+ *
+ * If you want to use a different API version, you can override the URLs:
  * ```ts
- * const apiVersion = "5.126"
+ * const apiVersion = "5.131"
  * providers: [
  *   Vk({
- *     accessTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
- *     requestTokenUrl: `https://oauth.vk.com/access_token?v=${apiVersion}`,
- *     authorizationUrl:
- *       `https://oauth.vk.com/authorize?response_type=code&v=${apiVersion}`,
- *     profileUrl: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
+ *     authorization: `https://oauth.vk.com/authorize?scope=email&v=${apiVersion}`,
+ *     token: {
+ *       url: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+ *       conform: async (response) => {
+ *         const data = await response.json()
+ *         return new Response(
+ *           JSON.stringify({ ...data, token_type: data.token_type ?? "bearer" }),
+ *           { headers: response.headers }
+ *         )
+ *       },
+ *     },
  *   })
  * ]
  * ```
@@ -371,7 +382,19 @@ export default function VK<P extends Record<string, any> = VkProfile>(
     client: {
       token_endpoint_auth_method: "client_secret_post",
     },
-    token: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+    token: {
+      url: `https://oauth.vk.com/access_token?v=${apiVersion}`,
+      conform: async (response: Response) => {
+        const data = await response.json()
+        return new Response(
+          JSON.stringify({
+            ...data,
+            token_type: data.token_type ?? "bearer",
+          }),
+          { headers: response.headers }
+        )
+      },
+    },
     userinfo: {
       url: `https://api.vk.com/method/users.get?fields=photo_100&v=${apiVersion}`,
       async request({ tokens, provider }) {
@@ -387,6 +410,7 @@ export default function VK<P extends Record<string, any> = VkProfile>(
         return profile.response[0]
       },
     },
+    checks: [],
     profile(profile: P) {
       return {
         id: profile.id,
