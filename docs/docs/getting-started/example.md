@@ -24,11 +24,11 @@ If you are using TypeScript, NextAuth.js comes with its types definitions within
 
 ### Add API route
 
-To add NextAuth.js to a project create a file called `[...nextauth].js` in `pages/api/auth`. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
+To add NextAuth.js to a project create a file called `[...nextauth]` in `pages/api/auth`. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
 
 If you're using [Next.js 13.2](https://nextjs.org/blog/next-13-2#custom-route-handlers) or above with the new App Router (`app/`), you can initialize the configuration using the new [Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/router-handlers) by following our [guide](https://next-auth.js.org/configuration/initialization#route-handlers-app).
 
-```javascript title="pages/api/auth/[...nextauth].js" showLineNumbers
+```javascript title="pages/api/auth/[...nextauth]" showLineNumbers
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
@@ -139,7 +139,7 @@ NextAuth.js allows you to hook into various parts of the authentication flow via
 
 For example, to pass a value from the sign-in to the frontend, client-side, you can use a combination of the [`session`](/configuration/callbacks#session-callback) and [`jwt`](/configuration/callbacks#jwt-callback) callback like so:
 
-```javascript title="pages/api/auth/[...nextauth].js"
+```javascript title="pages/api/auth/[...nextauth]"
 ...
 callbacks: {
   async jwt({ token, account }) {
