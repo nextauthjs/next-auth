@@ -27,7 +27,7 @@ Because this Node.js vs. other runtimes situation is so fragmented and fluid at 
 
 ## Auth.js
 
-Edge compatibility is something Auth.js has optimized for. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here, however, being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, Middleware, etc. then you can use it wherever you want!
+Edge compatibility is something Auth.js has optimized for. That means that you can run the core Auth.js functionality on any JavaScript runtime you choose. The key word here, however, being **core functionality**. If you use _only_ Auth.js / `next-auth` and no other library in your Auth.js callbacks, Proxy, etc. then you can use it wherever you want!
 
 Issues begin to arise when you want to use other libraries with Auth.js.
 
@@ -41,9 +41,18 @@ PostgreSQL is a database that uses a message-based protocol for communication be
 
 As edge runtimes have matured and become more popular, however, people have gotten creative and implemented various solutions to this problem. One such common solution is to put some sort of API server in front of the database whose goal is to translate database queries sent to it via HTTP into a protocol the database can understand. This allows the client side to only have to make HTTP requests to the API server, which is something that every edge runtime supports.
 
-### Middleware
+### Proxy (formerly Middleware)
 
-In Next.js and `next-auth` you can also use Next.js [Middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware) to protect routes by checking if a session exists and deciding where to route next. By default, on Vercel and other hosting providers, **Middleware code always runs in an edge runtime**. This means that our code will be trying to execute, for example, PostgreSQL queries in an environment where the underlying functionality is not available (i.e. TCP sockets). Therefore, **to use a database adapter that isn't explicitly "edge compatible", we will need to find a way to query the database using the features that we do have available to us**.
+In Next.js and `next-auth` you can also use Next.js [Proxy](https://nextjs.org/docs/app/api-reference/file-conventions/proxy) (formerly [Middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware)) to protect routes by checking if a session exists and deciding where to route next.
+
+<Callout>
+  As of Next.js 16, `middleware.ts` has been renamed to `proxy.ts` and now runs
+  on the **Node.js runtime** instead of the edge runtime. If you are using
+  Next.js 16+, the edge compatibility workarounds below may no longer be
+  necessary.
+</Callout>
+
+For older versions of Next.js, **Middleware code always runs in an edge runtime**. This means that our code will be trying to execute, for example, PostgreSQL queries in an environment where the underlying functionality is not available (i.e. TCP sockets). Therefore, **to use a database adapter that isn't explicitly "edge compatible", we will need to find a way to query the database using the features that we do have available to us**.
 
 ## The Solution
 
@@ -53,7 +62,7 @@ This means that everywhere in your application where you may want to check if th
 
 ### Split Config
 
-With Next.js and `next-auth` in mind, let's think about what we need to do to make Auth.js be able to both run some of its code in an edge runtime, but also use a database to store its sessions. We would need a separate "version" of `next-auth` without the database settings for the edge environment and another one with the database for everywhere else. To achieve this, we can use the ["lazy initialization"](/reference/nextjs#lazy-initialization) features of Auth.js to instantiate a standalone client without the adapter for middleware and another one to be used everywhere else.
+With Next.js and `next-auth` in mind, let's think about what we need to do to make Auth.js be able to both run some of its code in an edge runtime, but also use a database to store its sessions. We would need a separate "version" of `next-auth` without the database settings for the edge environment and another one with the database for everywhere else. To achieve this, we can use the ["lazy initialization"](/reference/nextjs#lazy-initialization) features of Auth.js to instantiate a standalone client without the adapter for the proxy and another one to be used everywhere else.
 
 1. First, a common Auth.js configuration object to be used everywhere. This **will not** include the database adapter.
 
@@ -85,13 +94,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-3. Our Middleware, which would then import the configuration **without the database adapter** and instantiate its own Auth.js client.
+3. Our Proxy (or Middleware for older Next.js versions), which would then import the configuration **without the database adapter** and instantiate its own Auth.js client.
 
-```ts filename="middleware.ts" {2, 4}
+```ts filename="proxy.ts" {2, 4}
 import NextAuth from "next-auth"
 import authConfig from "./auth.config"
 
-export const { auth: middleware } = NextAuth(authConfig)
+export const { auth: proxy } = NextAuth(authConfig)
 ```
 
 4. Finally, everywhere else we can import from the primary `auth.ts` configuration and use `next-auth` as usual. See our [session management docs](/getting-started/session-management/protecting) for more examples.
@@ -114,4 +123,4 @@ export default async function Page() {
 }
 ```
 
-It is important to note here that we've now removed database functionality and support from `next-auth` **in the middleware**. That means that we won't be able to fetch the session or other info like the user's account details, etc. while executing code in middleware. That means you'll want to rely on checks like the one demonstrated above in the `/app/protected/page.tsx` file to ensure you're [protecting your routes](/getting-started/session-management/protecting) effectively. Middleware is then still used for bumping the session cookie's expiry time, for example.
+It is important to note here that we've now removed database functionality and support from `next-auth` **in the proxy**. That means that we won't be able to fetch the session or other info like the user's account details, etc. while executing code in the proxy. That means you'll want to rely on checks like the one demonstrated above in the `/app/protected/page.tsx` file to ensure you're [protecting your routes](/getting-started/session-management/protecting) effectively. The proxy is then still used for bumping the session cookie's expiry time, for example.

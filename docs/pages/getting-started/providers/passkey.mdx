@@ -160,7 +160,7 @@ CREATE UNIQUE INDEX Authenticator_credentialID_key ON Authenticator(credentialID
 
 #### Edge Compatibility
 
-If you're using `next-auth` with Next.js and middleware, you should ensure that your database client of choice is "edge compatible". If you're using an older version of Prisma or another adapter that is not edge compatible, you'll need to make some adjustments. Check out our [edge compatibility](/guides/edge-compatibility) guide for more details. There is also Prisma specific information in the [Prisma adapter docs](/getting-started/adapters/prisma#edge-compatibility).
+If you're using `next-auth` with Next.js and a proxy (or middleware in older versions), you should ensure that your database client of choice is "edge compatible" when using Next.js versions before 16. In Next.js 16+, `proxy.ts` runs on the Node.js runtime, so edge compatibility is no longer a concern. For older versions, check out our [edge compatibility](/guides/edge-compatibility) guide for more details. There is also Prisma specific information in the [Prisma adapter docs](/getting-started/adapters/prisma#edge-compatibility).
 
 ### Update Auth.js Configuration
 
