@@ -46,7 +46,7 @@
  * If you need to override the default values for a provider, you can still call it as a function `GitHub({...})` as before.
  *
  * ## Lazy initialization
- * You can also initialize NextAuth.js lazily (previously known as advanced intialization), which allows you to access the request context in the configuration in some cases, like Route Handlers, Middleware, API Routes or `getServerSideProps`.
+ * You can also initialize NextAuth.js lazily (previously known as advanced intialization), which allows you to access the request context in the configuration in some cases, like Route Handlers, React Server Components, Middleware, API Routes or `getServerSideProps`.
  * The above example becomes:
  *
  * ```ts title="auth.ts"
