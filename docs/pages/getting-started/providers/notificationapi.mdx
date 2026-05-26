@@ -1,0 +1,110 @@
+import { Callout, Tabs } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img
+  align="right"
+  src="/img/providers/notificationapi.svg"
+  className="dark:bg-[currentColor]"
+  height="64"
+  width="96"
+/>
+
+# NotificationAPI Provider
+
+## Overview
+
+The [NotificationAPI](https://www.notificationapi.com) provider for Auth.js is an easy way to implement the "magic link" authentication flow with Email. It doesn't require additional integrations or writing HTML email templates.
+
+This flow can be used to sign in existing or new users by simply sending them a link.
+
+## Flow
+
+1. User inputs their email.
+2. Auth.js generates a <b>verification token</b> - valid for 24 hours by default - and stores it using the database adapter.
+3. NotificationAPI delivers the "Magic Link" via Email. The Magic Link is a URL containing the verification token. When visited, the token is passed to Auth.js which logs the user in.
+
+<Callout type="warning">
+  The magic link auth flow requires a [database
+  adapter](https://authjs.dev/getting-started/database) to work. The database is
+  used to store the verification tokens, to be matched later against what the
+  user provides.
+</Callout>
+
+## Setup
+
+### 1. NotificationAPI Account
+
+Create a [NotificationAPI account](https://app.notificationapi.com) and design a magic link email notification in the dashboard.
+
+Make sure to include the `{{url}}` parameter in the email design. This `{{url}}` tag will be dynamically replaced with the real URL.
+
+### 2. Auth.js Configuration
+
+Set up environment variables using the values from NotificationAPI's environments page:
+
+```sh
+NOTIFICATIONAPI_API_KEY=...
+```
+
+If you name your environment variable like the above, the provider will pick it up automatically.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import NotificationAPI from "next-auth/providers/notificationapi"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: ..., // you need an adapter for magic link auth flows
+  providers: [
+    NotificationAPI({
+      // The ID of the notification you designed in the NotificationAPI dashboard:
+      notificationId: "auth_magic_link"
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import NotificationAPI from "@auth/qwik/providers/notificationapi"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    adapter: ..., // you need an adapter for magic link auth flows
+    providers: [
+      NotificationAPI({
+        // The ID of the notification you designed in the NotificationAPI dashboard:
+        notificationId: "auth_magic_link"
+      }),
+    ],
+
+})
+)
+
+````
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import NotificationAPI from "@auth/sveltekit/providers/notificationapi"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  adapter: ..., // you need an adapter for magic link auth flows
+  providers: [
+    NotificationAPI({
+      // The ID of the notification you designed in the NotificationAPI dashboard:
+      notificationId: "auth_magic_link"
+    }),
+  ],
+})
+````
+
+</Code.Svelte>
+</Code>
