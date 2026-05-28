@@ -356,6 +356,9 @@ export interface MicrosoftEntraIDProfile {
  * When the `issuer` parameter is omitted it will default to
  * `"https://login.microsoftonline.com/common/v2.0/"`.
  * This allows any Microsoft account (Personal, School or Work) to log in.
+ * The `/organizations/` and `/consumers/` endpoints are also supported and
+ * the issuer of the returned ID token is validated against the tenant that
+ * actually authenticated the user.
  *
  * ```typescript
  * import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id"
@@ -484,8 +487,11 @@ export default function MicrosoftEntraID(
       if (url.pathname.endsWith(".well-known/openid-configuration")) {
         const response = await fetch(...args)
         const json = await response.clone().json()
-        const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
-        const tenantId = config.issuer?.match(tenantRe)?.[1] ?? "common"
+        const tenantRe = /microsoftonline\.com\/([^/]+)\/v2\.0/
+        const tenantId =
+          url.href.match(tenantRe)?.[1] ??
+          config.issuer?.match(tenantRe)?.[1] ??
+          "common"
         const issuer = json.issuer.replace("{tenantid}", tenantId)
         return Response.json({ ...json, issuer })
       }
