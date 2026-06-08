@@ -52,7 +52,7 @@
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.3",
-    "typeorm": "0.3.17",
+    "typeorm": "0.3.26",
     "typeorm-naming-strategies": "^4.1.0"
   },
   "peerDependencies": {

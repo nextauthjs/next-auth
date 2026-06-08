@@ -52,7 +52,7 @@
   "devDependencies": {
     "@types/uuid": "^8.3.3",
     "drizzle-kit": "^0.23.0",
-    "drizzle-orm": "^0.32.0",
+    "drizzle-orm": "^0.45.2",
     "libsql": "^0.3.18",
     "mysql2": "^3.9.7",
     "postgres": "^3.4.3",

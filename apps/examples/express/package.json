@@ -31,5 +31,17 @@
     "@types/pug": "^2.0.10",
     "tsx": "^4.7.0",
     "typescript": "5.3.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@2": "2.0.3",
+      "glob@10": "10.5.0",
+      "minimatch@9": "9.0.7",
+      "on-headers@1": "1.1.0",
+      "path-to-regexp@0": "0.1.13",
+      "picomatch@2": "2.3.2",
+      "qs@6": "6.15.2",
+      "yaml@2": "2.8.3"
+    }
   }
 }
