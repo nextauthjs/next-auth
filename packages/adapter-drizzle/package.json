@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@types/uuid": "^8.3.3",
-    "drizzle-kit": "^0.23.0",
+    "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "libsql": "^0.3.18",
     "mysql2": "^3.9.7",

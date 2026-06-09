@@ -370,7 +370,7 @@ importers:
         version: 4.24.0
       better-auth:
         specifier: 1.6.2
-        version: 1.6.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(@sveltejs/kit@2.57.1(@opentelemetry/api@1.7.0)(svelte@4.2.19)(typescript@5.6.3)(vite@5.4.21(@types/node@20.12.7)(sass@1.70.0)(terser@5.27.0)))(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(prisma@6.0.0))(mongodb@6.9.0)(mysql2@3.9.8)(next@14.2.35(@opentelemetry/api@1.7.0)(@playwright/test@1.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(pg@8.11.3)(prisma@6.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.9.4)(svelte@4.2.19)(vitest@1.6.1(@types/node@20.12.7)(@vitest/ui@1.6.1)(sass@1.70.0)(terser@5.27.0))
+        version: 1.6.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(@sveltejs/kit@2.57.1(@opentelemetry/api@1.7.0)(svelte@4.2.19)(typescript@5.6.3)(vite@5.4.21(@types/node@20.12.7)(sass@1.70.0)(terser@5.27.0)))(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(prisma@6.0.0))(mongodb@6.9.0)(mysql2@3.9.8)(next@14.2.35(@opentelemetry/api@1.7.0)(@playwright/test@1.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(pg@8.11.3)(prisma@6.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.9.4)(svelte@4.2.19)(vitest@1.6.1(@types/node@20.12.7)(@vitest/ui@1.6.1)(sass@1.70.0)(terser@5.27.0))
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -476,8 +476,8 @@ importers:
         specifier: ^8.3.3
         version: 8.3.4
       drizzle-kit:
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.31.10
+        version: 0.31.10
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20240117.0)(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@11.10.0)(knex@3.2.10(better-sqlite3@11.10.0)(mysql2@3.9.8)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(postgres@3.4.3)(sqlite3@5.1.6)
@@ -2301,6 +2301,9 @@ packages:
         optional: true
       search-insights:
         optional: true
+
+  '@drizzle-team/brocli@0.10.2':
+    resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
 
   '@emnapi/runtime@1.11.0':
     resolution: {integrity: sha512-55coeOFKHv1ywEcUXJtWU5f+Jr/W5tZDvZig8DLKSwUN1JpROQ4rk/SNOQiFWmaR/VKF4zuFyW1B8JduOSv6Pg==}
@@ -7455,8 +7458,8 @@ packages:
   double-ended-queue@2.1.0-0:
     resolution: {integrity: sha512-+BNfZ+deCo8hMNpDqDnvT+c0XpJ5cUa6mqYq89bho2Ifze4URTqRkcwR399hWoTrTkbZ/XJYDgP6rc7pRgffEQ==}
 
-  drizzle-kit@0.23.0:
-    resolution: {integrity: sha512-w9jE97z193dd4jzAyj4Uv2SOh8Ydue70Ki6W0awy4bGM1aPXan6zD6Yv+nNTA6oGgNTDl2MJFxutjHG4fden5g==}
+  drizzle-kit@0.31.10:
+    resolution: {integrity: sha512-7OZcmQUrdGI+DUNNsKBn1aW8qSoKuTH7d0mYgSP8bAzdFzKoovxEFnoGQp2dVs82EOJeYycqRtciopszwUf8bw==}
     hasBin: true
 
   drizzle-orm@0.45.2:
@@ -7706,11 +7709,6 @@ packages:
     peerDependencies:
       esbuild: 0.25.0
       solid-js: 1.9.4
-
-  esbuild-register@3.5.0:
-    resolution: {integrity: sha512-+4G/XmakeBAsvJuDugJvtyF1x+XJT4FMocynNpxrvEBViirpfUn2PgNpCHedfWhF4WokNsO/OvMKrmJOIJsI5A==}
-    peerDependencies:
-      esbuild: 0.25.0
 
   esbuild@0.25.0:
     resolution: {integrity: sha512-BXq5mqc8ltbaN34cDqWuYKyNhX8D/Z0J1xdtdQ8UcIIIyJyz+ZMKUt58tF3SrZ85jcfN/PZYhjR5uDQAYNVbuw==}
@@ -12831,6 +12829,11 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
+  tsx@4.22.4:
+    resolution: {integrity: sha512-X8EX+XV4QR5xCsrgxaED954zTDfY8KqlDtskKEL0cHhyS/P8b4IFOvGDQpsC9Q1XnLq915wEfwwY/zzskCtmhg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   tsx@4.7.3:
     resolution: {integrity: sha512-+fQnMqIp/jxZEXLcj6WzYy9FhcS5/Dfk8y4AtzJ6ejKcKqmfTF8Gso/jtrzDggCF2zTU20gJa6n8XqPYwDAUYQ==}
     engines: {node: '>=18.0.0'}
@@ -15896,6 +15899,8 @@ snapshots:
       search-insights: 2.17.2
     transitivePeerDependencies:
       - '@algolia/client-search'
+
+  '@drizzle-team/brocli@0.10.2': {}
 
   '@emnapi/runtime@1.11.0':
     dependencies:
@@ -21471,7 +21476,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.1.2
 
-  better-auth@1.6.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(@sveltejs/kit@2.57.1(@opentelemetry/api@1.7.0)(svelte@4.2.19)(typescript@5.6.3)(vite@5.4.21(@types/node@20.12.7)(sass@1.70.0)(terser@5.27.0)))(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(prisma@6.0.0))(mongodb@6.9.0)(mysql2@3.9.8)(next@14.2.35(@opentelemetry/api@1.7.0)(@playwright/test@1.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(pg@8.11.3)(prisma@6.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.9.4)(svelte@4.2.19)(vitest@1.6.1(@types/node@20.12.7)(@vitest/ui@1.6.1)(sass@1.70.0)(terser@5.27.0)):
+  better-auth@1.6.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(@sveltejs/kit@2.57.1(@opentelemetry/api@1.7.0)(svelte@4.2.19)(typescript@5.6.3)(vite@5.4.21(@types/node@20.12.7)(sass@1.70.0)(terser@5.27.0)))(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(prisma@6.0.0))(mongodb@6.9.0)(mysql2@3.9.8)(next@14.2.35(@opentelemetry/api@1.7.0)(@playwright/test@1.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(pg@8.11.3)(prisma@6.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.9.4)(svelte@4.2.19)(vitest@1.6.1(@types/node@20.12.7)(@vitest/ui@1.6.1)(sass@1.70.0)(terser@5.27.0)):
     dependencies:
       '@better-auth/core': 1.6.2(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(better-call@1.3.5(zod@3.22.4))(jose@6.2.3)(kysely@0.28.17)(nanostores@1.3.0)
       '@better-auth/drizzle-adapter': 1.6.2(@better-auth/core@1.6.2(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(better-call@1.3.5(zod@3.22.4))(jose@6.2.3)(kysely@0.28.17)(nanostores@1.3.0))(@better-auth/utils@0.4.0)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(prisma@6.0.0))
@@ -21493,6 +21498,7 @@ snapshots:
     optionalDependencies:
       '@prisma/client': 6.0.0(prisma@6.0.0)
       '@sveltejs/kit': 2.57.1(@opentelemetry/api@1.7.0)(svelte@4.2.19)(typescript@5.6.3)(vite@5.4.21(@types/node@20.12.7)(sass@1.70.0)(terser@5.27.0))
+      drizzle-kit: 0.31.10
       drizzle-orm: 0.45.2(@cloudflare/workers-types@4.20240117.0)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0(prisma@6.0.0))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(prisma@6.0.0)
       mongodb: 6.9.0(@aws-sdk/credential-providers@3.499.0)(gcp-metadata@5.3.0)(socks@2.7.1)
       mysql2: 3.9.8
@@ -22639,13 +22645,12 @@ snapshots:
 
   double-ended-queue@2.1.0-0: {}
 
-  drizzle-kit@0.23.0:
+  drizzle-kit@0.31.10:
     dependencies:
+      '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
       esbuild: 0.25.0
-      esbuild-register: 3.5.0(esbuild@0.25.0)
-    transitivePeerDependencies:
-      - supports-color
+      tsx: 4.22.4
 
   drizzle-orm@0.45.2(@cloudflare/workers-types@4.20240117.0)(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.7.0)(@prisma/client@6.0.0)(@types/better-sqlite3@7.6.9)(@types/pg@8.11.6)(@xata.io/client@0.28.0(typescript@5.3.3))(better-sqlite3@11.10.0)(knex@3.2.10(better-sqlite3@11.10.0)(mysql2@3.9.8)(pg@8.11.3)(sqlite3@5.1.6))(kysely@0.28.17)(mysql2@3.9.8)(pg@8.11.3)(postgres@3.4.3)(sqlite3@5.1.6):
     optionalDependencies:
@@ -22886,13 +22891,6 @@ snapshots:
       babel-preset-solid: 1.8.12(@babel/core@7.23.9)
       esbuild: 0.25.0
       solid-js: 1.9.4
-    transitivePeerDependencies:
-      - supports-color
-
-  esbuild-register@3.5.0(esbuild@0.25.0):
-    dependencies:
-      debug: 4.4.0(supports-color@8.1.1)
-      esbuild: 0.25.0
     transitivePeerDependencies:
       - supports-color
 
@@ -28177,7 +28175,7 @@ snapshots:
     dependencies:
       open: 8.4.2
       picomatch: 2.3.2
-      source-map: 0.7.4
+      source-map: 0.7.6
       yargs: 17.7.2
     optionalDependencies:
       rollup: 3.30.0
@@ -29426,6 +29424,12 @@ snapshots:
   tslib@2.7.0: {}
 
   tslib@2.8.1: {}
+
+  tsx@4.22.4:
+    dependencies:
+      esbuild: 0.25.0
+    optionalDependencies:
+      fsevents: 2.3.3
 
   tsx@4.7.3:
     dependencies:
