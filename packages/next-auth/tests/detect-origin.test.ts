@@ -15,13 +15,13 @@ describe("detectOrigin", () => {
   beforeEach(() => {
     for (const key of ENV_KEYS) {
       saved[key] = process.env[key]
-      delete process.env[key]
+      Reflect.deleteProperty(process.env, key)
     }
   })
 
   afterEach(() => {
     for (const key of ENV_KEYS) {
-      if (saved[key] === undefined) delete process.env[key]
+      if (saved[key] === undefined) Reflect.deleteProperty(process.env, key)
       else process.env[key] = saved[key]
     }
   })

@@ -40,13 +40,15 @@ it("Send e-mail to the only address correctly", async () => {
   )
 })
 
-it("Send e-mail to first address only", async () => {
+it("Reject an address list containing multiple `@` symbols", async () => {
   const { secret, csrf } = await createCSRF()
   const sendVerificationRequest = jest.fn()
   const signIn = jest.fn(() => true)
 
-  const firstEmail = "email@email.com"
-  const email = `${firstEmail},email@email2.com`
+  // Two real `@` symbols (one per address) must be rejected rather than
+  // silently delivering the magic link to the first address, which would let
+  // an attacker smuggle a second recipient past the single-`@` check.
+  const email = "email@email.com,email@email2.com"
   const { res } = await handler(
     {
       adapter: mockAdapter(),
@@ -64,19 +66,10 @@ it("Send e-mail to first address only", async () => {
     }
   )
 
+  expect(signIn).toBeCalledTimes(0)
+  expect(sendVerificationRequest).toBeCalledTimes(0)
   expect(res.redirect).toBe(
-    "http://localhost:3000/api/auth/verify-request?provider=email&type=email"
-  )
-
-  expect(signIn).toBeCalledTimes(1)
-  expect(signIn).toHaveBeenCalledWith(
-    expect.objectContaining({
-      user: expect.objectContaining({ email: firstEmail }),
-    })
-  )
-
-  expect(sendVerificationRequest).toHaveBeenCalledWith(
-    expect.objectContaining({ identifier: firstEmail })
+    "http://localhost:3000/api/auth/error?error=EmailSignin"
   )
 })
 

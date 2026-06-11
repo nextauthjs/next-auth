@@ -63,7 +63,8 @@
   "packageManager": "pnpm@7.13.3",
   "pnpm": {
     "overrides": {
-      "undici": "5.11.0"
+      "undici": "5.11.0",
+      "headers-polyfill": "3.0.4"
     }
   }
 }
