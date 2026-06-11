@@ -309,8 +309,8 @@ importers:
   packages/adapter-mikro-orm:
     dependencies:
       uuid:
-        specifier: ^9
-        version: 9.0.1
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@mikro-orm/core':
         specifier: ^5
@@ -324,9 +324,6 @@ importers:
       '@next-auth/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@types/uuid':
-        specifier: '>=8'
-        version: 8.3.4
       jest:
         specifier: ^29
         version: 29.7.0(@types/node@17.0.45)(ts-node@10.5.0(@swc/core@1.15.32)(@types/node@17.0.45)(typescript@4.8.4))
@@ -355,8 +352,8 @@ importers:
   packages/adapter-neo4j:
     dependencies:
       uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@next-auth/adapter-test':
         specifier: workspace:*
@@ -364,9 +361,6 @@ importers:
       '@next-auth/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@types/uuid':
-        specifier: ^8.3.3
-        version: 8.3.4
       jest:
         specifier: ^27.4.3
         version: 27.5.1(ts-node@10.5.0(@swc/core@1.15.32)(@types/node@17.0.45)(typescript@4.8.4))
@@ -567,8 +561,8 @@ importers:
   packages/adapter-upstash-redis:
     dependencies:
       uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@next-auth/adapter-test':
         specifier: workspace:*
@@ -576,9 +570,6 @@ importers:
       '@next-auth/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@types/uuid':
-        specifier: ^8.3.3
-        version: 8.3.4
       '@upstash/redis':
         specifier: ^1.0.1
         version: 1.37.0
@@ -646,8 +637,8 @@ importers:
         specifier: ^5.1.19
         version: 5.2.6(preact@10.29.1)
       uuid:
-        specifier: ^8.3.2
-        version: 8.3.2
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@auth/core':
         specifier: 0.34.3
@@ -1161,12 +1152,15 @@ packages:
 
   '@azure/ms-rest-azure-env@2.0.0':
     resolution: {integrity: sha512-dG76W7ElfLi+fbTjnZVGj+M9e0BIEJmRxU6fHaUQ12bZBe8EJKYb2GV50YWNaP2uJiVQ5+7nXEVj1VN1UQtaEw==}
+    deprecated: This package has been deprecated. new Azure Management SDK package from [Azure SDK for JavaScript](https://github.com/azure/azure-sdk-for-js) now have the cloud settings built-in, [for example](https://github.com/Azure/azure-sdk-for-js/blob/dc5f9743b05ea78f938eba31cbe704150889490c/sdk/sql/arm-sql/src/static-helpers/cloudSettingHelpers.ts).
 
   '@azure/ms-rest-js@2.7.0':
     resolution: {integrity: sha512-ngbzWbqF+NmztDOpLBVDxYM+XLcUj7nKhxGbSU9WtIsXfRB//cf2ZbAG5HkOrhU9/wd/ORRB6lM/d69RKVjiyA==}
+    deprecated: This package has been deprecated in favor of the new Azure SDK packages from [Azure SDK for JavaScript](https://github.com/azure/azure-sdk-for-js).
 
   '@azure/ms-rest-nodeauth@3.1.1':
     resolution: {integrity: sha512-UA/8dgLy3+ZiwJjAZHxL4MUB14fFQPkaAOZ94jsTW/Z6WmoOeny2+cLk0+dyIX/iH6qSrEWKwbStEeB970B9pA==}
+    deprecated: This package has been deprecated in favor of the new identity packages from [Azure SDK for JavaScript](https://github.com/azure/azure-sdk-for-js).
 
   '@azure/msal-common@4.5.1':
     resolution: {integrity: sha512-/i5dXM+QAtO+6atYd5oHGBAx48EGSISkXNXViheliOQe+SIFMDo3gSq3lL54W0suOSAsVPws3XnTaIHlla0PIQ==}
@@ -3769,9 +3763,6 @@ packages:
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
-
-  '@types/uuid@8.3.4':
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
 
   '@types/validator@13.15.10':
     resolution: {integrity: sha512-T8L6i7wCuyoK8A/ZeLYt1+q0ty3Zb9+qbSSvrIVitzT3YjZqkTZ40IbRsPanlB4h1QB3JVL1SYCdR6ngtFYcuA==}
@@ -11532,13 +11523,18 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
+  uuid@14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+    hasBin: true
+
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@9.0.1:
@@ -16749,8 +16745,6 @@ snapshots:
   '@types/triple-beam@1.3.5': {}
 
   '@types/unist@2.0.11': {}
-
-  '@types/uuid@8.3.4': {}
 
   '@types/validator@13.15.10': {}
 
@@ -26371,6 +26365,8 @@ snapshots:
   utility-types@3.11.0: {}
 
   utils-merge@1.0.1: {}
+
+  uuid@14.0.0: {}
 
   uuid@3.4.0: {}
 
