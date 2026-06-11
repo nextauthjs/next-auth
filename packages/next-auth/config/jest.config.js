@@ -1,4 +1,9 @@
 const swcConfig = require("./swc.config")
+// The default server pages are Preact components rendered with
+// `preact-render-to-string`. Their JSX must be compiled with Preact's
+// automatic runtime; the React runtime produces React elements that
+// `preact-render-to-string` renders as an empty body.
+const swcPreactConfig = require("./swc.preact.config")
 
 /** @type {import('jest').Config} */
 module.exports = {
@@ -8,7 +13,7 @@ module.exports = {
       testMatch: ["<rootDir>/tests/**/*.test.ts"],
       rootDir: ".",
       transform: {
-        "\\.(js|jsx|ts|tsx)$": ["@swc/jest", swcConfig],
+        "\\.(js|jsx|ts|tsx)$": ["@swc/jest", swcPreactConfig],
       },
       coveragePathIgnorePatterns: ["tests"],
       testEnvironment: "@edge-runtime/jest-environment",

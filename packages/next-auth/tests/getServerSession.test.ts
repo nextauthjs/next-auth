@@ -3,6 +3,18 @@ import { MissingSecret } from "../src/core/errors"
 import { getServerSession } from "../src/next"
 import { mockLogger } from "./lib"
 
+// `AuthHandler` is compiled to a non-configurable CommonJS export, so it cannot
+// be replaced with `jest.spyOn`. Mock the module instead, defaulting to the
+// real implementation so unrelated tests in this file are unaffected.
+jest.mock("../src/core", () => {
+  const actual = jest.requireActual("../src/core")
+  return {
+    __esModule: true,
+    ...actual,
+    AuthHandler: jest.fn(actual.AuthHandler),
+  }
+})
+
 const originalWarn = console.warn
 let logger = mockLogger()
 
@@ -61,13 +73,13 @@ describe("Treat secret correctly", () => {
 
 describe("Return correct data", () => {
   afterEach(() => {
-    jest.restoreAllMocks()
+    const actual = jest.requireActual("../src/core")
+    ;(core.AuthHandler as jest.Mock).mockImplementation(actual.AuthHandler)
   })
 
   it("Should return null if there is no session", async () => {
-    const spy = jest.spyOn(core, "AuthHandler")
     // @ts-expect-error
-    spy.mockReturnValue({ body: {} })
+    ;(core.AuthHandler as jest.Mock).mockReturnValue({ body: {} })
 
     const session = await getServerSession(req, res, {
       providers: [],
@@ -91,9 +103,8 @@ describe("Return correct data", () => {
       },
     }
 
-    const spy = jest.spyOn(core, "AuthHandler")
     // @ts-expect-error
-    spy.mockReturnValue(mockedResponse)
+    ;(core.AuthHandler as jest.Mock).mockReturnValue(mockedResponse)
 
     const session = await getServerSession(req, res, {
       providers: [],

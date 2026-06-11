@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 overrides:
   undici: 5.11.0
+  headers-polyfill: 3.0.4
 
 importers:
 
@@ -6576,7 +6577,7 @@ packages:
       '@open-draft/until': 1.0.3
       '@xmldom/xmldom': 0.7.13
       debug: 4.3.7
-      headers-polyfill: 3.3.0
+      headers-polyfill: 3.0.4
       outvariant: 1.4.3
       strict-event-emitter: 0.2.8
     transitivePeerDependencies:
@@ -14471,8 +14472,8 @@ packages:
     hasBin: true
     dev: true
 
-  /headers-polyfill/3.3.0:
-    resolution: {integrity: sha512-5e57etwBpNcDc0b6KCVWEh/Ro063OxPvzVimUdM0/tsYM/T7Hfy3kknIGj78SFTOhNd8AZY41U8mOHoO4LzmIQ==}
+  /headers-polyfill/3.0.4:
+    resolution: {integrity: sha512-I1DOM1EdWYntdrnCvqQtcKwSSuiTzoqOExy4v1mdcFixFZABlWP4IPHdmoLtPda0abMHqDOY4H9svhQ10DFR4w==}
     dev: true
 
   /heap-js/2.5.0:
@@ -18406,7 +18407,7 @@ packages:
       chokidar: 3.6.0
       cookie: 0.4.2
       graphql: 16.9.0
-      headers-polyfill: 3.3.0
+      headers-polyfill: 3.0.4
       inquirer: 8.2.6
       is-node-process: 1.2.0
       js-levenshtein: 1.1.6
