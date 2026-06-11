@@ -224,18 +224,16 @@ importers:
       '@mikro-orm/sqlite': ^5
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      '@types/uuid': '>=8'
       jest: ^29
       next-auth: workspace:*
-      uuid: ^9
+      uuid: ^14.0.0
     dependencies:
-      uuid: 9.0.1
+      uuid: 14.0.0
     devDependencies:
       '@mikro-orm/core': 5.9.8_@mikro-orm+sqlite@5.9.8
       '@mikro-orm/sqlite': 5.9.8_@mikro-orm+core@5.9.8
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      '@types/uuid': 10.0.0
       jest: 29.7.0
       next-auth: link:../next-auth
 
@@ -257,17 +255,15 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      '@types/uuid': ^8.3.3
       jest: ^27.4.3
       neo4j-driver: ^4.4.0
       next-auth: workspace:*
-      uuid: ^8.3.2
+      uuid: ^14.0.0
     dependencies:
-      uuid: 8.3.2
+      uuid: 14.0.0
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      '@types/uuid': 8.3.4
       jest: 27.5.1
       neo4j-driver: 4.4.11
       next-auth: link:../next-auth
@@ -413,19 +409,17 @@ importers:
     specifiers:
       '@next-auth/adapter-test': workspace:*
       '@next-auth/tsconfig': workspace:*
-      '@types/uuid': ^8.3.3
       '@upstash/redis': ^1.0.1
       dotenv: ^10.0.0
       isomorphic-fetch: 3.0.0
       jest: ^27.4.3
       next-auth: workspace:*
-      uuid: ^8.3.2
+      uuid: ^14.0.0
     dependencies:
-      uuid: 8.3.2
+      uuid: 14.0.0
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
-      '@types/uuid': 8.3.4
       '@upstash/redis': 1.34.0
       dotenv: 10.0.0
       isomorphic-fetch: 3.0.0
@@ -496,7 +490,7 @@ importers:
       preact-render-to-string: ^5.1.19
       react: ^18
       react-dom: ^18
-      uuid: ^8.3.2
+      uuid: ^14.0.0
       whatwg-fetch: ^3.6.2
     dependencies:
       '@babel/runtime': 7.25.6
@@ -507,7 +501,7 @@ importers:
       openid-client: 5.7.0
       preact: 10.24.1
       preact-render-to-string: 5.2.6_preact@10.24.1
-      uuid: 8.3.2
+      uuid: 14.0.0
     devDependencies:
       '@auth/core': 0.34.3
       '@babel/cli': 7.25.6_@babel+core@7.25.2
@@ -8517,14 +8511,6 @@ packages:
 
   /@types/unist/2.0.11:
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
-
-  /@types/uuid/10.0.0:
-    resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
-    dev: true
-
-  /@types/uuid/8.3.4:
-    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
-    dev: true
 
   /@types/validator/13.12.2:
     resolution: {integrity: sha512-6SlHBzUW8Jhf3liqrGGXyTJSIFe4nqlJ5A5KaMZ2l/vbM3Wh3KSybots/wfWVzNLK4D1NZluDlSQIbIEPx6oyA==}
@@ -23896,6 +23882,11 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
+  /uuid/14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+    hasBin: true
+    dev: false
+
   /uuid/3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
@@ -23905,6 +23896,7 @@ packages:
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
+    dev: true
 
   /uuid/9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
