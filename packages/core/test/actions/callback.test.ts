@@ -154,7 +154,11 @@ describe("assert GET callback action", () => {
 })
 
 describe("OAuth check cookies are bound to their provider", () => {
-  const cookieOptions = { secure: true, sameSite: "lax" as const, httpOnly: true }
+  const cookieOptions = {
+    secure: true,
+    sameSite: "lax" as const,
+    httpOnly: true,
+  }
   const cookies = {
     state: { name: "authjs.state", options: cookieOptions },
     nonce: { name: "authjs.nonce", options: cookieOptions },
