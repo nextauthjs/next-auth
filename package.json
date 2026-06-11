@@ -28,7 +28,7 @@
     "setup-fw-integration": "pnpm clean --filter=@auth/frameworks-template && node packages/utils/scripts/setup-fw-integration.js"
   },
   "devDependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.11.1",
     "@balazsorban/monorepo-release": "0.5.1",
     "@eslint/compat": "^1.1.1",
     "@eslint/js": "^9.9.1",
@@ -36,8 +36,8 @@
     "@types/node": "^20.8.10",
     "@typescript-eslint/eslint-plugin": "v6.19.1",
     "@typescript-eslint/parser": "v6.19.1",
-    "@vitest/coverage-v8": "1.6.1",
-    "@vitest/ui": "^1.6.1",
+    "@vitest/coverage-v8": "3.2.6",
+    "@vitest/ui": "^3.2.6",
     "eslint": "9.9.1",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import-x": "^4.1.1",
@@ -56,8 +56,8 @@
     "typescript": "5.3.3",
     "typescript-eslint": "^8.3.0",
     "utils": "workspace:*",
-    "vite": "^5.1.8",
-    "vitest": "1.6.1"
+    "vite": "^6.4.2",
+    "vitest": "3.2.6"
   },
   "engines": {
     "node": "^18.18.0 || ^20.8.0 || ^22.0.0"
@@ -85,17 +85,17 @@
       "@protobufjs/utf8@1": "1.1.1",
       "@smithy/config-resolver@4": "4.4.0",
       "@supabase/auth-js@2": "2.70.0",
-      "@sveltejs/kit@2": "2.57.1",
+      "@sveltejs/kit@2": "2.60.1",
       "@tootallnate/once@2": "2.0.1",
       "@xmldom/xmldom@0": "0.8.13",
       "@zag-js/core@0": "0.82.2",
       "axios@0": "0.32.0",
-      "better-auth@1": "1.6.2",
+      "better-auth@1": "1.6.16",
       "braces@3": "3.0.3",
       "cookie@0": "0.7.0",
       "cross-spawn@6": "6.0.6",
       "defu@6": "6.1.5",
-      "devalue@5": "5.6.4",
+      "devalue@5": "5.8.1",
       "diff@5": "5.2.2",
       "dompurify@3": "3.4.0",
       "dottie@2": "2.0.7",
@@ -138,7 +138,7 @@
       "next@14": "14.2.35",
       "next@15": "15.5.18",
       "node-forge@1": "1.4.0",
-      "nodemailer@7": "7.0.11",
+      "nodemailer@7": "8.0.5",
       "nodemailer@8": "8.0.5",
       "on-headers@1": "1.1.0",
       "picomatch@2": "2.3.2",
@@ -169,12 +169,18 @@
       "undici@6": "6.24.0",
       "uuid@11": "11.1.1",
       "validator@13": "13.15.22",
-      "vite@5": "5.4.21",
+      "vite@5": "6.4.2",
       "vite@6": "6.4.2",
-      "vitest@1": "1.6.1",
+      "vitest@1": "3.2.6",
       "vitest@3": "3.2.6",
       "ws@8": "8.20.1",
-      "yaml@2": "2.8.3"
+      "yaml@2": "2.8.3",
+      "shell-quote@1": "1.8.4",
+      "@grpc/grpc-js@1": "1.14.4",
+      "brace-expansion@2": "2.1.1",
+      "nodemailer@6": "8.0.5",
+      "mailparser@2": "3.9.3",
+      "estree-util-value-to-estree@1": "3.3.3"
     },
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.5.1": "patches/@balazsorban__monorepo-release@0.5.1.patch"

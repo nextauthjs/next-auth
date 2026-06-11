@@ -62,6 +62,6 @@
     "@types/set-cookie-parser": "^2.4.7",
     "typescript": "^5.4.5",
     "vite-plugin-dts": "^3.9.1",
-    "vite-plugin-static-copy": "^1.0.5"
+    "vite-plugin-static-copy": "^2.3.2"
   }
 }
