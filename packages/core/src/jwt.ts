@@ -172,7 +172,12 @@ export async function getToken(
 
   if (!token && authorizationHeader?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = authorizationHeader.split(" ")[1]
-    token = decodeURIComponent(urlEncodedToken)
+    try {
+      token = decodeURIComponent(urlEncodedToken)
+    } catch {
+      // Malformed percent-encoding makes the Bearer token invalid
+      return null
+    }
   }
 
   if (!token) return null
