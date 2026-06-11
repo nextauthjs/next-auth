@@ -57,8 +57,8 @@
     "set-cookie-parser": "^2.6.0"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.7.3",
-    "@builder.io/qwik-city": "1.5.5",
+    "@builder.io/qwik": "1.19.1",
+    "@builder.io/qwik-city": "1.19.2",
     "@types/set-cookie-parser": "^2.4.7",
     "typescript": "^5.4.5",
     "vite-plugin-dts": "^3.9.1",
