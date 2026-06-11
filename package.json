@@ -63,7 +63,9 @@
   "packageManager": "pnpm@10.33.2",
   "pnpm": {
     "overrides": {
-      "undici": "5.11.0"
+      "undici": "5.11.0",
+      "webpack": "5.95.0",
+      "cytoscape": "3.30.2"
     }
   }
 }
