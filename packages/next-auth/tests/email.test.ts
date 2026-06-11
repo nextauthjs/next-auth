@@ -120,6 +120,43 @@ it("Send e-mail to address with first domain", async () => {
   )
 })
 
+// Regression test for GHSA-7rqj-j65f-68wh:
+// U+FF20 (FULLWIDTH COMMERCIAL AT) is a homoglyph of `@` that normalizes to an
+// ASCII `@` under NFKC. The normalizer must canonicalize before validation so
+// the address cannot smuggle a second `@` past the single-`@` check and have a
+// downstream mailer deliver the magic link to an attacker-controlled address.
+it("Reject email with a Unicode homoglyph of @ (GHSA-7rqj-j65f-68wh)", async () => {
+  const { secret, csrf } = await createCSRF()
+  const sendVerificationRequest = jest.fn()
+  const signIn = jest.fn(() => true)
+
+  const { res } = await handler(
+    {
+      adapter: mockAdapter(),
+      providers: [EmailProvider({ sendVerificationRequest })],
+      callbacks: { signIn },
+      secret,
+    },
+    {
+      path: "signin/email",
+      requestInit: {
+        method: "POST",
+        headers: { cookie: csrf.cookie },
+        body: JSON.stringify({
+          email: "attacker@evil.com＠victim.company.com",
+          csrfToken: csrf.value,
+        }),
+      },
+    }
+  )
+
+  expect(signIn).toBeCalledTimes(0)
+  expect(sendVerificationRequest).toBeCalledTimes(0)
+  expect(res.redirect).toBe(
+    "http://localhost:3000/api/auth/error?error=EmailSignin"
+  )
+})
+
 it("Redirect to error page if multiple addresses aren't allowed", async () => {
   const { secret, csrf } = await createCSRF()
   const sendVerificationRequest = jest.fn()

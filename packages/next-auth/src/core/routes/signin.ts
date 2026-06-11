@@ -39,7 +39,12 @@ export default async function signin(params: {
     const normalizer: (identifier: string) => string =
       provider.normalizeIdentifier ??
       ((identifier) => {
-        const trimmedEmail = identifier.trim()
+        // Apply Unicode NFKC normalization *before* validation. Without this, a
+        // character that is a homoglyph of `@` (e.g. U+FF20 FULLWIDTH COMMERCIAL
+        // AT) passes the single-`@` check below, but can later be canonicalized
+        // to an ASCII `@` by a downstream address parser, splitting the address
+        // into multiple recipients (CWE-180: validate before canonicalize).
+        const trimmedEmail = identifier.normalize("NFKC").trim()
 
         // Validate email format according to RFC 5321/5322
         // Reject emails with quotes in the local part to prevent address parser exploits
