@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "echo 'No build step required: the proxy is deployed as Vercel Functions from api/'"
+}
