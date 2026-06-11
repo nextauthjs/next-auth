@@ -228,7 +228,9 @@ export function assertConfig(
   if (hasWebAuthn) {
     // Log experimental warning
     if (options.experimental?.enableWebAuthn) {
-      warnings.push("experimental-webauthn")
+      if (!warned) {
+        warnings.push("experimental-webauthn")
+      }
     } else {
       return new ExperimentalFeatureNotEnabled(
         "WebAuthn is an experimental feature. To enable it, set `experimental.enableWebAuthn` to `true` in your config"
