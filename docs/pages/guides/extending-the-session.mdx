@@ -92,6 +92,87 @@ const providers: Provider[] = [
 ]
 ```
 
+## Dynamic Session Duration
+
+You can now dynamically control session duration based on user preferences or roles. The `maxAge` option accepts a static value, `"session"` for browser session cookies, or a function that returns either dynamically.
+
+### Remember Me Feature
+
+```ts filename="auth.ts"
+export default {
+  session: {
+    maxAge: async ({ token }) => {
+      // Check if user selected "Remember Me" during login
+      if (token?.rememberMe) {
+        return 30 * 24 * 60 * 60 // 30 days
+      }
+      return "session" // Browser session cookie
+    }
+  },
+  callbacks: {
+    jwt({ token, user, trigger }) {
+      if (trigger === "signIn" && user) {
+        // Save rememberMe preference in JWT
+        token.rememberMe = user.rememberMe
+      }
+      return token
+    }
+  }
+}
+```
+
+### Role-Based Session Duration
+
+```ts filename="auth.ts"
+export default {
+  session: {
+    maxAge: async ({ token }) => {
+      // Different session durations based on user role
+      switch (token?.role) {
+        case "admin":
+          return 4 * 60 * 60 // 4 hours for admins
+        case "user":
+          return 24 * 60 * 60 // 24 hours for regular users
+        case "guest":
+          return "session" // Session cookie for guests
+        default:
+          return 30 * 24 * 60 * 60 // Default 30 days
+      }
+    }
+  }
+}
+```
+
+### Device-Based Sessions
+
+```ts filename="auth.ts"
+export default {
+  session: {
+    maxAge: async ({ token, trigger }) => {
+      // Shorter sessions on public/shared devices
+      if (token?.deviceType === "public") {
+        return 60 * 60 // 1 hour
+      }
+      
+      // Session cookies for sensitive operations
+      if (trigger === "update" && token?.isSensitiveOperation) {
+        return "session"
+      }
+      
+      return 7 * 24 * 60 * 60 // Default 7 days
+    }
+  }
+}
+```
+
+<Callout type="info">
+  When using `"session"` as the maxAge value, the cookie will expire when the browser is closed. This is useful for public computers or when users don't want their session to persist.
+</Callout>
+
+<Callout type="warning">
+  For database sessions, `"session"` cookies still require a database expiry. The database record will use the default maxAge for cleanup purposes, but the cookie itself will be a session cookie.
+</Callout>
+
 ## Resources
 
 - [Concepts. Session strategies](/concepts/session-strategies)
