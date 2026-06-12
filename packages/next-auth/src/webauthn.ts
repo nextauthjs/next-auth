@@ -1,4 +1,5 @@
 import { apiBaseUrl } from "./lib/client.js"
+import { getSkewProtectionHeaderInit } from "./lib/vercel-skew-protection.js"
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import { getCsrfToken, getProviders, __NEXTAUTH } from "./react.js"
 
@@ -33,7 +34,8 @@ async function webAuthnOptions(
   const params = new URLSearchParams(options)
 
   const optionsResp = await fetch(
-    `${baseUrl}/webauthn-options/${providerID}?${params}`
+    `${baseUrl}/webauthn-options/${providerID}?${params}`,
+    { headers: { ...getSkewProtectionHeaderInit() } }
   )
   if (!optionsResp.ok) {
     return { error: optionsResp }
@@ -116,6 +118,7 @@ export async function signIn<Redirect extends boolean = true>(
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
+      ...getSkewProtectionHeaderInit(),
     },
     body: new URLSearchParams({
       ...signInParams,
