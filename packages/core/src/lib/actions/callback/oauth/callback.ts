@@ -156,24 +156,58 @@ export async function handleOAuth(
     redirect_uri = provider.redirectProxyUrl
   }
 
-  let codeGrantResponse = await o.authorizationCodeGrantRequest(
-    as,
-    client,
-    clientAuth,
-    codeGrantParams,
-    redirect_uri,
-    codeVerifier ?? "decoy",
-    {
-      // TODO: move away from allowing insecure HTTP requests
-      [o.allowInsecureRequests]: true,
-      [o.customFetch]: (...args) => {
-        if (!provider.checks.includes("pkce")) {
-          args[1].body.delete("code_verifier")
-        }
-        return (provider[customFetch] ?? fetch)(...args)
-      },
+  let codeGrantResponse: Response
+  
+  // Check if there is a custom token request method
+  if (provider.token?.request && typeof provider.token.request === 'function') {
+    try {
+      const tokenResult = await provider.token.request({
+        params: Object.fromEntries(codeGrantParams.entries()),
+        checks: {},
+        provider: provider
+      })
+      
+      if (tokenResult && tokenResult.tokens) {
+        codeGrantResponse = new Response(JSON.stringify(tokenResult.tokens), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      } else {
+        throw new Error('Invalid token response from custom request')
+      }
+    } catch (error) {
+      logger.error(
+        new OAuthCallbackError("Custom token request failed", { 
+          providerId: provider.id,
+          error: error instanceof Error ? error.message : 'Unknown error'
+        })
+      )
+      throw new OAuthCallbackError("Custom token request failed", { 
+        providerId: provider.id,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      })
     }
-  )
+  } else {
+    // Use standard OAuth2 process
+    codeGrantResponse = await o.authorizationCodeGrantRequest(
+      as,
+      client,
+      clientAuth,
+      codeGrantParams,
+      redirect_uri,
+      codeVerifier ?? "decoy",
+      {
+        // TODO: move away from allowing insecure HTTP requests
+        [o.allowInsecureRequests]: true,
+        [o.customFetch]: (...args) => {
+          if (!provider.checks.includes("pkce")) {
+            args[1].body.delete("code_verifier")
+          }
+          return (provider[customFetch] ?? fetch)(...args)
+        },
+      }
+    )
+  }
 
   if (provider.token?.conform) {
     codeGrantResponse =
