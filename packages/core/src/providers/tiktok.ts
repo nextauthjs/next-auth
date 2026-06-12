@@ -138,7 +138,7 @@ export interface TiktokProfile {
  *
  * #### Configuration
  * You can omit the client and secret if you have set the `AUTH_TIKTOK_ID` and `AUTH_TIKTOK_SECRET` environment variables.
- * Remeber that the AUTH_TIKTOK_ID is the Client Key in the TikTok Application
+ * Remember that the AUTH_TIKTOK_ID is the Client Key in the TikTok Application
  *```ts
  * import { Auth } from "@auth/core"
  * import TikTok from "@auth/core/providers/tiktok"
