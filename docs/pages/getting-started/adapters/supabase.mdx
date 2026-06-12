@@ -234,10 +234,10 @@ This works by sending a signed JWT to your [Supabase Serverless API](https://sup
 
 #### Generate the Supabase `access_token` JWT in the session callback
 
-To sign the JWT use the `jsonwebtoken` package:
+To sign the JWT use the `jose` package:
 
 ```bash npm2yarn
-npm install jsonwebtoken
+npm install jose
 ```
 
 Using the [session callback](/reference/core/types#session) create the Supabase `access_token` and append it to the `session` object.
@@ -247,7 +247,7 @@ To sign the JWT use the Supabase JWT secret which can be found in the [API setti
 ```ts filename="./auth.ts"
 import NextAuth from "next-auth"
 import { SupabaseAdapter } from "@auth/supabase-adapter"
-import jwt from "jsonwebtoken"
+import { SignJWT } from "jose";
 
 // For more information on each option (and a full list of options) go to
 // https://authjs.dev/reference/core/types#authconfig
@@ -268,10 +268,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           sub: user.id,
           email: user.email,
           role: "authenticated",
-        }
-        session.supabaseAccessToken = jwt.sign(payload, signingSecret)
+        };
+
+        const token = await new SignJWT(payload)
+          .setProtectedHeader({ alg: "HS256" })
+          .setExpirationTime(payload.exp)
+          .sign(new TextEncoder().encode(signingSecret));
+
+        session.supabaseAccessToken = token;
       }
-      return session
+      return session;
     },
   },
 })
