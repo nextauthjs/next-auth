@@ -20,7 +20,7 @@ npm install prisma --save-dev
 
 Configure your NextAuth.js to use the Prisma Adapter:
 
-```javascript title="pages/api/auth/[...nextauth].js"
+```javascript title="pages/api/auth/[...nextauth]"
 import NextAuth from "next-auth"
 import Providers from "next-auth/providers"
 import Adapters from "next-auth/adapters"
