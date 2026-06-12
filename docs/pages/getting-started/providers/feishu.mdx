@@ -1,0 +1,241 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/feishu.svg" height="64" width="64" />
+
+# Feishu Provider
+
+## Resources
+
+- [Feishu - Creating an OAuth App](https://open.feishu.cn/document/sso/web-application-sso/login-overview)
+- [Feishu - Authorizing OAuth Apps](https://open.feishu.cn/document/authentication-management/access-token/obtain-oauth-code)
+- [Feishu - Configure your Feishu OAuth Apps](https://open.feishu.cn/app)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/feishu
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/feishu
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/feishu
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```bash
+https://example.com/auth/callback/feishu
+```
+
+  </Code.Express>
+</Code>
+
+### Environment Variables
+
+```
+FEISHU_CLIENT_ID
+FEISHU_CLIENT_SECRET
+```
+
+### Register Application
+
+1. Log in to the Developer Console
+
+- Go to Feishu Open Platform.
+- Sign in with your Feishu account.
+
+2. Create a New Application
+
+- Click “Create App”.
+- Choose Custom App (企业自建应用) if for internal use, or Marketplace App (商店应用) if it will be public.
+- Fill in the app name, description, and icon.
+
+3. Enable Web App Feature
+
+- In the app’s dashboard, go to App Features (应用功能).
+- Enable Web App (网页应用) or Login & Authorization (登录与授权).
+
+4. Configure Redirect URI
+
+- In Security Settings (安全设置), find Redirect URI (重定向URI).
+- Add your app’s callback URL here (must be HTTPS).
+- This must exactly match the redirect_uri you’ll use in OAuth requests.
+
+5. Get App Credentials
+
+- Go to Credentials & Basic Info (凭证与基础信息).
+- Copy the App ID (应用ID) and App Secret (应用密钥).
+- These will be used for OAuth authorization and token exchange.
+
+6. (Optional) Configure Permissions
+
+- If you need user profile, email, contacts, etc.:
+  - Go to Permissions & Scopes (权限管理).
+  - Select the required scopes (e.g., email, user_info).
+- Without this step, your app may only get very limited info.
+
+7. (Optional) Release the App
+
+- For internal apps: just toggle App Status to Enabled.
+- For marketplace apps: submit a version for review under Version Management & Release (版本管理与发布).
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Feishu from "next-auth/providers/feishu"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Feishu({
+      clientId: process.env.FEISHU_CLIENT_ID!,
+      clientSecret: process.env.FEISHU_CLIENT_SECRET!,
+      callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/callback/feishu`,
+    }),
+  ],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Feishu from "@auth/qwik/providers/feishu"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Feishu({
+        clientId: import.meta.env.FEISHU_CLIENT_ID,
+        clientSecret: import.meta.env.FEISHU_CLIENT_SECRET,
+        callbackUrl: `${import.meta.env.NEXTAUTH_URL}/auth/callback/feishu`,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Feishu from "@auth/sveltekit/providers/feishu"
+import { FEISHU_CLIENT_ID, FEISHU_CLIENT_SECRET } from "$env/static/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Feishu({
+      clientId: FEISHU_CLIENT_ID,
+      clientSecret: FEISHU_CLIENT_SECRET,
+      callbackUrl: `${process.env.NEXTAUTH_URL}/auth/callback/feishu`,
+    }),
+  ],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Feishu from "@auth/express/providers/feishu"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Feishu({
+        clientId: process.env.FEISHU_CLIENT_ID!,
+        clientSecret: process.env.FEISHU_CLIENT_SECRET!,
+        callbackUrl: `${process.env.NEXTAUTH_URL}/auth/callback/feishu`,
+      }),
+    ],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
+
+### TypeScript Interface
+
+The Feishu provider returns a comprehensive user profile with the following structure:
+
+```ts
+interface FeishuProfile {
+  /** The user's display name */
+  name: string;
+  /** The user's English name */
+  en_name: string;
+  /** The user's avatar URLs in different sizes */
+  avatar_url: string;
+  avatar_thumb: string;
+  avatar_middle: string;
+  avatar_big: string;
+  /** The user's Feishu-specific IDs */
+  open_id: string;
+  union_id: string;
+  /** The user's email addresses */
+  email: string;
+  enterprise_email: string;
+  /** The user's unique identifier */
+  user_id: string;
+  /** The user's mobile phone number */
+  mobile: string;
+  /** The tenant/organization key */
+  tenant_key: string;
+  /** The user's employee number */
+  employee_no: string;
+}
+```
+
+### Notes
+
+- The Feishu provider uses OAuth 2.0 with PKCE (Proof Key for Code Exchange) for enhanced security.
+- The provider returns comprehensive user information including name, email, avatar URLs, and various Feishu-specific IDs.
+- Make sure to configure the correct redirect URI in your Feishu application settings.
+- The provider supports both personal and enterprise Feishu accounts.
+- **Endpoints used**: 
+  - Authorization: `https://accounts.feishu.cn/open-apis/authen/v1/authorize`
+  - Token: `https://open.feishu.cn/open-apis/authen/v2/oauth/token`
+  - User Info: `https://open.feishu.cn/open-apis/authen/v1/user_info`
+- **Error handling**: The provider handles Feishu's specific response format where `code: 0` indicates success and non-zero values indicate errors.
+
+:::tip
+
+The Feishu provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/feishu.ts).
+To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/configuring-oauth-providers).
+
+:::
+
+:::info **Disclaimer**
+
+If you think you found a bug in the default configuration, you can [open an issue](https://authjs.dev/new/provider-issue).
+
+Auth.js strictly adheres to the specification and it cannot take responsibility for any deviation from
+the spec by the provider. You can open an issue, but if the problem is non-compliance with the spec,
+we might not pursue a resolution. You can ask for more help in [Discussions](https://authjs.dev/new/github-discussions).
+
+:::
