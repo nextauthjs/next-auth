@@ -92,38 +92,56 @@ export async function handleOAuth(
 
   let clientAuth: o.ClientAuth
 
-  switch (client.token_endpoint_auth_method) {
-    // TODO: in the next breaking major version have undefined be `client_secret_post`
-    case undefined:
-    case "client_secret_basic":
-      // TODO: in the next breaking major version use o.ClientSecretBasic() here
-      clientAuth = (_as, _client, _body, headers) => {
-        headers.set(
-          "authorization",
-          clientSecretBasic(provider.clientId, provider.clientSecret!)
-        )
-      }
-      break
-    case "client_secret_post":
-      clientAuth = o.ClientSecretPost(provider.clientSecret!)
-      break
-    case "client_secret_jwt":
-      clientAuth = o.ClientSecretJwt(provider.clientSecret!)
-      break
-    case "private_key_jwt":
-      clientAuth = o.PrivateKeyJwt(provider.token!.clientPrivateKey!, {
-        // TODO: review in the next breaking change
-        [o.modifyAssertion](_header, payload) {
-          payload.aud = [as.issuer, as.token_endpoint!]
-        },
-      })
-      break
-    case "none":
-      clientAuth = o.None()
-      break
-    default:
-      throw new Error("unsupported client authentication method")
-  }
+  // If a clientAssertionProvider is configured (and no clientSecret is set),
+  // use JWT bearer client assertion authentication instead of a client secret.
+  // See RFC 7523.
+  const useClientAssertion =
+    !provider.clientSecret &&
+    typeof provider.clientAssertionProvider === "function"
+
+  if (useClientAssertion) {
+    const assertionProvider = provider.clientAssertionProvider!
+    clientAuth = async (_as, _client, body, _headers) => {
+      body.set("client_id", provider.clientId)
+      body.set(
+        "client_assertion_type",
+        "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+      )
+      body.set("client_assertion", await assertionProvider())
+    }
+  } else
+    switch (client.token_endpoint_auth_method) {
+      // TODO: in the next breaking major version have undefined be `client_secret_post`
+      case undefined:
+      case "client_secret_basic":
+        // TODO: in the next breaking major version use o.ClientSecretBasic() here
+        clientAuth = (_as, _client, _body, headers) => {
+          headers.set(
+            "authorization",
+            clientSecretBasic(provider.clientId, provider.clientSecret!)
+          )
+        }
+        break
+      case "client_secret_post":
+        clientAuth = o.ClientSecretPost(provider.clientSecret!)
+        break
+      case "client_secret_jwt":
+        clientAuth = o.ClientSecretJwt(provider.clientSecret!)
+        break
+      case "private_key_jwt":
+        clientAuth = o.PrivateKeyJwt(provider.token!.clientPrivateKey!, {
+          // TODO: review in the next breaking change
+          [o.modifyAssertion](_header, payload) {
+            payload.aud = [as.issuer, as.token_endpoint!]
+          },
+        })
+        break
+      case "none":
+        clientAuth = o.None()
+        break
+      default:
+        throw new Error("unsupported client authentication method")
+    }
 
   const resCookies: Cookie[] = []
 
