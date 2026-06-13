@@ -7,8 +7,7 @@ import { Code } from "@/components/Code"
 
 ## Resources
 
-- [Kakao OAuth documentation](https://developers.kakao.com/product/kakaoLogin)
-- [Kakao OAuth configuration](https://developers.kakao.com/docs/latest/en/kakaologin/common)
+- [Kakao OAuth documentation](https://developers.kakao.com/docs/latest/en/kakaologin/common)
 
 ## Setup
 
@@ -109,12 +108,8 @@ app.use("/auth/*", ExpressAuth({ providers: [Kakao] }))
 - For production: `https://{YOUR_DOMAIN}/api/auth/callback/kakao`
 - For development: `http://localhost:3000/api/auth/callback/kakao`
 
-- Kakao's client key is in **Summary(It is written as 요약정보 in Korean.) tab's App Keys Field** (My Application > App Settings > Summary)
+- Kakao's client key is in **General (It is written as 일반 in Korean) tab's App Keys Field (App > App Settings > App > General)**. You must select the JavaScript key from here.
 
-![스크린샷 2023-11-28 오후 9 47 17](https://github.com/nextauthjs/next-auth/assets/66895208/a87e5705-26b9-4f83-99d7-6df097a3632c)
-
-- Kakao's clientSecret key is in **Security(It is written as 보안 in Korean.) tab's App Keys Field** (My Application > Product Settings > Kakao Login > Security)
-
-![스크린샷 2023-11-28 오후 9 38 25](https://github.com/nextauthjs/next-auth/assets/66895208/6a763921-4f70-40f4-a3e1-9abc78276d45)
+- Kakao's clientSecret key is in **General (It is written as 일반 in Korean) tab's Client Secret Field (App > Product Settings > Kakao Login > General)**. You must issue the Client Secret here.
 
 - Kakao dev console has a button at the top right to change from KR to ENG
