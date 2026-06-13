@@ -1,6 +1,7 @@
 import type { AuthAction } from "../../types.js"
 
 const actions: AuthAction[] = [
+  "_log",
   "providers",
   "session",
   "csrf",
