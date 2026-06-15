@@ -66,5 +66,8 @@
   "peerDependencies": {
     "solid-js": "^1.5.7",
     "solid-start": "^0.2.14"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }

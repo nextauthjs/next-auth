@@ -51,5 +51,9 @@
   "author": "",
   "contributors": [],
   "repository": "https://github.com/nextauthjs/next-auth",
-  "license": "ISC"
+  "license": "ISC",
+  "homepage": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  }
 }
