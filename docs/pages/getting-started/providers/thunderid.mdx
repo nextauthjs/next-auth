@@ -1,0 +1,113 @@
+---
+title: ThunderID
+---
+
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/thunderid.svg" width="64" height="64" />
+
+# ThunderID Provider
+
+## Resources
+
+- [ThunderID Documentation](https://thunderid.dev/docs/next/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/thunderid
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/thunderid
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/thunderid
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_THUNDERID_ID
+AUTH_THUNDERID_SECRET
+AUTH_THUNDERID_ISSUER
+```
+
+### Configuration
+
+1. Get ThunderID installed on your environment. (via `npx thunderid` or any [other option](https://thunderid.dev/docs/next/guides/getting-started/get-thunderid/))
+2. Go to the **ThunderID Console** at `https://{THUNDERID_HOST}:{THUNDERID_PORT}/console`
+3. Create an application with the **Next.js** template
+   > ⚠️ IMPORTANT: Make sure to copy the **Client Secret** at the end of the wizard since it will not be prompted again
+4. In the **General** tab, **Access** section → **Authorized redirect URIs**, add:
+   - Development: `http://localhost:3000/api/auth/callback/thunderid`
+   - Production: `https://{YOUR_DOMAIN}/api/auth/callback/thunderid`
+
+Then, add the values to your environment variables.
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import ThunderID from "next-auth/providers/thunderid"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [ThunderID],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import ThunderID from "@auth/qwik/providers/thunderid"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [ThunderID],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import ThunderID from "@auth/sveltekit/providers/thunderid"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [ThunderID],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import ThunderID from "@auth/express/providers/thunderid"
+
+app.use("/auth/*", ExpressAuth({ providers: [ThunderID] }))
+```
+
+  </Code.Express>
+</Code>
