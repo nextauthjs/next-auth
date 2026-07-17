@@ -1,4 +1,4 @@
-import type { SqliteDriver } from "@mikro-orm/sqlite"
+import { BetterSqliteDriver } from "@mikro-orm/better-sqlite"
 import { MikroOrmAdapter, defaultEntities } from "../src"
 import {
   Cascade,
@@ -76,9 +76,9 @@ const entities = [
   VeryImportantEntity,
 ]
 
-const config: Options<SqliteDriver> = {
+const config: Options<BetterSqliteDriver> = {
   dbName: "./db.sqlite",
-  type: "sqlite",
+  driver: BetterSqliteDriver,
   entities,
   debug: process.env.DEBUG === "true" || process.env.DEBUG?.includes("db"),
 }

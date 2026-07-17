@@ -76,7 +76,7 @@
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.2",
-    "nodemailer": "^8.0.5"
+    "nodemailer": "^7.0.7 || ^8.0.5"
   },
   "peerDependenciesMeta": {
     "@simplewebauthn/browser": {
@@ -106,7 +106,7 @@
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
-    "postcss": "8.4.19",
+    "postcss": "8.5.10",
     "postcss-nesting": "^12.1.5",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"

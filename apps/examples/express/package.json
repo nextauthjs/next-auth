@@ -19,17 +19,30 @@
   "license": "ISC",
   "dependencies": {
     "@auth/express": "latest",
-    "express": "^4.19.2",
-    "morgan": "^1.10.0",
-    "pug": "^3.0.2",
-    "tailwindcss": "^3.4.3"
+    "express": "^4.22.2",
+    "morgan": "^1.11.0",
+    "pug": "^3.0.4",
+    "tailwindcss": "^3.4.19"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/morgan": "^1.9.9",
-    "@types/node": "^20.12.7",
+    "@types/express": "^4.17.25",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^20.19.43",
     "@types/pug": "^2.0.10",
-    "tsx": "^4.7.0",
+    "tsx": "^4.22.4",
     "typescript": "5.3.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@2": "2.0.3",
+      "glob@10": "10.5.0",
+      "minimatch@9": "9.0.7",
+      "on-headers@1": "1.1.0",
+      "path-to-regexp@0": "0.1.13",
+      "picomatch@2": "2.3.2",
+      "qs@6": "6.15.2",
+      "yaml@2": "2.8.3",
+      "postcss@8": "8.5.10"
+    }
   }
 }

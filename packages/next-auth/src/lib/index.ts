@@ -96,6 +96,23 @@ async function getSession(headers: Headers, config: NextAuthConfig) {
   }) as Promise<Response>
 }
 
+/**
+ * Reads the session payload from a `getSession()` response.
+ *
+ * On any non-OK response (e.g. a `500` returned by `@auth/core` when the
+ * provider configuration is invalid), the body is an error object such as
+ * `{ message: "There was a problem with the server configuration..." }`.
+ * Returning that object as the session would make truthiness checks like
+ * `!!auth` pass for everyone, failing open. Treat any non-OK response as
+ * "no session" so auth checks fail closed.
+ */
+async function parseSessionResponse(
+  response: Response
+): Promise<Session | null> {
+  if (!response.ok) return null
+  return (await response.json()) satisfies Session | null
+}
+
 export interface NextAuthRequest extends NextRequest {
   auth: Session | null
 }
@@ -131,7 +148,7 @@ export function initAuth(
         const _config = await config(undefined) // Review: Should we pass headers() here instead?
         onLazyLoad?.(_config)
 
-        return getSession(_headers, _config).then((r) => r.json())
+        return getSession(_headers, _config).then(parseSessionResponse)
       }
 
       if (args[0] instanceof Request) {
@@ -168,14 +185,14 @@ export function initAuth(
       // @ts-expect-error -- request is NextRequest
       return getSession(new Headers(request.headers), _config).then(
         async (authResponse) => {
-          const auth = await authResponse.json()
+          const auth = await parseSessionResponse(authResponse)
 
           for (const cookie of authResponse.headers.getSetCookie())
             if ("headers" in response)
               response.headers.append("set-cookie", cookie)
             else response.appendHeader("set-cookie", cookie)
 
-          return auth satisfies Session | null
+          return auth
         }
       )
     }
@@ -184,7 +201,7 @@ export function initAuth(
     if (!args.length) {
       // React Server Components
       return Promise.resolve(headers()).then((h: Headers) =>
-        getSession(h, config).then((r) => r.json())
+        getSession(h, config).then(parseSessionResponse)
       )
     }
     if (args[0] instanceof Request) {
@@ -218,13 +235,13 @@ export function initAuth(
       new Headers(request.headers),
       config
     ).then(async (authResponse) => {
-      const auth = await authResponse.json()
+      const auth = await parseSessionResponse(authResponse)
 
       for (const cookie of authResponse.headers.getSetCookie())
         if ("headers" in response) response.headers.append("set-cookie", cookie)
         else response.appendHeader("set-cookie", cookie)
 
-      return auth satisfies Session | null
+      return auth
     })
   }
 }
@@ -236,7 +253,7 @@ async function handleAuth(
 ) {
   const request = reqWithEnvURL(args[0])
   const sessionResponse = await getSession(request.headers, config)
-  const auth = await sessionResponse.json()
+  const auth = await parseSessionResponse(sessionResponse)
 
   let authorized: boolean | NextResponse | Response | undefined = true
 

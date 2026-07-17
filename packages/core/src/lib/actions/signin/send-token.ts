@@ -91,10 +91,16 @@ export async function sendToken(
   }
 }
 
-function defaultNormalizer(email?: string) {
+export function defaultNormalizer(email?: string) {
   if (!email) throw new Error("Missing email from request body.")
 
-  const trimmedEmail = email.toLowerCase().trim()
+  // Apply Unicode NFKC normalization *before* validation. Without this, a
+  // character that is a homoglyph of `@` (e.g. U+FF20 FULLWIDTH COMMERCIAL AT)
+  // passes the single-`@` check below, but can later be canonicalized to an
+  // ASCII `@` by a downstream address parser, splitting the address into
+  // multiple recipients. Normalizing first ensures any such homoglyph is
+  // turned into a real `@` and rejected by the checks below.
+  const trimmedEmail = email.normalize("NFKC").toLowerCase().trim()
 
   // Reject email addresses with quotes to prevent address parser confusion
   // This prevents attacks like "attacker@evil.com"@victim.com

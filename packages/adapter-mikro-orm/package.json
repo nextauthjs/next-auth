@@ -43,11 +43,11 @@
     "clean": "rm -rf *.js *.d.ts* lib"
   },
   "peerDependencies": {
-    "@mikro-orm/core": "^5"
+    "@mikro-orm/core": "^5 || ^6"
   },
   "devDependencies": {
-    "@mikro-orm/core": "^5",
-    "@mikro-orm/sqlite": "^5"
+    "@mikro-orm/better-sqlite": "^6.6.14",
+    "@mikro-orm/core": "^6.6.14"
   },
   "dependencies": {
     "@auth/core": "workspace:*"
