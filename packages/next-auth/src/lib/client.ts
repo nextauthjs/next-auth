@@ -25,12 +25,7 @@ export interface AuthClientConfig {
    * trigger session updates from places like `signIn` or `signOut`
    */
   _getSession: (...args: any[]) => any
-  /**
-   * Aborts in-flight session fetches when the auth state changes
-   * (e.g. `signIn`, `signOut`), so a stale response cannot overwrite
-   * the new session state or re-issue a rolling session cookie.
-   * @internal
-   */
+  /** Lets auth-state changes (`signIn`, `signOut`) abort the in-flight session fetch */
   _abort?: AbortController | null
 }
 
@@ -176,9 +171,12 @@ export async function fetchData<T = any>(
 }
 
 /**
- * Aborts any in-flight session fetch so its (now stale) result — and the
+ * Aborts the in-flight session fetch so its (now stale) result — and the
  * rolling session cookie the server attaches to `GET /session` responses —
- * is discarded instead of overwriting a newer auth state.
+ * is discarded instead of overwriting a newer auth state. Auth-mutating
+ * requests (`signIn`, `signOut`) call this before and after their POST,
+ * which narrows the race window rather than closing it: responses whose
+ * headers already arrived and other tabs' fetches are out of reach.
  * @internal
  */
 export function abortFetches(__NEXTAUTH: AuthClientConfig) {

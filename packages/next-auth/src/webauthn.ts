@@ -111,11 +111,7 @@ export async function signIn<Redirect extends boolean = true>(
   webAuthnBody.action = webAuthnResponse.action
 
   const signInUrl = `${baseUrl}/callback/${provider}?${new URLSearchParams(authorizationParams)}`
-  // Abort in-flight session fetches so a stale response cannot overwrite the
-  // new session state afterwards. This narrows the race window rather than
-  // closing it: fetches whose response headers already arrived, fetches
-  // started while this request is running (aborted again below), and other
-  // tabs' fetches are out of reach.
+  // A stale session response must not overwrite the new session state.
   abortFetches(__NEXTAUTH)
   const res = await fetch(signInUrl, {
     method: "post",

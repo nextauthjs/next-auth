@@ -287,11 +287,7 @@ export async function signIn<Redirect extends boolean = true>(
   }/${provider}`
 
   const csrfToken = await getCsrfToken()
-  // Abort in-flight session fetches so a stale response cannot overwrite the
-  // new session state afterwards. This narrows the race window rather than
-  // closing it: fetches whose response headers already arrived, fetches
-  // started while this request is running (aborted again below), and other
-  // tabs' fetches are out of reach.
+  // A stale session response must not overwrite the new session state.
   abortFetches(__NEXTAUTH)
   const res = await fetch(
     `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
@@ -357,12 +353,8 @@ export async function signOut<R extends boolean = true>(
   } = options ?? {}
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
-  // Abort in-flight session fetches so a stale response cannot resurrect the
-  // session state — or, with the JWT strategy, re-issue a rolling session
-  // cookie that outlives the sign-out. This narrows the race window rather
-  // than closing it: fetches whose response headers already arrived, fetches
-  // started while this request is running (aborted again below), and other
-  // tabs' fetches are out of reach.
+  // A stale session response must not resurrect the session state — or, with
+  // the JWT strategy, its rolling session cookie.
   abortFetches(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
