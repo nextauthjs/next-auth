@@ -1,11 +1,27 @@
 /// <reference types="vitest" />
 
-import sharedConfig from "../utils/vitest.config"
+import { defineConfig, mergeConfig } from "vite"
+import baseConfig from "../utils/vitest.config"
 
-// The shared config enables `@preact/preset-vite`, which aliases
-// react/react-dom to preact/compat and breaks `@testing-library/react`.
-// The preset returns an array of plugins, so drop it and keep the rest.
-export default {
-  ...sharedConfig,
-  plugins: (sharedConfig.plugins ?? []).filter((p) => !Array.isArray(p)),
-}
+// The base config's `@preact/preset-vite` aliases react/react-dom to
+// preact/compat, which breaks `@testing-library/react`, so drop the
+// preset's plugins ("preact:config", "vite:preact-jsx", "preact:devtools",
+// "prefresh") and keep the rest (swc).
+const preactPresetPlugin = /^(preact:|vite:preact-jsx|prefresh)/
+
+export default mergeConfig(
+  { ...baseConfig, plugins: [] },
+  defineConfig({
+    plugins: (baseConfig.plugins ?? [])
+      .flat()
+      .filter(
+        (p) =>
+          !(
+            p &&
+            typeof p === "object" &&
+            "name" in p &&
+            preactPresetPlugin.test(p.name)
+          )
+      ),
+  })
+)

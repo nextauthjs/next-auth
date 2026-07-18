@@ -111,8 +111,11 @@ export async function signIn<Redirect extends boolean = true>(
   webAuthnBody.action = webAuthnResponse.action
 
   const signInUrl = `${baseUrl}/callback/${provider}?${new URLSearchParams(authorizationParams)}`
-  // Abort in-flight session fetches before and after the sign-in request, so
-  // a stale response cannot overwrite the new session state afterwards.
+  // Abort in-flight session fetches so a stale response cannot overwrite the
+  // new session state afterwards. This narrows the race window rather than
+  // closing it: fetches whose response headers already arrived, fetches
+  // started while this request is running (aborted again below), and other
+  // tabs' fetches are out of reach.
   abortFetches(__NEXTAUTH)
   const res = await fetch(signInUrl, {
     method: "post",
@@ -129,6 +132,7 @@ export async function signIn<Redirect extends boolean = true>(
   })
 
   const data = await res.json()
+  // Also abort fetches that started while the request was running.
   abortFetches(__NEXTAUTH)
 
   if (redirect) {
@@ -142,9 +146,9 @@ export async function signIn<Redirect extends boolean = true>(
   const error = new URL(data.url).searchParams.get("error")
   const code = new URL(data.url).searchParams.get("code")
 
-  if (res.ok) {
-    await __NEXTAUTH._getSession({ event: "storage" })
-  }
+  // Refetch even if the sign-in failed: the aborts above may have discarded
+  // a legitimate in-flight session update that must be replayed.
+  await __NEXTAUTH._getSession({ event: "storage" })
 
   return {
     error,
