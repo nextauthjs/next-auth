@@ -14,6 +14,7 @@
 
 import * as React from "react"
 import {
+  abortFetches,
   apiBaseUrl,
   ClientSessionError,
   fetchData,
@@ -176,6 +177,8 @@ export interface GetSessionParams {
   event?: "storage" | "timer" | "hidden" | string
   triggerEvent?: boolean
   broadcast?: boolean
+  /** Aborts the session fetch, discarding its result. */
+  signal?: AbortSignal
 }
 
 export async function getSession(params?: GetSessionParams) {
@@ -281,6 +284,9 @@ export async function signIn<Redirect extends boolean = true>(
   }/${provider}`
 
   const csrfToken = await getCsrfToken()
+  // Abort in-flight session fetches before and after the sign-in request, so
+  // a stale response cannot overwrite the new session state afterwards.
+  abortFetches(__NEXTAUTH)
   const res = await fetch(
     `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
     {
@@ -298,6 +304,7 @@ export async function signIn<Redirect extends boolean = true>(
   )
 
   const data = await res.json()
+  abortFetches(__NEXTAUTH)
 
   if (redirect) {
     const url = data.url ?? redirectTo
@@ -343,6 +350,10 @@ export async function signOut<R extends boolean = true>(
   } = options ?? {}
 
   const baseUrl = apiBaseUrl(__NEXTAUTH)
+  // Abort in-flight session fetches before and after the sign-out request, so
+  // a stale response cannot resurrect the session state — or, with the JWT
+  // strategy, re-issue a rolling session cookie that outlives the sign-out.
+  abortFetches(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
@@ -353,6 +364,7 @@ export async function signOut<R extends boolean = true>(
     body: new URLSearchParams({ csrfToken, callbackUrl: redirectTo }),
   })
   const data = await res.json()
+  abortFetches(__NEXTAUTH)
 
   broadcast().postMessage({ event: "session", data: { trigger: "signout" } })
 
@@ -413,10 +425,16 @@ export function SessionProvider(props: SessionProviderProps) {
         // or if there are events from other tabs/windows
         if (storageEvent || __NEXTAUTH._session === undefined) {
           __NEXTAUTH._lastSync = now()
-          __NEXTAUTH._session = await getSession({
+          const controller = (__NEXTAUTH._abort ??= new AbortController())
+          const session = await getSession({
             broadcast: !storageEvent,
+            signal: controller.signal,
           })
-          setSession(__NEXTAUTH._session)
+          // The auth state changed (e.g. `signOut`) while this fetch was in
+          // flight; its result is stale and must not overwrite the new state.
+          if (controller.signal.aborted) return
+          __NEXTAUTH._session = session
+          setSession(session)
           return
         }
 
@@ -438,9 +456,13 @@ export function SessionProvider(props: SessionProviderProps) {
 
         // An event or session staleness occurred, update the client session.
         __NEXTAUTH._lastSync = now()
-        __NEXTAUTH._session = await getSession()
-        setSession(__NEXTAUTH._session)
+        const controller = (__NEXTAUTH._abort ??= new AbortController())
+        const session = await getSession({ signal: controller.signal })
+        if (controller.signal.aborted) return
+        __NEXTAUTH._session = session
+        setSession(session)
       } catch (error) {
+        if ((error as Error).name === "AbortError") return
         logger.error(
           new ClientSessionError((error as Error).message, error as any)
         )
@@ -452,6 +474,7 @@ export function SessionProvider(props: SessionProviderProps) {
     __NEXTAUTH._getSession()
 
     return () => {
+      abortFetches(__NEXTAUTH)
       __NEXTAUTH._lastSync = 0
       __NEXTAUTH._session = undefined
       __NEXTAUTH._getSession = () => {}

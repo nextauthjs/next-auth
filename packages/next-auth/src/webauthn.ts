@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "./lib/client.js"
+import { abortFetches, apiBaseUrl } from "./lib/client.js"
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import { getCsrfToken, getProviders, __NEXTAUTH } from "./react.js"
 
@@ -111,6 +111,9 @@ export async function signIn<Redirect extends boolean = true>(
   webAuthnBody.action = webAuthnResponse.action
 
   const signInUrl = `${baseUrl}/callback/${provider}?${new URLSearchParams(authorizationParams)}`
+  // Abort in-flight session fetches before and after the sign-in request, so
+  // a stale response cannot overwrite the new session state afterwards.
+  abortFetches(__NEXTAUTH)
   const res = await fetch(signInUrl, {
     method: "post",
     headers: {
@@ -126,6 +129,7 @@ export async function signIn<Redirect extends boolean = true>(
   })
 
   const data = await res.json()
+  abortFetches(__NEXTAUTH)
 
   if (redirect) {
     const url = data.url ?? callbackUrl
