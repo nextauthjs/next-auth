@@ -4,7 +4,7 @@
   "description": "Authentication for Next.js",
   "homepage": "https://nextjs.authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
-  "author": "Balázs Orbán <info@balazsorban.com>",
+  "author": "Bal\u00e1zs Orb\u00e1n <info@balazsorban.com>",
   "contributors": [
     "Iain Collins <me@iaincollins.com>",
     "Nico Domino <yo@ndo.dev>",
@@ -112,5 +112,8 @@
     "next": "15.5.18",
     "nodemailer": "^8.0.5",
     "react": "^18.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }

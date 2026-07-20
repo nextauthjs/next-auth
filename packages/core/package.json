@@ -15,9 +15,9 @@
   ],
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth.git",
-  "author": "Balázs Orbán <info@balazsorban.com>",
+  "author": "Bal\u00e1zs Orb\u00e1n <info@balazsorban.com>",
   "contributors": [
-    "Balázs Orbán <info@balazsorban.com>",
+    "Bal\u00e1zs Orb\u00e1n <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
     "Thang Huu Vu <hi@thvu.dev>",
@@ -110,5 +110,8 @@
     "postcss-nesting": "^12.1.5",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }

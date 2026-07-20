@@ -10,5 +10,13 @@
   "type": "module",
   "dependencies": {
     "unplugin-swc": "^1.4.4"
+  },
+  "homepage": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextauthjs/next-auth.git"
   }
 }

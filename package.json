@@ -189,5 +189,9 @@
     "patchedDependencies": {
       "@balazsorban/monorepo-release@0.5.1": "patches/@balazsorban__monorepo-release@0.5.1.patch"
     }
+  },
+  "homepage": "https://github.com/nextauthjs/next-auth",
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }

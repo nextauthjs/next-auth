@@ -63,5 +63,8 @@
     "typescript": "^5.4.5",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-static-copy": "^2.3.2"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }

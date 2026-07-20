@@ -22,7 +22,7 @@
   "author": "Thang Huu Vu <hi@thvu.dev>",
   "contributors": [
     "Thang Huu Vu <hi@thvu.dev>",
-    "Balázs Orbán <info@balazsorban.com>",
+    "Bal\u00e1zs Orb\u00e1n <info@balazsorban.com>",
     "Nico Domino <yo@ndo.dev>",
     "Lluis Agusti <hi@llu.lu>",
     "Iain Collins <me@iaincollins.com>"
@@ -105,5 +105,8 @@
       "import": "./dist/providers/*.js"
     },
     "./package.json": "./package.json"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }
