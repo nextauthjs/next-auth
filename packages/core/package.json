@@ -14,7 +14,11 @@
     "webapi"
   ],
   "homepage": "https://authjs.dev",
-  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextauthjs/next-auth.git",
+    "directory": "packages/core"
+  },
   "author": "Balázs Orbán <info@balazsorban.com>",
   "contributors": [
     "Balázs Orbán <info@balazsorban.com>",
@@ -110,5 +114,8 @@
     "postcss-nesting": "^12.1.5",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }
