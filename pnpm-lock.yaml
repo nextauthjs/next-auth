@@ -227,9 +227,9 @@ importers:
       '@next-auth/tsconfig': workspace:*
       jest: ^29
       next-auth: workspace:*
-      uuid: ^14.0.0
+      uuid: ^11.1.1
     dependencies:
-      uuid: 14.0.0
+      uuid: 11.1.1
     devDependencies:
       '@mikro-orm/core': 5.9.8_@mikro-orm+sqlite@5.9.8
       '@mikro-orm/sqlite': 5.9.8_@mikro-orm+core@5.9.8
@@ -259,9 +259,9 @@ importers:
       jest: ^27.4.3
       neo4j-driver: ^4.4.0
       next-auth: workspace:*
-      uuid: ^14.0.0
+      uuid: ^11.1.1
     dependencies:
-      uuid: 14.0.0
+      uuid: 11.1.1
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
@@ -415,9 +415,9 @@ importers:
       isomorphic-fetch: 3.0.0
       jest: ^27.4.3
       next-auth: workspace:*
-      uuid: ^14.0.0
+      uuid: ^11.1.1
     dependencies:
-      uuid: 14.0.0
+      uuid: 11.1.1
     devDependencies:
       '@next-auth/adapter-test': link:../adapter-test
       '@next-auth/tsconfig': link:../tsconfig
@@ -491,7 +491,7 @@ importers:
       preact-render-to-string: ^5.1.19
       react: ^18
       react-dom: ^18
-      uuid: ^14.0.0
+      uuid: ^11.1.1
       whatwg-fetch: ^3.6.2
     dependencies:
       '@babel/runtime': 7.25.6
@@ -502,7 +502,7 @@ importers:
       openid-client: 5.7.0
       preact: 10.24.1
       preact-render-to-string: 5.2.6_preact@10.24.1
-      uuid: 14.0.0
+      uuid: 11.1.1
     devDependencies:
       '@auth/core': 0.34.3
       '@babel/cli': 7.25.6_@babel+core@7.25.2
@@ -23883,14 +23883,14 @@ packages:
     engines: {node: '>= 0.4.0'}
     dev: true
 
-  /uuid/14.0.0:
-    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+  /uuid/11.1.1:
+    resolution: {integrity: sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==}
     hasBin: true
     dev: false
 
   /uuid/3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
     dev: true
 

@@ -96,7 +96,7 @@
     "openid-client": "^5.4.0",
     "preact": "^10.6.3",
     "preact-render-to-string": "^5.1.19",
-    "uuid": "^14.0.0"
+    "uuid": "^11.1.1"
   },
   "peerDependencies": {
     "@auth/core": "0.34.3",
