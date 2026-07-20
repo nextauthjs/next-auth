@@ -44,7 +44,7 @@
     "next-auth": "workspace:*"
   },
   "dependencies": {
-    "uuid": "^14.0.0"
+    "uuid": "^11.1.1"
   },
   "jest": {
     "preset": "@next-auth/adapter-test/jest"
