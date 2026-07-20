@@ -56,6 +56,29 @@ html[data-theme="dark"] svg[id^="mermaid-svg"] text[id*="-attr"] {
   fill: var(--ifm-background-color) !important;
 }
 
+html[data-theme="dark"] .mermaid svg rect.actor {
+  fill: #1f2020 !important;
+  stroke: #ccc !important;
+}
+
+html[data-theme="dark"] .mermaid svg text {
+  fill: lightgrey !important;
+}
+
+html[data-theme="dark"] .mermaid svg tspan {
+  fill: lightgrey !important;
+}
+
+html[data-theme="dark"] .mermaid svg line,
+html[data-theme="dark"] .mermaid svg path {
+  stroke: lightgrey !important;
+}
+
+html[data-theme="dark"] .mermaid svg rect.note {
+  fill: #3e3f3f !important;
+  stroke: #ccc !important;
+}
+
 @import "hero.css";
 @import "admonitions.css";
 @import "buttons.css";
