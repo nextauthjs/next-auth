@@ -29,7 +29,7 @@ export async function signCookie(
     value: await jwt.encode({
       ...options.jwt,
       maxAge,
-      token: { value },
+      token: { value, provider: options.provider.id },
       salt: name,
     }),
     options: { ...cookies[type].options, expires },
@@ -87,6 +87,11 @@ export const pkce = {
     if (!value?.value)
       throw new TypeError("PKCE code_verifier value could not be parsed.")
 
+    if (value.provider !== options.provider?.id)
+      throw new TypeError(
+        `${name} cookie was created for a different provider than the one handling the callback.`
+      )
+
     resCookies.push({
       name,
       value: "",
@@ -138,6 +143,11 @@ export const state = {
 
     if (!value?.value) throw new TypeError("State value could not be parsed.")
 
+    if (value.provider !== options.provider?.id)
+      throw new TypeError(
+        `${name} cookie was created for a different provider than the one handling the callback.`
+      )
+
     resCookies.push({
       name,
       value: "",
@@ -187,6 +197,11 @@ export const nonce = {
     })) as any
 
     if (!value?.value) throw new TypeError("Nonce value could not be parsed.")
+
+    if (value.provider !== options.provider?.id)
+      throw new TypeError(
+        `${name} cookie was created for a different provider than the one handling the callback.`
+      )
 
     resCookies.push({
       name,
