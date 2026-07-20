@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "./lib/client.js"
+import { abortFetches, apiBaseUrl } from "./lib/client.js"
 import { startAuthentication, startRegistration } from "@simplewebauthn/browser"
 import { getCsrfToken, getProviders, __NEXTAUTH } from "./react.js"
 
@@ -111,6 +111,8 @@ export async function signIn<Redirect extends boolean = true>(
   webAuthnBody.action = webAuthnResponse.action
 
   const signInUrl = `${baseUrl}/callback/${provider}?${new URLSearchParams(authorizationParams)}`
+  // A stale session response must not overwrite the new session state.
+  abortFetches(__NEXTAUTH)
   const res = await fetch(signInUrl, {
     method: "post",
     headers: {
@@ -126,6 +128,8 @@ export async function signIn<Redirect extends boolean = true>(
   })
 
   const data = await res.json()
+  // Also abort fetches that started while the request was running.
+  abortFetches(__NEXTAUTH)
 
   if (redirect) {
     const url = data.url ?? callbackUrl
@@ -138,9 +142,9 @@ export async function signIn<Redirect extends boolean = true>(
   const error = new URL(data.url).searchParams.get("error")
   const code = new URL(data.url).searchParams.get("code")
 
-  if (res.ok) {
-    await __NEXTAUTH._getSession({ event: "storage" })
-  }
+  // Refetch even if the sign-in failed: the aborts above may have discarded
+  // a legitimate in-flight session update that must be replayed.
+  await __NEXTAUTH._getSession({ event: "storage" })
 
   return {
     error,

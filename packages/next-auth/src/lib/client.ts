@@ -25,6 +25,8 @@ export interface AuthClientConfig {
    * trigger session updates from places like `signIn` or `signOut`
    */
   _getSession: (...args: any[]) => any
+  /** Lets auth-state changes (`signIn`, `signOut`) abort the in-flight session fetch */
+  _abort?: AbortController | null
 }
 
 export interface UseSessionOptions<R extends boolean> {
@@ -149,6 +151,7 @@ export async function fetchData<T = any>(
         "Content-Type": "application/json",
         ...(req?.headers?.cookie ? { cookie: req.headers.cookie } : {}),
       },
+      ...(req?.signal ? { signal: req.signal } : {}),
     }
 
     if (req?.body) {
@@ -161,9 +164,24 @@ export async function fetchData<T = any>(
     if (!res.ok) throw data
     return data
   } catch (error) {
+    if ((error as Error)?.name === "AbortError") throw error
     logger.error(new ClientFetchError((error as Error).message, error as any))
     return null
   }
+}
+
+/**
+ * Aborts the in-flight session fetch so its (now stale) result — and the
+ * rolling session cookie the server attaches to `GET /session` responses —
+ * is discarded instead of overwriting a newer auth state. Auth-mutating
+ * requests (`signIn`, `signOut`) call this before and after their POST,
+ * which narrows the race window rather than closing it: responses whose
+ * headers already arrived and other tabs' fetches are out of reach.
+ * @internal
+ */
+export function abortFetches(__NEXTAUTH: AuthClientConfig) {
+  __NEXTAUTH._abort?.abort()
+  __NEXTAUTH._abort = null
 }
 
 /** @internal */
