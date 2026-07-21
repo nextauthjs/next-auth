@@ -1,19 +1,24 @@
 {
   "frameworks": [
     {
-      "id": "Next.js",
-      "name": "Auth.js",
+      "id": "nextjs",
+      "name": "Next.js",
       "url": "next-auth-example"
     },
     {
       "id": "sveltekit",
-      "name": "SvelteKit Auth",
+      "name": "SvelteKit",
       "url": "sveltekit-auth-example"
     },
     {
-      "id": "solidstart",
-      "name": "SolidStart Auth",
-      "url": "auth-solid"
+      "id": "express",
+      "name": "Express",
+      "url": "express-auth-example"
+    },
+    {
+      "id": "qwik",
+      "name": "Qwik",
+      "url": "qwik-auth-example"
     }
   ],
   "adapters": {
