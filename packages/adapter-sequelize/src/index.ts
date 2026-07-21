@@ -55,14 +55,37 @@ export interface SequelizeAdapterOptions {
     Account: ModelCtor<AccountInstance>
     Session: ModelCtor<SessionInstance>
     VerificationToken: ModelCtor<VerificationTokenInstance>
-  }>
+  }>;
+  /**
+   * Override the default model {@link https://sequelize.org/docs/v6/core-concepts/assocs/ associations}
+   *
+   * Default Associations:
+   * ```ts
+   * Account.belongsTo(User, { onDelete: "cascade" })
+   * Session.belongsTo(User, { onDelete: "cascade" })
+   * ```
+   *
+   * Example:
+   * ```ts
+   * (User, Account, Session) => {
+   *   Account.belongsTo(User, { onDelete: "cascade", foreignKey: "userId", as: 'user' });
+   *   Session.belongsTo(User, { onDelete: "cascade", foreignKey: "userId", as: 'user' });
+   * }
+   * ```
+   */
+  associations?: (
+    User: ModelCtor<UserInstance>,
+    Account: ModelCtor<AccountInstance>,
+    Session: ModelCtor<SessionInstance>,
+    VerificationToken: ModelCtor<VerificationTokenInstance>
+  ) => void;
 }
 
 export default function SequelizeAdapter(
   client: Sequelize,
   options?: SequelizeAdapterOptions
 ): Adapter {
-  const { models, synchronize = true } = options ?? {}
+  const { models, synchronize = true, associations } = options ?? {}
   const defaultModelOptions = { underscored: true, timestamps: false }
   const { User, Account, Session, VerificationToken } = {
     User:
@@ -111,8 +134,12 @@ export default function SequelizeAdapter(
     }
   }
 
-  Account.belongsTo(User, { onDelete: "cascade" })
-  Session.belongsTo(User, { onDelete: "cascade" })
+  if (associations) {
+    associations(User, Account, Session, VerificationToken);
+  } else {
+    Account.belongsTo(User, { onDelete: 'cascade' });
+    Session.belongsTo(User, { onDelete: 'cascade' });
+  }
 
   return {
     async createUser(user) {
