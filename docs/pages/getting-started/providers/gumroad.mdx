@@ -1,0 +1,112 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/gumroad.svg" height="64" width="64" />
+
+# Gumroad Provider
+
+## Resources
+
+- [Gumroad OAuth documentation](https://gumroad.com/api)
+- [Gumroad OAuth application setup](https://app.gumroad.com/settings/advanced#application-form)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/gumroad.ts)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/gumroad
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/gumroad
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/gumroad
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_GUMROAD_ID
+AUTH_GUMROAD_SECRET
+```
+
+### Configuration
+
+1. Go to [Gumroad Advanced Settings](https://app.gumroad.com/settings/advanced#application-form)
+2. Create a new OAuth application
+3. Add your callback URL
+4. Copy your Client ID and Client Secret
+5. Add them to your `.env.local` file:
+
+```
+AUTH_GUMROAD_ID="your-client-id"
+AUTH_GUMROAD_SECRET="your-client-secret"
+```
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Gumroad from "next-auth/providers/gumroad"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Gumroad],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Gumroad from "@auth/qwik/providers/gumroad"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Gumroad],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Gumroad from "@auth/sveltekit/providers/gumroad"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Gumroad],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Gumroad from "@auth/express/providers/gumroad"
+
+app.use("/auth/*", ExpressAuth({ providers: [Gumroad] }))
+```
+
+  </Code.Express>
+</Code>
