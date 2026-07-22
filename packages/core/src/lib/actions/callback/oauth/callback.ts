@@ -269,7 +269,7 @@ export async function handleOAuth(
     if (userinfo?.request) {
       const _profile = await userinfo.request({ tokens, provider })
       if (_profile instanceof Object) profile = _profile
-    } else if (userinfo?.url) {
+    } else if (as.userinfo_endpoint) {
       const userinfoResponse = await o.userInfoRequest(
         as,
         client,
