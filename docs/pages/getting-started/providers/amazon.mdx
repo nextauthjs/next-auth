@@ -1,0 +1,110 @@
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/amazon.svg" height="64" width="64" />
+
+# Amazon Provider
+
+## Resources
+
+- [Amazon OAuth documentation](https://developer.amazon.com/docs/login-with-amazon/documentation-overview.html)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/auth/callback/amazon
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/amazon
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/amazon
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```bash
+https://example.com/api/auth/callback/amazon
+```
+
+  </Code.Express>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_AMAZON_ID
+AUTH_AMAZON_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Amazon from "next-auth/providers/amazon"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Amazon],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Amazon from "@auth/qwik/providers/amazon"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Amazon],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Amazon from "@auth/sveltekit/providers/amazon"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Amazon],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Amazon from "@auth/express/providers/amazon"
+
+app.use("/auth/*", ExpressAuth({ providers: [Amazon] }))
+```
+
+  </Code.Express>
+</Code>
+
+### Notes
+
+- The Amazon provider requires you to set up your application in the [Amazon Developer Console - Login with Amazon](https://developer.amazon.com/loginwithamazon/console/site/lwa/overview.html).
+- Make sure to configure the correct callback URL in your Amazon app settings, which should match the one provided by your application (e.g., `https://example.com/auth/callback/amazon` for Next.js).
