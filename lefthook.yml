@@ -3,4 +3,6 @@ pre-commit:
   commands:
     format:
       run: pnpm prettier --cache --write {staged_files}
+      exclude:
+        - apps/examples/nextjs/app/api/auth/*
       stage_fixed: true

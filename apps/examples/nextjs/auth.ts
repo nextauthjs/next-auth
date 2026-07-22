@@ -100,7 +100,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     WorkOS({ connection: process.env.AUTH_WORKOS_CONNECTION! }),
     Zoom,
   ],
-  basePath: "/auth",
+  basePath: "/api/auth",
   session: { strategy: "jwt" },
   callbacks: {
     authorized({ request, auth }) {
