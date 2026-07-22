@@ -100,6 +100,8 @@ export type {
   Profile,
   DefaultSession,
   User,
+  ErrorPageParam,
+  SignInPageErrorParam,
 } from "@auth/core/types"
 
 type AppRouteHandlers = Record<
