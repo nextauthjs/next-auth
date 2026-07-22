@@ -202,6 +202,24 @@ export interface OAuth2Config<Profile>
   clientId?: string
   clientSecret?: string
   /**
+   * An async function that returns a client assertion (typically a signed JWT)
+   * to be used instead of a long-lived `clientSecret` when authenticating to the
+   * provider's token endpoint.
+   *
+   * When provided (and no `clientSecret` is set), the token exchange request
+   * will include the following parameters instead of a `client_secret`:
+   * - `client_assertion_type`: `urn:ietf:params:oauth:client-assertion-type:jwt-bearer`
+   * - `client_assertion`: the string returned by this function
+   *
+   * This enables the use of JWT-based client authentication (for example, with
+   * Okta or Microsoft Entra ID) without having to store a long-lived secret.
+   *
+   * The caller is responsible for generating/signing the assertion.
+   *
+   * @see [RFC 7523 - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants](https://www.rfc-editor.org/rfc/rfc7523)
+   */
+  clientAssertionProvider?: () => Awaitable<string>
+  /**
    * Pass overrides to the underlying OAuth library.
    * See [`oauth4webapi` client](https://github.com/panva/oauth4webapi/blob/main/docs/interfaces/Client.md) for details.
    */
