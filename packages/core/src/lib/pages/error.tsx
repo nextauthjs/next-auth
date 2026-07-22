@@ -1,3 +1,4 @@
+import type { JSX } from "preact"
 import type { ErrorPageParam, Theme } from "../../types.js"
 
 /**

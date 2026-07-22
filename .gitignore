@@ -1,8 +1,6 @@
 # Misc
 .DS_Store
 .eslintcache
-.env
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -123,3 +121,4 @@ docs/docs/reference/adapter
 
 ## Drizzle migration folder
 .drizzle
+config.bat

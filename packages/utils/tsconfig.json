@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "declaration": true,
     "declarationMap": true,
     "emitDecoratorMetadata": true,

@@ -51,6 +51,60 @@ export async function handleOAuth(
 ) {
   const { logger, provider } = options
 
+  /**
+   * If the provider supplies a custom `token.request` function, call it
+   * directly and skip the standard OAuth 2.0 authorization-code grant entirely.
+   * This is required for protocols that differ from OAuth 2.0, such as
+   * Steam's OpenID 2.0 flow, where there is no authorization code to exchange
+   * and no token/issuer endpoint to discover.
+   *
+   * This check must happen before the authorization-server setup block below,
+   * which would otherwise crash for providers that have no `token.url` or `issuer`.
+   */
+  if (provider.token?.request) {
+    const resCookies: Cookie[] = []
+    const state = await checks.state.use(cookies, resCookies, options)
+    const codeVerifier = await checks.pkce.use(cookies, resCookies, options)
+    const { userinfo } = provider
+
+    const tokenResponse = await provider.token.request({
+      params: params as Record<string, string | undefined>,
+      checks: { pkce: codeVerifier, state },
+      provider,
+    })
+
+    if (!tokenResponse) {
+      throw new OAuthCallbackError(
+        `Provider "${provider.id}" token.request returned no tokens`
+      )
+    }
+
+    const tokens: TokenSet & Pick<Account, "expires_at"> =
+      tokenResponse.tokens as TokenSet & Pick<Account, "expires_at">
+
+    let profile: Profile = {}
+
+    if (userinfo?.request) {
+      const _profile = await userinfo.request({ tokens, provider })
+      if (_profile instanceof Object) profile = _profile
+    } else if (userinfo?.url) {
+      const userinfoResponse = await fetch(userinfo.url, {
+        headers: { Authorization: `Bearer ${tokens.access_token}` },
+      })
+      profile = await userinfoResponse.json()
+    } else {
+      throw new TypeError("No userinfo endpoint configured")
+    }
+
+    const profileResult = await getUserAndAccount(
+      profile,
+      provider,
+      tokens,
+      logger
+    )
+    return { ...profileResult, profile, cookies: resCookies }
+  }
+
   let as: o.AuthorizationServer
 
   const { token, userinfo } = provider
@@ -156,6 +210,10 @@ export async function handleOAuth(
     redirect_uri = provider.redirectProxyUrl
   }
 
+  let profile: Profile = {}
+
+  const requireIdToken = isOIDCProvider(provider)
+
   let codeGrantResponse = await o.authorizationCodeGrantRequest(
     as,
     client,
@@ -180,10 +238,6 @@ export async function handleOAuth(
       (await provider.token.conform(codeGrantResponse.clone())) ??
       codeGrantResponse
   }
-
-  let profile: Profile = {}
-
-  const requireIdToken = isOIDCProvider(provider)
 
   if (provider[conformInternal]) {
     switch (provider.id) {
