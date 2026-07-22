@@ -129,14 +129,24 @@ Imports from `next-auth/react` are now marked with the [`"use client"`](https://
 ```ts filename="components/clientComponent.tsx"
 'use client';
 
-import { useSession, SessionProvider } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 const ClientComponent = () => {
   const session = useSession();
 
   return (
+    <p>Welcome {session?.user?.name}</p>
+  )
+}
+```
+
+```ts filename="app/layout.tsx"
+import { SessionProvider } from 'next-auth/react';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
     <SessionProvider>
-      <p>Welcome {session?.user?.name}</p>
+      {children}
     </SessionProvider>
   )
 }
