@@ -56,6 +56,15 @@ export async function session(
       const newExpires = fromDate(sessionMaxAge)
 
       if (token !== null) {
+        const sessionUpdateAge = options.session.updateAge
+        // Throttle JWT re-signing based on updateAge (mirrors the database branch).
+        // Formula: (token expiry − sessionMaxAge) + sessionUpdateAge ≤ now
+        const jwtIsDueToBeUpdated =
+          isUpdate ||
+          !payload.exp ||
+          payload.exp * 1000 - sessionMaxAge * 1000 + sessionUpdateAge * 1000 <=
+            Date.now()
+
         // By default, only exposes a limited subset of information to the client
         // as needed for presentation purposes (e.g. "you are logged in as...").
         const session = {
@@ -68,15 +77,15 @@ export async function session(
         // Return session payload as response
         response.body = newSession
 
-        // Refresh JWT expiry by re-signing it, with an updated expiry date
-        const newToken = await jwt.encode({ ...jwt, token, salt })
-
-        // Set cookie, to also update expiry date on cookie
-        const sessionCookies = sessionStore.chunk(newToken, {
-          expires: newExpires,
-        })
-
-        response.cookies?.push(...sessionCookies)
+        if (jwtIsDueToBeUpdated) {
+          // Refresh JWT expiry by re-signing it, with an updated expiry date
+          const newToken = await jwt.encode({ ...jwt, token, salt })
+          // Set cookie, to also update expiry date on cookie
+          const sessionCookies = sessionStore.chunk(newToken, {
+            expires: newExpires,
+          })
+          response.cookies?.push(...sessionCookies)
+        }
 
         await events.session?.({ session: newSession, token })
       } else {
