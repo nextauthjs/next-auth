@@ -107,6 +107,7 @@
         "@auth/mongodb-adapter#build",
         "@auth/neo4j-adapter#build",
         "@auth/pg-adapter#build",
+        "@auth/postgresjs-adapter#build",
         "@auth/pouchdb-adapter#build",
         "@auth/prisma-adapter#build",
         "@auth/sequelize-adapter#build",
