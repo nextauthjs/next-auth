@@ -2,8 +2,29 @@ import { JWTSessionError, SessionTokenError } from "../../errors.js"
 import { fromDate } from "../utils/date.js"
 
 import type { Adapter } from "../../adapters.js"
-import type { InternalOptions, ResponseInternal, Session } from "../../types.js"
+import type { InternalOptions, ResponseInternal, Session, User } from "../../types.js"
 import type { Cookie, SessionStore } from "../utils/cookie.js"
+import type { JWT } from "../../jwt.js"
+
+/**
+ * Resolve the maxAge value for session cookies.
+ * Handles static values, "session" for session cookies, and dynamic functions.
+ */
+async function resolveMaxAge(
+  maxAge: InternalOptions["session"]["maxAge"],
+  params: {
+    user?: User
+    token?: JWT
+    trigger?: "signIn" | "signUp" | "update"
+    isNewUser?: boolean
+    session?: any
+  }
+): Promise<number | "session"> {
+  if (typeof maxAge === "function") {
+    return await maxAge(params)
+  }
+  return maxAge
+}
 
 /** Return a session object filtered via `callbacks.session` */
 export async function session(
@@ -53,7 +74,15 @@ export async function session(
         session: newSession,
       })
 
-      const newExpires = fromDate(sessionMaxAge)
+      const resolvedMaxAge = await resolveMaxAge(sessionMaxAge, {
+        token,
+        trigger: isUpdate ? "update" : undefined,
+        session: newSession,
+      })
+
+      const newExpires = resolvedMaxAge === "session" 
+        ? fromDate(30 * 24 * 60 * 60) // Use a default for internal calculations
+        : fromDate(resolvedMaxAge)
 
       if (token !== null) {
         // By default, only exposes a limited subset of information to the client
@@ -72,9 +101,12 @@ export async function session(
         const newToken = await jwt.encode({ ...jwt, token, salt })
 
         // Set cookie, to also update expiry date on cookie
-        const sessionCookies = sessionStore.chunk(newToken, {
-          expires: newExpires,
-        })
+        const cookieOptions: { expires?: Date } = {}
+        if (resolvedMaxAge !== "session") {
+          cookieOptions.expires = newExpires
+        }
+        
+        const sessionCookies = sessionStore.chunk(newToken, cookieOptions)
 
         response.cookies?.push(...sessionCookies)
 
@@ -110,15 +142,26 @@ export async function session(
       const { user, session } = userAndSession
 
       const sessionUpdateAge = options.session.updateAge
+
+      // Resolve maxAge for database sessions
+      const resolvedMaxAge = await resolveMaxAge(sessionMaxAge, {
+        user,
+        trigger: isUpdate ? "update" : undefined,
+        session: newSession,
+      })
+
+      // For database sessions, we need a numeric value
+      const numericMaxAge = resolvedMaxAge === "session" ? sessionMaxAge : resolvedMaxAge
+      
       // Calculate last updated date to throttle write updates to database
       // Formula: ({expiry date} - sessionMaxAge) + sessionUpdateAge
       //     e.g. ({expiry date} - 30 days) + 1 hour
       const sessionIsDueToBeUpdatedDate =
         session.expires.valueOf() -
-        sessionMaxAge * 1000 +
+        numericMaxAge * 1000 +
         sessionUpdateAge * 1000
 
-      const newExpires = fromDate(sessionMaxAge)
+      const newExpires = fromDate(numericMaxAge)
       // Trigger update of session expiry date and write to database, only
       // if the session was last updated more than {sessionUpdateAge} ago
       if (sessionIsDueToBeUpdatedDate <= Date.now()) {
@@ -143,13 +186,15 @@ export async function session(
       response.body = sessionPayload
 
       // Set cookie again to update expiry
+      const cookieOptions = { ...options.cookies.sessionToken.options }
+      if (resolvedMaxAge !== "session") {
+        cookieOptions.expires = newExpires
+      }
+      
       response.cookies?.push({
         name: options.cookies.sessionToken.name,
         value: sessionToken,
-        options: {
-          ...options.cookies.sessionToken.options,
-          expires: newExpires,
-        },
+        options: cookieOptions,
       })
 
       // @ts-expect-error
