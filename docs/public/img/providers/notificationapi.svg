@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="336" height="315" viewBox="0 0 336 315">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clip-Artboard_16);
+      }
+
+      .cls-2 {
+        fill: #021928;
+      }
+
+      .cls-3 {
+        fill: red;
+      }
+
+      .cls-4 {
+        filter: url(#Ellipse_1);
+      }
+    </style>
+    <filter id="Ellipse_1" x="188.001" y="33.001" width="104" height="104" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feFlood flood-opacity="0.149"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clip-Artboard_16">
+      <rect width="336" height="315"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_16" data-name="Artboard – 16" class="cls-1">
+    <g id="Group_9" data-name="Group 9" transform="translate(-658.999 -111.999)">
+      <path id="Subtraction_1" data-name="Subtraction 1" class="cls-2" d="M20435,15153h-100a49.958,49.958,0,0,1-50-50v-100a49.961,49.961,0,0,1,50-50h93.809a41.8,41.8,0,0,0,8.2,46.842,40.861,40.861,0,0,0,13.033,8.894,40.578,40.578,0,0,0,34.961-1.455V15103a49.958,49.958,0,0,1-50,50Z" transform="translate(-19567 -14774)"/>
+      <g class="cls-4" transform="matrix(1, 0, 0, 1, 659, 112)">
+        <circle id="Ellipse_1-2" data-name="Ellipse 1" class="cls-3" cx="37" cy="37" r="37" transform="translate(203 48)"/>
+      </g>
+    </g>
+  </g>
+</svg>
