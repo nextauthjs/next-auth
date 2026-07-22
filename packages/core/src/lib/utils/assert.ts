@@ -110,7 +110,8 @@ export function assertConfig(
   }
 
   const { callbackUrl: defaultCallbackUrl } = defaultCookies(
-    options.useSecureCookies ?? url.protocol === "https:"
+    options.useSecureCookies ?? url.protocol === "https:",
+    options.useStrictCookies ?? false
   )
   const callbackUrlCookie =
     request.cookies?.[
