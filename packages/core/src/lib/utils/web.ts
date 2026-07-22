@@ -1,14 +1,12 @@
 import * as cookie from "../vendored/cookie.js"
 import { UnknownAction } from "../../errors.js"
-import { setLogger } from "./logger.js"
-
 import type {
   AuthAction,
+  AuthConfigInternal,
   RequestInternal,
   ResponseInternal,
 } from "../../types.js"
 import { isAuthAction } from "./actions.js"
-import type { AuthConfig } from "../../index.js"
 
 const { parse: parseCookie, serialize: serializeCookie } = cookie
 
@@ -26,7 +24,7 @@ async function getBody(req: Request): Promise<Record<string, any> | undefined> {
 
 export async function toInternalRequest(
   req: Request,
-  config: AuthConfig
+  config: AuthConfigInternal
 ): Promise<RequestInternal | undefined> {
   try {
     if (req.method !== "GET" && req.method !== "POST")
@@ -54,9 +52,8 @@ export async function toInternalRequest(
       query: Object.fromEntries(url.searchParams),
     }
   } catch (e) {
-    const logger = setLogger(config)
-    logger.error(e as Error)
-    logger.debug("request", req)
+    config.logger.error(e as Error)
+    config.logger.debug("request", req)
   }
 }
 

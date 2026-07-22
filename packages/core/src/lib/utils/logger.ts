@@ -63,12 +63,13 @@ export function setLogger(
     ...defaultLogger,
   }
 
-  // Turn off debug logging if `debug` isn't set to `true`
-  if (!config.debug) newLogger.debug = () => {}
-
   if (config.logger?.error) newLogger.error = config.logger.error
   if (config.logger?.warn) newLogger.warn = config.logger.warn
-  if (config.logger?.debug) newLogger.debug = config.logger.debug
+
+  // Disable debug logging if `debug` is not explicitly set to `true`, even if a custom logger is provided
+  if (!config.debug) newLogger.debug = () => {}
+  if (config.debug && config.logger?.debug)
+    newLogger.debug = config.logger.debug
 
   config.logger ??= newLogger
   return newLogger
