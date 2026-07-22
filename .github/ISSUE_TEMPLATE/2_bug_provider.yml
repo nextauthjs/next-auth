@@ -104,6 +104,7 @@ body:
         - "Yandex"
         - "Zoho"
         - "Zoom"
+        - "Ztrust"
     validations:
       required: true
   - type: textarea
