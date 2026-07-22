@@ -331,6 +331,16 @@ export interface Adapter {
   linkAccount?(
     account: AdapterAccount
   ): Promise<void> | Awaitable<AdapterAccount | null | undefined>
+  /**
+   * This method is invoked internally.
+   * It is called when connected with a user, a signin-in process happens on another account that already have been created (and has its own user)
+   * The purpose of this method is to allow changing the behaviour of trying to "link" an account that already exists
+   * Returning a falsy value will result in the signin-in process erroring, explicitely saying it's not possible to link an account already used
+   */
+  linkAccountOverride?(
+    connectedUser: AdapterUser,
+    account: AdapterAccount
+  ): Promise<void> | Awaitable<AdapterAccount | null | undefined>
   /** @todo This method is currently not invoked yet. */
   unlinkAccount?(
     providerAccountId: Pick<AdapterAccount, "provider" | "providerAccountId">
