@@ -59,6 +59,36 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+```ts filename="./auth.ts"
+import { Auth } from "@auth/core"
+import Auth0 from "@auth/core/providers/auth0"
+import express, { Request, Response } from "express"
+
+const app = express()
+
+app.use("/auth", async (req: Request, res: Response) => {
+  const request = new Request(`http://localhost:3000${req.url}`, {
+    headers: req.headers as HeadersInit,
+    method: req.method,
+    body: req.method === "POST" ? req.body : undefined,
+  })
+
+  const response = await Auth(request, {
+    providers: [
+      Auth0({
+        authorization: {
+          params: { scope: "openid custom_scope" }
+        }
+      })
+    ],
+  })
+
+  response.headers.forEach((value, key) => res.setHeader(key, value))
+  res.status(response.status).send(await response.text())
+})
+```
+</Code.Express>
 </Code>
 
 Another example, the `profile` callback will return `name`, `email` and `picture` by default, but you might want to return more information from the provider. What you return will be used to create the user object in the database.
@@ -124,6 +154,45 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./auth.ts"
+import { Auth } from "@auth/core"
+import Auth0 from "@auth/core/providers/auth0"
+import express, { Request, Response } from "express"
+
+const app = express()
+
+app.use("/auth", async (req: Request, res: Response) => {
+  const request = new Request(`http://localhost:3000${req.url}`, {
+    headers: req.headers as HeadersInit,
+    method: req.method,
+    body: req.method === "POST" ? req.body : undefined,
+  })
+
+  const response = await Auth(request, {
+    providers: [
+      Auth0({
+        async profile(profile) {
+          return {
+            id: profile.sub,
+            name: profile.name,
+            email: profile.email,
+            image: profile.picture,
+          }
+        }
+      })
+    ],
+  })
+
+  response.headers.forEach((value, key) => res.setHeader(key, value))
+  res.status(response.status).send(await response.text())
+})
+```
+</Code.Express>
+
+
+
 </Code>
 
 ## Use your own provider
@@ -194,6 +263,38 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./auth.ts"
+import { Auth } from "@auth/core"
+import express, { Request, Response } from "express"
+
+const app = express()
+
+app.use("/auth", async (req: Request, res: Response) => {
+  const request = new Request(`http://localhost:3000${req.url}`, {
+    headers: req.headers as HeadersInit,
+    method: req.method,
+    body: req.method === "POST" ? req.body : undefined,
+  })
+
+  const response = await Auth(request, {
+    providers: [{
+      id: "my-provider",
+      name: "My Provider",
+      type: "oidc",
+      issuer: "https://my.oidc-provider.com",
+      clientId: process.env.AUTH_CLIENT_ID!,
+      clientSecret: process.env.AUTH_CLIENT_SECRET!,
+    }]
+  })
+
+  response.headers.forEach((value, key) => res.setHeader(key, value))
+  res.status(response.status).send(await response.text())
+})```
+```
+</Code.Express>
+
 </Code>
 
 Then, set the [callback URL](https://www.ietf.org/archive/id/draft-ietf-oauth-v2-1-07.html#name-client-redirection-endpoint) in your provider's dashboard to `https://app.com/{basePath}/callback/{id}`.
