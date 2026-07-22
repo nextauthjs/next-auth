@@ -35,7 +35,40 @@ export async function toInternalRequest(
     // Defaults are usually set in the `init` function, but this is needed below
     config.basePath ??= "/auth"
 
-    const url = new URL(req.url)
+    const headers = Object.fromEntries(req.headers)
+    const forwardedHost = headers["x-forwarded-host"]
+    const forwardedProto = headers["x-forwarded-proto"]
+
+    // Determine if we should trust forwarded headers
+    // This mirrors the logic in setEnvDefaults but works before config is fully initialized
+    const envObject =
+      typeof process !== "undefined" && process.env ? process.env : {}
+    const trustHost =
+      config.trustHost ??
+      !!(
+        envObject.AUTH_URL ??
+        envObject.AUTH_TRUST_HOST ??
+        envObject.VERCEL ??
+        envObject.CF_PAGES ??
+        envObject.NODE_ENV !== "production"
+      )
+
+    // Construct URL from forwarded headers if in trusted environment
+    // This is necessary because req.url may contain internal pod/service names in proxied environments
+    let url: URL
+    if (trustHost && forwardedHost && forwardedProto) {
+      const originalUrl = new URL(req.url)
+      const protocol = forwardedProto.endsWith(":")
+        ? forwardedProto
+        : `${forwardedProto}:`
+      // Construct a completely new URL using the forwarded host/proto
+      // This avoids issues where req.url contains internal kubernetes service names
+      url = new URL(
+        `${protocol}//${forwardedHost}${originalUrl.pathname}${originalUrl.search}`
+      )
+    } else {
+      url = new URL(req.url)
+    }
 
     const { action, providerId } = parseActionAndProviderId(
       url.pathname,
@@ -47,7 +80,7 @@ export async function toInternalRequest(
       action,
       providerId,
       method: req.method,
-      headers: Object.fromEntries(req.headers),
+      headers,
       body: req.body ? await getBody(req) : undefined,
       cookies: parseCookie(req.headers.get("cookie") ?? "") ?? {},
       error: url.searchParams.get("error") ?? undefined,
