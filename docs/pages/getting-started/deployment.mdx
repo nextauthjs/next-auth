@@ -14,7 +14,7 @@ import { Accordion, Accordions } from "@/components/Accordion"
 Auth.js libraries require you to set an `AUTH_SECRET` environment variable. This is used to encrypt cookies and tokens. It should be a cryptographically secure random string of at least 32 characters:
 
 ```bash npm2yarn
-npm exec auth secret
+npx auth secret
 ```
 
 If you are using an [OAuth Provider](/concepts/oauth), your provider will provide you with a **Client ID** and **Client Secret** that you will need to set as environment variables as well (in the case of an OIDC provider, like Auth0, a third `issuer` value might be also required, refer to the provider's specific documentation).
