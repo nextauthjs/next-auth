@@ -1,0 +1,107 @@
+---
+title: AuthKit (WorkOS)
+---
+
+import { Callout } from "nextra/components"
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/authkit.svg" height="64" width="64" />
+
+# AuthKit Provider
+
+## Resources
+
+- [AuthKit (WorkOS) documentation](https://workos.com/docs/reference/user-management)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/authkit
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/authkit
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/authkit
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_AUTHKIT_ID
+AUTH_AUTHKIT_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import AuthKit from "next-auth/providers/authkit"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [AuthKit({ authkitProvider: "authkit", screenHint: "sign-in" })],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+  
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import AuthKit from "@auth/qwik/providers/authkit"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [AuthKit({ authkitProvider: "authkit", screenHint: "sign-in" })],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import AuthKit from "@auth/sveltekit/providers/authkit"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [AuthKit({ authkitProvider: "authkit", screenHint: "sign-in" })],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import AuthKit from "@auth/express/providers/authkit"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [AuthKit({ authkitProvider: "authkit", screenHint: "sign-in" })],
+  })
+)
+```
+
+  </Code.Express>
+</Code>
