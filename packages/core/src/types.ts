@@ -320,6 +320,7 @@ export interface PublicProvider {
  *   - **`GET`**: Returns the options for the WebAuthn authentication and registration flows.
  */
 export type AuthAction =
+  | "_log"
   | "callback"
   | "csrf"
   | "error"
