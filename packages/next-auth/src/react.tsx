@@ -87,7 +87,7 @@ function getNewBroadcastChannel() {
   return new BroadcastChannel("next-auth")
 }
 
-function broadcast() {
+export function broadcast() {
   if (broadcastChannel === null) {
     broadcastChannel = getNewBroadcastChannel()
   }
