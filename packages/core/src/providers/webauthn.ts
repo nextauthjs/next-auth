@@ -251,13 +251,15 @@ const getUserInfo: GetUserInfo = async (options, request) => {
   // If email is not provided, return null
   if (!email || typeof email !== "string") return null
 
-  const existingUser = await adapter.getUserByEmail(email)
+  const normalizedEmail = email.toLowerCase().trim()
+
+  const existingUser = await adapter.getUserByEmail(normalizedEmail)
   if (existingUser) {
     return { user: existingUser, exists: true }
   }
 
   // If the user does not exist, return a new user info.
-  return { user: { email }, exists: false }
+  return { user: { email: normalizedEmail }, exists: false }
 }
 
 /**
