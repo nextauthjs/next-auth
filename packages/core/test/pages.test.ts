@@ -4,6 +4,33 @@ import { authOptions } from "./fixtures/pages"
 import { init } from "../src/lib/init"
 
 describe("pages", () => {
+  describe("error", () => {
+    beforeEach(() => {
+      vi.resetAllMocks()
+    })
+
+    it("should generate correct signin URL on error page", async () => {
+      // Generated when visiting `/auth/error?error=AccessDenied`
+      const { options } = await init({
+        authOptions,
+        action: "error",
+        providerId: "github",
+        url: new URL("http://localhost:3000/auth/error?error=AccessDenied"),
+        cookies: {},
+        isPost: false,
+        csrfDisabled: true,
+      })
+
+      const render = renderPage({ ...options, query: {}, cookies: [] })
+      const errorPage = render.error("AccessDenied")
+
+      // The signin link should point to /auth/signin, not /auth/error?error=AccessDenied/signin
+      expect(errorPage.body).toContain(
+        `href="http://localhost:3000/auth/signin"`
+      )
+      expect(errorPage.body).not.toContain(`error=AccessDenied/signin`)
+    })
+  })
   describe("sign-out", () => {
     beforeEach(() => {
       vi.resetAllMocks()

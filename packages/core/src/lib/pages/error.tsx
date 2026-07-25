@@ -22,7 +22,7 @@ interface ErrorView {
 /** Renders an error page. */
 export default function ErrorPage(props: ErrorProps) {
   const { url, error = "default", theme } = props
-  const signinPageUrl = `${url}/signin`
+  const signinPageUrl = url ? new URL("signin", url).href : "/signin"
 
   const errors: Record<ErrorPageParam | "default", ErrorView> = {
     default: {
