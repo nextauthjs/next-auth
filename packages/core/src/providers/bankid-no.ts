@@ -13,7 +13,7 @@
 import type { OIDCConfig, OIDCUserConfig } from "./index.js"
 
 /**
- * @see [Core conepts - ID Token](https://confluence.bankidnorge.no/confluence/pdoidcl/technical-documentation/core-concepts/id-token)
+ * @see [Core concepts - ID Token](https://confluence.bankidnorge.no/confluence/pdoidcl/technical-documentation/core-concepts/id-token)
  * @see [userinfo](https://confluence.bankidnorge.no/confluence/pdoidcl/technical-documentation/api/userinfo)
  */
 export interface BankIDNorwayProfile {
