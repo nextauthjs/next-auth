@@ -279,7 +279,7 @@ model User {
 
 model Account {
   id                       String  @id @default(cuid())
-  userId                   String  @unique
+  userId                   String
   type                     String
   provider                 String
   providerAccountId        String
@@ -291,7 +291,7 @@ model Account {
   id_token                 String? @db.Text
   session_state            String?
   refresh_token_expires_in Int?
-  user                     User?   @relation(fields: [userId], references: [id])
+  user                     User    @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
