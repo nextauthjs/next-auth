@@ -62,6 +62,7 @@ export const __NEXTAUTH: AuthClientConfig = {
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
   ).path,
+  fetchOptions: {},
   _lastSync: 0,
   _session: undefined,
   _getSession: () => {},
@@ -284,8 +285,10 @@ export async function signIn<Redirect extends boolean = true>(
   const res = await fetch(
     `${signInUrl}?${new URLSearchParams(authorizationParams)}`,
     {
+      ...__NEXTAUTH.fetchOptions,
       method: "post",
       headers: {
+        ...(__NEXTAUTH.fetchOptions.headers || {}),
         "Content-Type": "application/x-www-form-urlencoded",
         "X-Auth-Return-Redirect": "1",
       },
@@ -345,8 +348,10 @@ export async function signOut<R extends boolean = true>(
   const baseUrl = apiBaseUrl(__NEXTAUTH)
   const csrfToken = await getCsrfToken()
   const res = await fetch(`${baseUrl}/signout`, {
+    ...__NEXTAUTH.fetchOptions,
     method: "post",
     headers: {
+      ...(__NEXTAUTH.fetchOptions.headers || {}),
       "Content-Type": "application/x-www-form-urlencoded",
       "X-Auth-Return-Redirect": "1",
     },
@@ -384,9 +389,16 @@ export function SessionProvider(props: SessionProviderProps) {
     throw new Error("React Context is unavailable in Server Components")
   }
 
-  const { children, basePath, refetchInterval, refetchWhenOffline } = props
+  const {
+    children,
+    basePath,
+    fetchOptions,
+    refetchInterval,
+    refetchWhenOffline,
+  } = props
 
   if (basePath) __NEXTAUTH.basePath = basePath
+  if (fetchOptions) __NEXTAUTH.fetchOptions = fetchOptions
 
   /**
    * If session was `null`, there was an attempt to fetch it,
