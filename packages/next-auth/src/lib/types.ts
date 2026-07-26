@@ -22,7 +22,7 @@ export type AppRouteHandlerFn = (
    * dynamic route).
    */
   ctx: AppRouteHandlerFnContext
-) => void | Response | Promise<void | Response>
+) => void | null | Response | Promise<void | Response>
 
 export type AppRouteHandlers = Record<
   "GET" | "POST",
