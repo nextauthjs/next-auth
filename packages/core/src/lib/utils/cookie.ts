@@ -56,15 +56,20 @@ export type SessionToken<T extends "jwt" | "database" = "jwt"> = T extends "jwt"
  *
  * @TODO Review cookie settings (names, options)
  */
-export function defaultCookies(useSecureCookies: boolean) {
+export function defaultCookies(
+  useSecureCookies: boolean,
+  useStrictCookies: boolean
+) {
   const cookiePrefix = useSecureCookies ? "__Secure-" : ""
+  const sameSite = useStrictCookies ? "strict" : "lax"
+
   return {
     // default cookie options
     sessionToken: {
       name: `${cookiePrefix}authjs.session-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
       },
@@ -73,7 +78,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       name: `${cookiePrefix}authjs.callback-url`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
       },
@@ -84,7 +89,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       name: `${useSecureCookies ? "__Host-" : ""}authjs.csrf-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
       },
@@ -93,7 +98,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       name: `${cookiePrefix}authjs.pkce.code_verifier`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
         maxAge: 60 * 15, // 15 minutes in seconds
@@ -103,7 +108,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       name: `${cookiePrefix}authjs.state`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
         maxAge: 60 * 15, // 15 minutes in seconds
@@ -113,7 +118,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       name: `${cookiePrefix}authjs.nonce`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
       },
@@ -122,7 +127,7 @@ export function defaultCookies(useSecureCookies: boolean) {
       name: `${cookiePrefix}authjs.challenge`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite,
         path: "/",
         secure: useSecureCookies,
         maxAge: 60 * 15, // 15 minutes in seconds
