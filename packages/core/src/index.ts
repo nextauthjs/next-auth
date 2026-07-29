@@ -44,7 +44,6 @@ import {
   isClientError,
 } from "./errors.js"
 import { AuthInternal, raw, skipCSRFCheck } from "./lib/index.js"
-import { setEnvDefaults, createActionURL } from "./lib/utils/env.js"
 import renderPage from "./lib/pages/index.js"
 import { setLogger, type LoggerInstance } from "./lib/utils/logger.js"
 import { toInternalRequest, toResponse } from "./lib/utils/web.js"
@@ -68,7 +67,14 @@ import { JWT, JWTOptions } from "./jwt.js"
 import { isAuthAction } from "./lib/utils/actions.js"
 
 export { customFetch } from "./lib/symbols.js"
-export { skipCSRFCheck, raw, setEnvDefaults, createActionURL, isAuthAction }
+export {
+  setEnvDefaults,
+  collectEnvSecrets,
+  applyEnvSecrets,
+  applyEnvSettings,
+  createActionURL,
+} from "./lib/utils/env.js"
+export { skipCSRFCheck, raw, isAuthAction }
 
 export async function Auth(
   request: Request,
