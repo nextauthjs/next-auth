@@ -119,5 +119,8 @@
   },
   "bugs": {
     "url": "https://github.com/nextauthjs/next-auth/issues"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
