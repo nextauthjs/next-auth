@@ -89,6 +89,14 @@ This login mechanism starts by the user providing their email address at the log
         <img className="size-16" src={`/img/providers/mailgun.svg`} />
         <div className="text-sm text-center">Mailgun</div>
       </RichTabs.Trigger>
+      <RichTabs.Trigger
+        value="supersendtx"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16" src={`/img/providers/supersendtx.svg`} />
+        <div className="text-sm text-center">SuperSend TX</div>
+      </RichTabs.Trigger>
     </RichTabs.List>
   <RichTabs.Content
     orientation="vertical"
@@ -1341,5 +1349,127 @@ Start your application, once the user enters their Email and clicks on the signi
 For more information on this provider go to the [Mailgun docs page](/getting-started/providers/mailgun).
 
 </RichTabs.Content>
+<RichTabs.Content
+  orientation="vertical"
+  value="supersendtx"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
+
+### SuperSend TX Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Install
+
+```bash
+npm install supersendtx-authjs supersendtx
+```
+
+### Setup Environment Variables
+
+```bash filename=".env"
+AUTH_SUPERSENDTX_KEY=stx_…
+```
+
+You can also use `SUPERSENDTX_API_KEY`. Pass `apiKey` manually if you use a different name.
+
+### Setup Provider
+
+Enable SuperSend TX as a sign-in option. Import the provider from `supersendtx-authjs` (not from `next-auth/providers`):
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import SuperSendTX from "supersendtx-authjs"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: ...,
+  providers: [
+    SuperSendTX({
+      from: "noreply@yourdomain.com",
+    }),
+  ],
+})
+```
+
+</Code.Next>
+</Code>
+
+Verify a sending domain in your [SuperSend TX](https://supersendtx.com) account and use that domain in `from`.
+
+### Add Signin Button
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("supersendtx", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Sign in with email</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  return (
+    <form
+      action={(formData: FormData) => {
+        signIn("supersendtx", formData)
+      }}
+    >
+      <label htmlFor="email-supersendtx">
+        Email
+        <input type="email" id="email-supersendtx" name="email" />
+      </label>
+      <input type="submit" value="Sign in with email" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
+</Code>
+
+### Signin
+
+Start your application. Once the user enters their email and clicks sign in, they'll be asked to check their email. When they click the link, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  See the [SuperSend TX provider docs](/getting-started/providers/supersendtx)
+  and the [full guide](https://docs.supersendtx.com/guides/authjs) for
+  customization options.
+</Callout>
+
+For more information on this provider go to the [SuperSend TX docs page](/getting-started/providers/supersendtx).
+
+</RichTabs.Content>
+
 </RichTabs>
 </div>
