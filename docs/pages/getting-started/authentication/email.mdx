@@ -697,6 +697,28 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import Nodemailer from "@auth/express/providers/nodemailer"
+import express from "express"
+
+const app = express()
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Nodemailer({
+        server: process.env.EMAIL_SERVER,
+        from: process.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Express>
 </Code>
 
   </Tabs.Tab>
@@ -790,10 +812,45 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import Nodemailer from "@auth/express/providers/nodemailer"
+import express from "express"
+
+const app = express()
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Nodemailer({
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: process.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: process.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Express>
 </Code>
 
   </Tabs.Tab>
 </Tabs>
+
+<Callout type="info">
+  For local development you can point this at an SMTP catcher on your own
+  machine instead of a real provider — see [Testing magic links
+  locally](/guides/local-email-testing).
+</Callout>
 
 ### Signin Button
 
@@ -856,6 +913,16 @@ export default component$(() => {
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```html filename="views/index.html"
+<nav>
+  <img src="/img/logo.svg" alt="Company Logo" />
+  <a href="/auth/signin">Sign In</a>
+</nav>
+```
+
+</Code.Express>
 </Code>
 
 ### Signin

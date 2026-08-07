@@ -1,0 +1,121 @@
+---
+title: Testing magic links locally
+---
+
+import { Callout, Steps } from "nextra/components"
+
+# Testing magic links locally
+
+The [Nodemailer provider](/getting-started/providers/nodemailer) sends magic links over SMTP, which is awkward in development: you need a real mailbox to receive the link, and every sign-in attempt sends real mail from your machine.
+
+A local SMTP catcher solves this. It speaks SMTP like a real mail server and accepts every message, but delivers none of them — instead it shows what it captured in a web UI, where you can click the link. Nothing leaves your machine, no credentials are needed, and you can sign in as any address you like, including ones that don't exist.
+
+<Callout type="info">
+  This applies to the [Nodemailer
+  provider](/getting-started/providers/nodemailer), which sends over SMTP.
+  [Resend](/getting-started/providers/resend),
+  [Sendgrid](/getting-started/providers/sendgrid),
+  [Postmark](/getting-started/providers/postmark) and the other email providers
+  send over HTTP, so an SMTP catcher won't intercept them — use whatever test
+  mode those providers offer instead.
+</Callout>
+
+<Steps>
+
+### Start a catcher
+
+[Mailtrap Local](https://github.com/mailtrap/mailtrap-local) listens for SMTP on port `3535` and serves its inbox on port `3550`.
+
+```bash
+docker run --rm \
+  -p 3535:3535 -p 3550:3550 \
+  -v mailtrap-local:/var/lib/mailtrap-local \
+  mailtrap/mailtrap-local:latest
+```
+
+If you'd rather not use Docker, its [README](https://github.com/mailtrap/mailtrap-local#quick-start) covers the other install options.
+
+<Callout type="info">
+  The volume keeps captured mail across restarts. Omit the `-v` flag and each
+  new `docker run` starts from an empty inbox.
+</Callout>
+
+### Point Auth.js at it
+
+The catcher needs no username or password, so the connection string is just a host and a port.
+
+```bash filename=".env"
+EMAIL_SERVER=smtp://localhost:3535
+EMAIL_FROM=noreply@example.com
+```
+
+If you configure the transport with an object rather than a connection string, set the host and port and leave the user and password unset. Either way the provider setup itself is unchanged — see [Nodemailer configuration](/getting-started/providers/nodemailer#configuration) for both forms.
+
+<Callout type="warning">
+  Keep this out of production. A catcher accepts unauthenticated, unencrypted
+  connections and silently swallows every message, so if it is ever wired up
+  outside development nobody will receive their magic links. Read the SMTP host
+  from an environment variable rather than hardcoding it.
+</Callout>
+
+### Sign in
+
+Start your app, open the sign-in page and submit any email address. Then open [http://localhost:3550](http://localhost:3550), open the message that just arrived, and click the link.
+
+Following it consumes the verification token and, on first sign-in, creates the user in your database — exactly as in production, so you still need a [database adapter](/getting-started/database) to test this. Tokens are single-use: to sign in again, request a new link.
+
+</Steps>
+
+## Automating this in tests
+
+The catcher also exposes an HTTP API, so an end-to-end test can request a magic link, read it back out of the captured message and follow it — covering the real sign-in flow without mocking the mail transport. See [Testing](/guides/testing) for the wider testing setup.
+
+This example uses [Playwright](https://playwright.dev). `GET /api/v1/message/latest` returns the most recent message, including its `text` body; `DELETE /api/v1/messages` with `{"all": true}` empties the inbox.
+
+It assumes Auth.js is mounted at `/auth`. In Next.js the default is `/api/auth`, so adjust the paths below to match your [`basePath`](/reference/core#basepath).
+
+```ts filename="tests/e2e/magic-link.spec.ts"
+import { test, expect } from "@playwright/test"
+
+const INBOX = "http://localhost:3550"
+
+test.beforeEach(async ({ request }) => {
+  // Start empty, so a leftover email can't satisfy the assertion below.
+  await request.delete(`${INBOX}/api/v1/messages`, { data: { all: true } })
+})
+
+test("sign in with a magic link", async ({ page, request }) => {
+  await page.goto("http://localhost:3000/auth/signin")
+  await page.getByLabel("Email").fill("test@example.com")
+  await page.getByRole("button", { name: "Sign in with Nodemailer" }).click()
+
+  // The email arrives a moment after the form is submitted, so poll for it.
+  let link: string | undefined
+  await expect
+    .poll(async () => {
+      const response = await request.get(`${INBOX}/api/v1/message/latest`)
+      if (!response.ok()) return undefined
+      const { text } = await response.json()
+      link = text.match(/https?:\/\/\S+/)?.[0]
+      return link
+    }, "waiting for the sign-in email")
+    .toBeTruthy()
+
+  await page.goto(link!)
+
+  // Ask Auth.js who we are, rather than relying on your own markup.
+  await page.goto("http://localhost:3000/auth/session")
+  const session = await page.locator("html").textContent()
+  expect(JSON.parse(session ?? "{}").user.email).toBe("test@example.com")
+})
+```
+
+<Callout type="info">
+  Match against the message's `text` body rather than `html`: in the HTML the
+  URL sits inside `href="..."`, so a greedy pattern picks up the closing quote
+  too. If you customized
+  [`sendVerificationRequest`](/getting-started/providers/nodemailer#email-body),
+  adjust the pattern to fit the email you actually send.
+</Callout>
+
+The button label above comes from the provider's name, so it reads "Sign in with Nodemailer" on the built-in sign-in page. Adjust the selectors if you renamed the provider or built your own [sign-in page](/guides/pages/signin).

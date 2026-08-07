@@ -10,6 +10,7 @@ export default {
   "edge-compatibility": "Edge Compatibility",
   "configuring-github": "Configuring GitHub for OAuth",
   "configuring-resend": "Configuring Resend for magic links",
+  "local-email-testing": "Testing magic links locally",
   "configuring-oauth-providers": "Configuring OAuth providers",
   "configuring-http-email": "Configuring Custom HTTP Email Provider",
   "creating-a-database-adapter": "Creating a Database Adapter",
