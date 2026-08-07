@@ -90,7 +90,7 @@ export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
-import { env } from "$env/dynamic/prviate"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
@@ -108,6 +108,29 @@ export { handle } from "./auth"
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import Nodemailer from "@auth/express/providers/nodemailer"
+import express from "express"
+
+const app = express()
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    adapter: ...,
+    providers: [
+      Nodemailer({
+        server: process.env.EMAIL_SERVER,
+        from: process.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Express>
 </Code>
 
   </Tabs.Tab>
@@ -147,12 +170,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 </Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Nodemailer from "@auth/qwik/providers/nodemailer"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Nodemailer({
+        server: {
+          host: import.meta.env.EMAIL_SERVER_HOST,
+          port: import.meta.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: import.meta.env.EMAIL_SERVER_USER,
+            pass: import.meta.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: import.meta.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
 <Code.Svelte>
 
 ```ts filename="./src/auth.ts"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Nodemailer from "@auth/sveltekit/providers/nodemailer"
-import { env } from "$env/dynamic/prviate"
+import { env } from "$env/dynamic/private"
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   adapter: ...,
@@ -173,6 +222,36 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 ```
 
 </Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/routes/auth.route.ts"
+import { ExpressAuth } from "@auth/express"
+import Nodemailer from "@auth/express/providers/nodemailer"
+import express from "express"
+
+const app = express()
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    adapter: ...,
+    providers: [
+      Nodemailer({
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: process.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: process.env.EMAIL_FROM,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Express>
 </Code>
 
   </Tabs.Tab>
@@ -183,6 +262,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 5. You can now start the sign process with an email address at `/api/auth/signin`.
 
 A user account (i.e. an entry in the `Users` table) will not be created for the user until the first time they verify their email address. If an email address is already associated with an account, the user will be signed in to that account when they use the link in the email.
+
+<Callout type="info">
+  In development you can point `EMAIL_SERVER` at an SMTP catcher on your own
+  machine instead of a real provider, so no mail is actually sent and you can
+  click the magic link from a local inbox. See [Testing magic links
+  locally](/guides/local-email-testing).
+</Callout>
 
 ## Customization
 
