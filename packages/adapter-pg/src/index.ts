@@ -50,7 +50,7 @@ export default function PostgresAdapter(client: Pool): Adapter {
     }: {
       identifier: string
       token: string
-    }): Promise<VerificationToken> {
+    }): Promise<VerificationToken | null> {
       const sql = `delete from verification_token
       where identifier = $1 and token = $2
       RETURNING identifier, expires, token `

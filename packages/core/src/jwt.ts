@@ -137,6 +137,9 @@ export interface GetTokenParams<R extends boolean = false>
 /**
  * Takes an Auth.js request (`req`) and returns either the Auth.js issued JWT's payload,
  * or the raw JWT string. We look for the JWT in the either the cookies, or the `Authorization` header.
+ *
+ * Returns `null` if no JWT is found in the cookies or `Authorization` header, and also when
+ * the `Authorization` header's Bearer value contains malformed percent-encoding.
  */
 export async function getToken<R extends boolean = false>(
   params: GetTokenParams<R>
@@ -172,7 +175,12 @@ export async function getToken(
 
   if (!token && authorizationHeader?.split(" ")[0] === "Bearer") {
     const urlEncodedToken = authorizationHeader.split(" ")[1]
-    token = decodeURIComponent(urlEncodedToken)
+    try {
+      token = decodeURIComponent(urlEncodedToken)
+    } catch {
+      // Malformed percent-encoding makes the Bearer token invalid
+      return null
+    }
   }
 
   if (!token) return null

@@ -1,6 +1,6 @@
 {
   "name": "@auth/mikro-orm-adapter",
-  "version": "2.10.0",
+  "version": "2.11.3",
   "description": "MikroORM adapter for Auth.js",
   "homepage": "https://authjs.dev",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -43,11 +43,11 @@
     "clean": "rm -rf *.js *.d.ts* lib"
   },
   "peerDependencies": {
-    "@mikro-orm/core": "^5"
+    "@mikro-orm/core": "^5 || ^6"
   },
   "devDependencies": {
-    "@mikro-orm/core": "^5",
-    "@mikro-orm/sqlite": "^5"
+    "@mikro-orm/better-sqlite": "^6.6.14",
+    "@mikro-orm/core": "^6.6.14"
   },
   "dependencies": {
     "@auth/core": "workspace:*"

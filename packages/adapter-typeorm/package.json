@@ -1,6 +1,6 @@
 {
   "name": "@auth/typeorm-adapter",
-  "version": "2.10.0",
+  "version": "2.11.3",
   "description": "TypeORM adapter for Auth.js.",
   "homepage": "https://authjs.dev/reference/adapter/typeorm",
   "repository": "https://github.com/nextauthjs/next-auth",
@@ -52,7 +52,7 @@
     "mssql": "^7.2.1",
     "mysql": "^2.18.1",
     "pg": "^8.7.3",
-    "typeorm": "0.3.17",
+    "typeorm": "0.3.26",
     "typeorm-naming-strategies": "^4.1.0"
   },
   "peerDependencies": {

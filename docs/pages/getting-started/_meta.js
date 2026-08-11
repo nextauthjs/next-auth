@@ -5,8 +5,8 @@ export default {
       typesetting: "article",
     },
   },
-  "migrating-to-v5": {
-    title: "Migrate to NextAuth.js v5",
+  "migrate-to-better-auth": {
+    title: "Migrate to Better Auth",
   },
   "-- getting-started": {
     type: "separator",

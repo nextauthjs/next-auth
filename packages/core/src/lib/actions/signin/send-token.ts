@@ -91,13 +91,40 @@ export async function sendToken(
   }
 }
 
-function defaultNormalizer(email?: string) {
+export function defaultNormalizer(email?: string) {
   if (!email) throw new Error("Missing email from request body.")
+
+  // Apply Unicode NFKC normalization *before* validation. Without this, a
+  // character that is a homoglyph of `@` (e.g. U+FF20 FULLWIDTH COMMERCIAL AT)
+  // passes the single-`@` check below, but can later be canonicalized to an
+  // ASCII `@` by a downstream address parser, splitting the address into
+  // multiple recipients. Normalizing first ensures any such homoglyph is
+  // turned into a real `@` and rejected by the checks below.
+  const trimmedEmail = email.normalize("NFKC").toLowerCase().trim()
+
+  // Reject email addresses with quotes to prevent address parser confusion
+  // This prevents attacks like "attacker@evil.com"@victim.com
+  if (trimmedEmail.includes('"')) {
+    throw new Error("Invalid email address format.")
+  }
+
   // Get the first two elements only,
   // separated by `@` from user input.
-  let [local, domain] = email.toLowerCase().trim().split("@")
+  let [local, domain] = trimmedEmail.split("@")
+
+  // Validate that we have exactly 2 parts (local and domain)
+  if (!local || !domain || trimmedEmail.split("@").length !== 2) {
+    throw new Error("Invalid email address format.")
+  }
+
   // The part before "@" can contain a ","
   // but we remove it on the domain part
   domain = domain.split(",")[0]
+
+  // Additional validation: domain should not be empty after comma split
+  if (!domain) {
+    throw new Error("Invalid email address format.")
+  }
+
   return `${local}@${domain}`
 }

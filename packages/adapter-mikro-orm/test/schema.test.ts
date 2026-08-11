@@ -1,11 +1,11 @@
 import { MikroORM, Options } from "@mikro-orm/core"
-import { SqliteDriver } from "@mikro-orm/sqlite"
+import { BetterSqliteDriver } from "@mikro-orm/better-sqlite"
 import { defaultEntities } from "../src"
 import { expect, test } from "vitest"
 
-const config: Options<SqliteDriver> = {
+const config: Options<BetterSqliteDriver> = {
   dbName: "./db.sqlite",
-  type: "sqlite",
+  driver: BetterSqliteDriver,
   entities: [
     defaultEntities.User,
     defaultEntities.Account,

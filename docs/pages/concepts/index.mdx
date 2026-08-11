@@ -57,9 +57,9 @@ Yes! Check out the [TypeScript docs](/getting-started/typescript)
 
 </Accordion>
 
-<Accordion title="Is Auth.js compatible with Next.js 12 Middleware?">
+<Accordion title="Is Auth.js compatible with Next.js Proxy / Middleware?">
 
-[Next.js middleware](https://nextjs.org/docs/middleware) is supported and is recommended as of version 5. An example middleware setup can be found [here](/getting-started/session-management/protecting#nextjs-middleware).
+Yes! As of Next.js 16, `middleware.ts` has been renamed to `proxy.ts`. Auth.js supports both the new `proxy.ts` convention and the legacy `middleware.ts`. An example setup can be found [here](/getting-started/session-management/protecting#nextjs-proxy).
 
 </Accordion>
 </Accordions>
@@ -116,8 +116,6 @@ Providing support for secure account linking and unlinking of additional provide
 Auth.js is an open-source project built by individual contributors who are volunteers writing code and providing support in their spare time.
 
 If you would like Auth.js to support a particular feature, the best way to help make it happen is to raise a feature request describing the feature and offer to work with other contributors to develop and test it.
-
-If you are not able to develop a feature yourself, you can offer to sponsor someone to work on it.
 
 </Accordion>
 <Accordion title="I disagree with a design decision, how can I change your mind?">

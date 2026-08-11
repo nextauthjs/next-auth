@@ -65,7 +65,9 @@ export class Session implements AdapterSession {
   @ManyToOne({
     entity: "User",
     hidden: true,
-    onDelete: "cascade",
+    // `onDelete` (v5) was renamed to `deleteRule` (v6)
+    deleteRule: "cascade",
+    ...{ onDelete: "cascade" },
   })
   user!: User
 
@@ -90,7 +92,9 @@ export class Account implements RemoveIndex<AdapterAccount> {
   @ManyToOne({
     entity: "User",
     hidden: true,
-    onDelete: "cascade",
+    // `onDelete` (v5) was renamed to `deleteRule` (v6)
+    deleteRule: "cascade",
+    ...{ onDelete: "cascade" },
   })
   user!: User
 

@@ -157,12 +157,12 @@ const config: DocsThemeConfig = {
   banner: {
     content: (
       <>
-        Migrating from NextAuth.js v4? Read{" "}
+        The Auth.js project is now part of{` `}
         <a
           style={{ textDecoration: "underline" }}
-          href="/getting-started/migrating-to-v5"
+          href="https://better-auth.com/blog/authjs-joins-better-auth"
         >
-          <b>our migration guide</b>
+          <b>Better Auth</b>
         </a>
         .
       </>
@@ -177,7 +177,6 @@ const config: DocsThemeConfig = {
     labels: "feedback",
   },
   toc: {
-    extraContent: <script id="_carbonads_js" />,
     backToTop: true,
   },
   docsRepositoryBase: "https://github.com/nextauthjs/next-auth/edit/main/docs",

@@ -6,7 +6,11 @@ import Credentials from "../../src/providers/credentials.js"
 import { logger, makeAuthRequest, testConfig } from "../utils.js"
 import { skipCSRFCheck } from "../../src/index.js"
 import { CredentialsSignin, InvalidCheck } from "../../src/errors.js"
-import { state } from "../../src/lib/actions/callback/oauth/checks.js"
+import {
+  nonce,
+  pkce,
+  state,
+} from "../../src/lib/actions/callback/oauth/checks.js"
 
 describe("assert GET callback action", () => {
   beforeEach(() => {
@@ -146,6 +150,74 @@ describe("assert GET callback action", () => {
     expect(response.headers.get("location")).toEqual(
       `https://authjs.test/custom/error?error=Configuration`
     )
+  })
+})
+
+describe("OAuth check cookies are bound to their provider", () => {
+  const cookieOptions = {
+    secure: true,
+    sameSite: "lax" as const,
+    httpOnly: true,
+  }
+  const cookies = {
+    state: { name: "authjs.state", options: cookieOptions },
+    nonce: { name: "authjs.nonce", options: cookieOptions },
+    pkceCodeVerifier: {
+      name: "authjs.pkce.code_verifier",
+      options: cookieOptions,
+    },
+  }
+
+  function optionsFor(id: string, checks: Array<"state" | "nonce" | "pkce">) {
+    return {
+      logger,
+      provider: { id, checks },
+      jwt: { secret: "secret" },
+      cookies,
+    } as any
+  }
+
+  it("accepts a state cookie on the same provider's callback", async () => {
+    const created = (await state.create(optionsFor("github", ["state"]))) as any
+    const value = await state.use(
+      { [cookies.state.name]: created.cookie.value },
+      [],
+      optionsFor("github", ["state"])
+    )
+    expect(value).toBe(created.value)
+  })
+
+  it("rejects a state cookie minted for a different provider", async () => {
+    const created = (await state.create(optionsFor("github", ["state"]))) as any
+    await expect(
+      state.use(
+        { [cookies.state.name]: created.cookie.value },
+        [],
+        optionsFor("google", ["state"])
+      )
+    ).rejects.toThrow(InvalidCheck)
+  })
+
+  it("rejects a nonce cookie minted for a different provider", async () => {
+    const created = (await nonce.create(optionsFor("github", ["nonce"]))) as any
+    await expect(
+      nonce.use(
+        { [cookies.nonce.name]: created.cookie.value },
+        [],
+        optionsFor("google", ["nonce"])
+      )
+    ).rejects.toThrow(InvalidCheck)
+  })
+
+  it("rejects a PKCE verifier cookie minted for a different provider", async () => {
+    const created = (await pkce.create(optionsFor("github", ["pkce"]))) as any
+    await expect(
+      pkce.use(
+        { [cookies.pkceCodeVerifier.name]: created.cookie.value },
+        [],
+        optionsFor("google", ["pkce"])
+      )
+    ).rejects.toThrow(InvalidCheck)
   })
 })
 

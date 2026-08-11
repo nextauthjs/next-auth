@@ -8,6 +8,7 @@ on:
       - next
       - 3.x
   pull_request:
+  merge_group:
   # TODO: Support latest releases
   workflow_dispatch:
     inputs:

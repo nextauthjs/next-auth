@@ -15,6 +15,12 @@ import type { WebAuthnProviderType } from "../../../../providers/webauthn.js"
 
 interface CookiePayload {
   value: string
+  /**
+   * The id of the provider that created this cookie. Since the cookie names
+   * are not provider-specific, the id is stored in the sealed payload and
+   * checked on callback.
+   */
+  provider?: string
 }
 
 const COOKIE_TTL = 60 * 15 // 15 minutes
@@ -40,7 +46,10 @@ async function sealCookie(
   const encoded = await encode({
     ...options.jwt,
     maxAge: COOKIE_TTL,
-    token: { value: payload } satisfies CookiePayload,
+    token: {
+      value: payload,
+      provider: options.provider.id,
+    } satisfies CookiePayload,
     salt: cookie.name,
   })
   const cookieOptions = { ...cookie.options, expires }
@@ -62,8 +71,15 @@ async function parseCookie(
       token: value,
       salt: cookies[name].name,
     })
-    if (parsed?.value) return parsed.value
-    throw new Error("Invalid cookie")
+    if (!parsed?.value) throw new Error("Invalid cookie")
+    // The check must have been created by the provider currently handling
+    // the callback.
+    if (parsed.provider !== options.provider?.id) {
+      throw new Error(
+        `${name} cookie was created for a different provider than the one handling the callback`
+      )
+    }
+    return parsed.value
   } catch (error) {
     throw new InvalidCheck(`${name} value could not be parsed`, {
       cause: error,

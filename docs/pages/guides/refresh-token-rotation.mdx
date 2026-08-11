@@ -51,7 +51,7 @@ Below is a sample implementation of refreshing the `access_token` with Google. P
   <Code.Next>
 
 ```ts filename="./auth.ts"
-import NextAuth, { type User } from "next-auth"
+import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
 export const { handlers, auth } = NextAuth({
@@ -65,6 +65,9 @@ export const { handlers, auth } = NextAuth({
     async jwt({ token, account }) {
       if (account) {
         // First-time login, save the `access_token`, its expiry and the `refresh_token`
+        if (!account.access_token || !account.expires_at) {
+          throw new TypeError("Missing access_token or expires_at")
+        }
         return {
           ...token,
           access_token: account.access_token,

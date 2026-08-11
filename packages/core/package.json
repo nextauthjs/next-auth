@@ -1,6 +1,6 @@
 {
   "name": "@auth/core",
-  "version": "0.40.0",
+  "version": "0.41.3",
   "description": "Authentication for the Web.",
   "keywords": [
     "authentication",
@@ -14,7 +14,11 @@
     "webapi"
   ],
   "homepage": "https://authjs.dev",
-  "repository": "https://github.com/nextauthjs/next-auth.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextauthjs/next-auth.git",
+    "directory": "packages/core"
+  },
   "author": "Balázs Orbán <info@balazsorban.com>",
   "contributors": [
     "Balázs Orbán <info@balazsorban.com>",
@@ -76,7 +80,7 @@
   "peerDependencies": {
     "@simplewebauthn/browser": "^9.0.1",
     "@simplewebauthn/server": "^9.0.2",
-    "nodemailer": "^6.8.0"
+    "nodemailer": "^7.0.7 || ^8.0.5"
   },
   "peerDependenciesMeta": {
     "@simplewebauthn/browser": {
@@ -106,9 +110,12 @@
     "@types/nodemailer": "6.4.6",
     "@types/react": "18.0.37",
     "autoprefixer": "10.4.13",
-    "postcss": "8.4.19",
+    "postcss": "8.5.10",
     "postcss-nesting": "^12.1.5",
     "typedoc": "^0.25.12",
     "typedoc-plugin-markdown": "4.0.0-next.53"
+  },
+  "bugs": {
+    "url": "https://github.com/nextauthjs/next-auth/issues"
   }
 }

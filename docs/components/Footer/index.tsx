@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import { useRouter } from "next/router"
 import cx from "classnames"
 
 function kFormatter(num: number) {
@@ -7,8 +6,6 @@ function kFormatter(num: number) {
 }
 
 export function Footer({ className = "" }) {
-  const router = useRouter()
-
   useEffect(() => {
     fetch("https://api.github.com/repos/nextauthjs/next-auth")
       .then((res) => res.json())
@@ -17,18 +14,6 @@ export function Footer({ className = "" }) {
         if (!githubStat) return
         githubStat.innerHTML = kFormatter(data.stargazers_count ?? 21100)
       })
-
-    // CarbonAds hydration error workaround hack
-    const carbonAdsEl =
-      document.querySelector<HTMLScriptElement>("#_carbonads_js")
-    if (carbonAdsEl) {
-      carbonAdsEl.src =
-        "https://cdn.carbonads.com/carbon.js?serve=CWYD42JY&placement=authjsdev&format=cover"
-
-      router.events.on("routeChangeComplete", () => {
-        window._carbonads?.refresh()
-      })
-    }
   }, [])
   return (
     <div
@@ -83,12 +68,11 @@ export function Footer({ className = "" }) {
           <h3 className="mb-4 text-lg font-black">Acknowledgements</h3>
           <ul className="flex flex-col gap-2">
             <a href="/contributors">Contributors</a>
-            <a href="/sponsors">Sponsors</a>
           </ul>
         </div>
       </div>
       <div className="mx-auto mt-4 flex-grow text-gray-400 sm:mt-0 dark:text-gray-500">
-        Auth.js &copy; Balázs Orbán and Team - {new Date().getFullYear()}
+        Auth.js &copy; Better Auth Inc. - {new Date().getFullYear()}
       </div>
     </div>
   )
