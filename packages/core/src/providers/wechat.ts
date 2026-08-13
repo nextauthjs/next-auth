@@ -106,13 +106,10 @@ export default function WeChat(
       params: { appid: clientId, secret: clientSecret },
       async conform(response) {
         const data = await response.json()
-        if (data.token_type === "bearer") {
-          console.warn(
-            "token_type is 'bearer'. Redundant workaround, please open an issue."
-          )
-          return response
-        }
-        return Response.json({ ...data, token_type: "bearer" }, response)
+        console.log('wechat data:',data)
+        return new Response( JSON.stringify({ ...data, token_type: "bearer" }), {
+          headers: { 'Content-Type': 'application/json' }
+        })
       },
     },
     userinfo: {
@@ -132,8 +129,10 @@ export default function WeChat(
       return {
         id: profile.unionid,
         name: profile.nickname,
-        email: null,
+        email: profile.unionid,
+        unionid: profile.unionid,
         image: profile.headimgurl,
+        openid: profile.openid,
       }
     },
     options,
