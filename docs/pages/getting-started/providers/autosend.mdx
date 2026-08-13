@@ -142,7 +142,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 ```
 
-As an example, the following shows the source for our built-in `sendVerificationRequest()` method. Notice that we're rendering the HTML (`html()`) and making the network call (`fetch()`) to AutoSend to actually do the sending here in this method. AutoSend expects `from` and `to` as objects (`{ email, name }`), so the built-in method parses the `from` string first.
+As an example, the following shows the source for our built-in `sendVerificationRequest()` method. Notice that we're rendering the HTML (`html()`) and making the network call (`fetch()`) to AutoSend to actually do the sending here in this method. AutoSend expects `from` and `to` as objects (`{ email }`), so the built-in method wraps the `from` string in an object.
 
 ```ts filename="./lib/authSendRequest.ts" {4, 14}
 export async function sendVerificationRequest(params) {
@@ -155,11 +155,12 @@ export async function sendVerificationRequest(params) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: parseFrom(provider.from), // { email, name? }
+      from: { email: provider.from },
       to: { email: to },
       subject: `Sign in to ${host}`,
       html: html({ url, host, theme }),
       text: text({ url, host }),
+      bypassSuppressions: true,
     }),
   })
 
