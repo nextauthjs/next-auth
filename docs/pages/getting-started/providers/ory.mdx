@@ -1,0 +1,97 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/ory.svg" width="64" height="64" />
+
+# Ory Provider
+
+## Resources
+
+- [Ory documentation](https://www.ory.sh/docs/)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+    ```bash
+    https://example.com/api/auth/callback/ory
+    ```
+
+  </Code.Next>
+  <Code.Qwik>
+
+    ```bash
+    https://example.com/auth/callback/ory
+    ```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+    ```bash
+    https://example.com/auth/callback/ory
+    ```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_ORY_ID
+AUTH_ORY_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+    ```ts filename="/auth.ts"
+    import NextAuth from "next-auth"
+    import Ory from "next-auth/providers/ory"
+
+    export const { handlers, auth, signIn, signOut } = NextAuth({
+    providers: [Ory],
+  })
+    ```
+
+  </Code.Next>
+  <Code.Qwik>
+
+    ```ts filename="/src/routes/plugin@auth.ts"
+    import { QwikAuth$ } from "@auth/qwik"
+    import Ory from "@auth/qwik/providers/ory"
+
+    export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+    () => ({
+    providers: [Ory],
+  })
+    )
+    ```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+    ```ts filename="/src/auth.ts"
+    import { SvelteKitAuth } from "@auth/sveltekit"
+    import Ory from "@auth/sveltekit/providers/ory"
+
+    export const { handle, signIn, signOut } = SvelteKitAuth({
+    providers: [Ory],
+  })
+    ```
+
+  </Code.Svelte>
+  <Code.Express>
+
+    ```ts filename="/src/app.ts"
+    import { ExpressAuth } from "@auth/express"
+    import Ory from "@auth/express/providers/ory"
+
+    app.use("/auth/*", ExpressAuth({ providers: [Ory] }))
+    ```
+
+  </Code.Express>
+</Code>
