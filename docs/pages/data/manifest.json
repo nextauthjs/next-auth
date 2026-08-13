@@ -125,6 +125,7 @@
     "zoom": "Zoom"
   },
   "providersEmail": {
+    "autosend": "AutoSend",
     "forwardemail": "Forward Email",
     "resend": "Resend",
     "sendgrid": "Sendgrid",
