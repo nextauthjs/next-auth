@@ -360,6 +360,10 @@ export interface Adapter {
   /**
    * Updates a session in the database and returns it.
    *
+   * :::tip
+   * If an `AdapterSession` is returned, it will be used in place of the original session.
+   * :::
+   *
    * See also [Database Session management](https://authjs.dev/guides/creating-a-database-adapter#database-session-management)
    */
   updateSession?(
