@@ -22,8 +22,8 @@ export interface TwitterProfile {
     id: string
     /** The friendly name of this user, as shown on their profile. */
     name: string
-    /** @note Email is currently unsupported by Twitter.  */
-    email?: string
+    /** The email address of this user, if the user provided one. */
+    confirmed_email?: string
     /** The Twitter handle (screen name) of this user. */
     username: string
     /**
@@ -133,28 +133,12 @@ export interface TwitterProfile {
  * - [Twitter App documentation](https://developer.x.com/en/apps)
  *
  * ## OAuth 2
- * Twitter supports OAuth 2, which is currently opt-in. To enable it, simply add version: "2.0" to your Provider configuration:
  * ```ts
  * Twitter({
  *   clientId: process.env.TWITTER_ID,
  *   clientSecret: process.env.TWITTER_SECRET,
- *   version: "2.0", // opt-in to Twitter OAuth 2.0
  * })
  * ```
- * Keep in mind that although this change is easy, it changes how and with which of Twitter APIs you can interact with. Read the official Twitter OAuth 2 documentation for more details.
- *
- *
- * :::note
- *
- * Email is currently not supported by Twitter OAuth 2.0.
- *
- * :::
- *
- * ### Notes
- *
- * Twitter is currently the only built-in provider using the OAuth 1.0 spec.
- * This means that you won't receive an `access_token` or `refresh_token`, but an `oauth_token` and `oauth_token_secret` respectively. Remember to add these to your database schema, in case if you are using an [Adapter](https://authjs.dev/reference/core/adapters).
- *
  * :::tip
  *
  * You must enable the "Request email address from users" option in your app permissions if you want to obtain the users email address.
@@ -190,14 +174,14 @@ export default function Twitter(
     type: "oauth",
     checks: ["pkce", "state"],
     authorization:
-      "https://x.com/i/oauth2/authorize?scope=users.read tweet.read offline.access",
+      "https://x.com/i/oauth2/authorize?scope=tweet.read users.read users.email offline.access",
     token: "https://api.x.com/2/oauth2/token",
-    userinfo: "https://api.x.com/2/users/me?user.fields=profile_image_url",
+    userinfo: "https://api.x.com/2/users/me?user.fields=profile_image_url,confirmed_email",
     profile({ data }) {
       return {
         id: data.id,
         name: data.name,
-        email: data.email ?? null,
+        email: data.confirmed_email ?? null,
         image: data.profile_image_url,
       }
     },
