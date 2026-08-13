@@ -29,7 +29,7 @@ export default function AutoSend(config: EmailUserConfig): EmailConfig {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: provider.from,
+          from: { email: provider.from },
           to: { email: to },
           subject: `Sign in to ${host}`,
           html: html({ url, host, theme }),
