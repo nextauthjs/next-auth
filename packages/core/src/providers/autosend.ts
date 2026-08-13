@@ -34,6 +34,7 @@ export default function AutoSend(config: EmailUserConfig): EmailConfig {
           subject: `Sign in to ${host}`,
           html: html({ url, host, theme }),
           text: text({ url, host }),
+          bypassSuppressions: true,
         }),
       })
 
