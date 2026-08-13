@@ -16,11 +16,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
       - run: corepack enable
-      - uses: aaimio/vercel-preview-url-action@v2.2.0
+      - name: Get Vercel preview URL
         id: vercel_preview_url
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          preview_url_regexp: https.*\/(.*-authjs.vercel.app)
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          url="$(printf '%s' "$COMMENT_BODY" | grep -oE 'https.*/.*-authjs\.vercel\.app' | head -n 1 | sed -E 's|.*/||')"
+          echo "vercel_preview_url=$url" >> "$GITHUB_OUTPUT"
       - name: Install dependencies
         run: cd ./.github/broken-link-checker && pnpm install --ignore-workspace && pnpm build
       - name: Run link checker
