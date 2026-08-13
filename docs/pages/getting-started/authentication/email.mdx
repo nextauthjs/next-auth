@@ -42,6 +42,14 @@ This login mechanism starts by the user providing their email address at the log
         <div className="text-sm text-center line-clamp-1">Forward Email</div>
       </RichTabs.Trigger>
       <RichTabs.Trigger
+        value="notificationapi"
+        orientation="vertical"
+        className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
+      >
+        <img className="size-16 dark:bg-[currentColor]" src={`/img/providers/notificationapi.svg`} />
+        <div className="text-sm text-center">NotificationAPI</div>
+      </RichTabs.Trigger>
+      <RichTabs.Trigger
         value="resend"
         orientation="vertical"
         className="!border border-neutral-200 dark:border-neutral-700 aria-selected:!bg-neutral-100 aria-selected:dark:!bg-neutral-950 dark:!bg-neutral-900 !bg-white !h-auto !w-auto !gap-2 !justify-start p-6 px-8 rounded-md outline-none transition-all duration-300 hover:bg-neutral-200 !font-normal"
@@ -241,6 +249,194 @@ Start your application, once the user enters their Email and clicks on the signi
 </Callout>
 
 For more information on this provider go to the [Forward Email docs page](/getting-started/providers/forwardemail).
+
+</RichTabs.Content>
+
+<RichTabs.Content
+  orientation="vertical"
+  value="notificationapi"
+  className="h-full !border-0 !w-full"
+  tabIndex={-1}
+>
+
+### NotificationAPI Setup
+
+<Steps>
+
+### Database Adapter
+
+Please make sure you've [setup a database adapter](/getting-started/database), as mentioned earlier,
+a database is required for passwordless login to work as verification tokens need to be stored.
+
+### Setup Environment Variables
+
+Auth.js will automatically pick up these if formatted like the example below.
+You can [also use a different name for the environment variables](/guides/environment-variables#oauth-variables) if needed, but then you’ll need to pass them to the provider manually.
+
+```bash filename=".env"
+NOTIFICATIONAPI_API_KEY=...
+```
+
+### Setup Provider
+
+Let’s enable `NotificationAPI` as a sign in option in our Auth.js configuration:
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import NotificationAPI from "next-auth/providers/notificationapi"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    NotificationAPI({
+      notificationId: "auth_magic_link",
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import NotificationAPI from "@auth/qwik/providers/notificationapi"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      NotificationAPI({
+        notificationId: "auth_magic_link",
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import SvelteKitAuth from "@auth/sveltekit"
+import NotificationAPI from "@auth/sveltekit/providers/notificationapi"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    NotificationAPI({
+      notificationId: "auth_magic_link",
+    }),
+  ],
+})
+```
+
+```ts filename="./src/hooks.server.ts"
+export { handle } from "./auth"
+```
+
+</Code.Svelte>
+</Code>
+
+### Add Signin Button
+
+Next, we can add a signin button somewhere in your application like the Navbar. This will send an email to the user containing the magic link to sign in.
+
+<Code>
+<Code.Next>
+
+```tsx filename="./components/sign-in.tsx"
+import { signIn } from "../../auth.ts"
+
+export function SignIn() {
+  return (
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("notificationapi", formData)
+      }}
+    >
+      <input type="text" name="email" placeholder="Email" />
+      <button type="submit">Signin with NotificationAPI</button>
+    </form>
+  )
+}
+```
+
+</Code.Next>
+<Code.NextClient>
+
+```tsx filename="./components/sign-in.tsx"
+"use client"
+import { signIn } from "next-auth/react"
+
+export function SignIn() {
+  const notificationapiAction = (formData: FormData) => {
+    signIn("notificationapi", formData)
+  }
+
+  return (
+    <form action={notificationapiAction}>
+      <label htmlFor="email-notificationapi">
+        Email
+        <input type="email" id="email-notificationapi" name="email" />
+      </label>
+      <input type="submit" value="Signin with NotificationAPI" />
+    </form>
+  )
+}
+```
+
+</Code.NextClient>
+<Code.Qwik>
+
+```ts filename="./components/sign-in.tsx"
+import { component$ } from "@builder.io/qwik"
+import { useSignIn } from "./plugin@auth"
+
+export default component$(() => {
+  const signInSig = useSignIn()
+
+  return (
+    <button
+      onClick$={() => signInSig.submit({ redirectTo: "/" })}
+    >
+      SignIn
+    </button>
+  )
+})
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```html filename="src/routes/+page.svelte"
+<script lang="ts">
+  import { SignIn } from "@auth/sveltekit/components"
+</script>
+
+<div>
+  <nav>
+    <img src="/img/logo.svg" alt="Company Logo" />
+    <SignIn provider="notificationapi" />
+  </nav>
+</div>
+```
+
+</Code.Svelte>
+</Code>
+
+### Signin
+
+Start your application, once the user enters their Email and clicks on the signin button, they'll be redirected to a page that asks them to check their email. When they click on the link in their email, they will be signed in.
+
+</Steps>
+
+<Callout type="info">
+  You can visually design your magic link email template in NotificationAPI.
+</Callout>
+
+For more information on this provider go to the [NotificationAPI provider docs page](/getting-started/providers/notificationapi).
 
 </RichTabs.Content>
 
