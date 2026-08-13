@@ -7,6 +7,7 @@ const files = readdirSync(providersPath, "utf8")
 
 // TODO: Autogenerate
 const emailProvidersFile = [
+  "autosend",
   "email",
   "forwardemail",
   "mailgun",
