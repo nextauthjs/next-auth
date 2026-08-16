@@ -184,7 +184,7 @@ Follow [these steps](/configuration/providers/oauth#how-to) to learn how to inte
 
 ## Deploying to production
 
-When deploying your site set the `NEXTAUTH_URL` environment variable to the canonical URL of the website.
+When deploying your site, set the `NEXTAUTH_URL` environment variable to the canonical URL of the website.
 
 ```
 NEXTAUTH_URL=https://example.com
