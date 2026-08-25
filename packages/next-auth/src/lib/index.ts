@@ -188,9 +188,7 @@ export function initAuth(
           const auth = await parseSessionResponse(authResponse)
 
           for (const cookie of authResponse.headers.getSetCookie())
-            if ("headers" in response)
-              response.headers.append("set-cookie", cookie)
-            else response.appendHeader("set-cookie", cookie)
+            appendSetCookie(response, cookie)
 
           return auth
         }
@@ -238,11 +236,33 @@ export function initAuth(
       const auth = await parseSessionResponse(authResponse)
 
       for (const cookie of authResponse.headers.getSetCookie())
-        if ("headers" in response) response.headers.append("set-cookie", cookie)
-        else response.appendHeader("set-cookie", cookie)
+        appendSetCookie(response, cookie)
 
       return auth
     })
+  }
+}
+
+/**
+ * Append a `set-cookie` header to either a Web `Response` or a Node
+ * `ServerResponse` (Pages Router API routes, `getServerSideProps`).
+ *
+ * `"headers" in response` alone is not a reliable discriminator. Node's
+ * `ServerResponse` has no `headers` property, but some runtimes' Node
+ * compatibility layers do expose one. Bun, for example, exposes a plain object
+ * rather than a `Headers` instance, so the check takes the Web branch and then
+ * throws `TypeError: response.headers.append is not a function`, turning every
+ * session-reading Pages Router API route into a 500.
+ *
+ * Requiring a callable `append` keeps real Web `Response` objects on the
+ * `Headers` path and lets every `ServerResponse` fall through to
+ * `appendHeader`, which both runtimes implement.
+ */
+function appendSetCookie(response: any, cookie: string) {
+  if ("headers" in response && typeof response.headers?.append === "function") {
+    response.headers.append("set-cookie", cookie)
+  } else {
+    response.appendHeader("set-cookie", cookie)
   }
 }
 
