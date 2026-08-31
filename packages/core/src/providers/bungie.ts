@@ -165,7 +165,9 @@ import type { OAuthConfig, OAuthUserConfig } from "./index.js"
  * :::
  */
 export default function Bungie(
-  options: OAuthUserConfig<Record<string, any>>
+  options: OAuthUserConfig<Record<string, any>> & {
+    headers?: Record<string, string>
+  }
 ): OAuthConfig<Record<string, any>> {
   return {
     id: "bungie",
@@ -173,8 +175,30 @@ export default function Bungie(
     type: "oauth",
     authorization: "https://www.bungie.net/en/OAuth/Authorize?reauth=true",
     token: "https://www.bungie.net/platform/app/oauth/token/",
-    userinfo:
-      "https://www.bungie.net/platform/User/GetBungieAccount/{membershipId}/254/",
+    userinfo: {
+      url: "https://www.bungie.net/Platform/User/GetMembershipsById/{membershipId}/254/",
+      async request({ tokens, provider }) {
+        const customHeaders =
+          (options as Record<string, any>).headers ??
+          (provider as Record<string, any>).headers ??
+          {}
+        const membershipId =
+          (tokens as Record<string, any>).membership_id ??
+          (tokens as Record<string, any>).membershipId ??
+          ""
+        const url = membershipId
+          ? `https://www.bungie.net/Platform/User/GetMembershipsById/${membershipId}/254/`
+          : ((provider.userinfo as { url: string })?.url ??
+            "https://www.bungie.net/Platform/User/GetMembershipsById/254/")
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            "X-API-Key": customHeaders["X-API-Key"] ?? "",
+          },
+        })
+        return await response.json()
+      },
+    },
     profile(profile) {
       const { bungieNetUser: user } = profile.Response
 
