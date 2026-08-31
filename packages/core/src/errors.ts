@@ -307,7 +307,7 @@ export class MissingAuthorize extends AuthError {
  *
  *
  * :::tip
- * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+ * To generate a random string, you can use `openssl rand -base64 33`.
  * :::
  * @noInheritDoc
  */
