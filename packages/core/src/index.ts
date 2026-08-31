@@ -225,7 +225,7 @@ export interface AuthConfig {
   /**
    * A random string used to hash tokens, sign cookies and generate cryptographic keys.
    *
-   * To generate a random string, you can use the Auth.js CLI: `npx auth secret`
+   * To generate a random string, you can use `openssl rand -base64 33`.
    *
    * @note
    * You can also pass an array of secrets, in which case the first secret that successfully

@@ -60,7 +60,7 @@ export default withNextra({
       {
         source: "/:path(.*)",
         has: [{ type: "host", value: "cli.authjs.dev" }],
-        destination: "https://github.com/nextauthjs/cli",
+        destination: "https://authjs.dev/getting-started/installation",
         permanent: true,
       },
       {
