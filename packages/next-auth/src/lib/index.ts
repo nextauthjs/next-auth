@@ -3,7 +3,7 @@ import { Auth, createActionURL, type AuthConfig } from "@auth/core"
 import { headers } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { NextResponse } from "next/server"
-import { reqWithEnvURL } from "./env.js"
+import { getProtocol, reqWithEnvURL } from "./env.js"
 
 import type { AuthAction, Awaitable, Session } from "@auth/core/types"
 import type {
@@ -62,8 +62,7 @@ export interface NextAuthConfig extends Omit<AuthConfig, "raw"> {
 async function getSession(headers: Headers, config: NextAuthConfig) {
   const url = createActionURL(
     "session",
-    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
-    headers.get("x-forwarded-proto"),
+    getProtocol(headers, process.env),
     headers,
     process.env,
     config

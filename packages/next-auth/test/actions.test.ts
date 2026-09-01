@@ -107,3 +107,59 @@ describe("signIn action", () => {
     })
   })
 })
+
+describe("signIn action without x-forwarded-proto header", () => {
+  beforeEach(() => {
+    process.env.AUTH_SECRET = "secret"
+    // Simulate missing x-forwarded-proto by using headers without it
+    mockedHeaders = new globalThis.Headers({
+      host: "localhost:3000",
+    })
+  })
+
+  afterEach(() => {
+    process.env.AUTH_SECRET = ""
+    process.env.AUTH_URL = ""
+    process.env.NODE_ENV = "test"
+    nextAuth = null
+    vi.resetAllMocks()
+  })
+
+  it("uses http protocol from AUTH_URL when x-forwarded-proto is missing", async () => {
+    process.env.AUTH_URL = "http://localhost:3000"
+    nextAuth = NextAuth(config)
+    await nextAuth.signIn("nodemailer", options)
+    expect(mockRedirect).toHaveBeenCalledWith(
+      expect.stringContaining("http://localhost:3000")
+    )
+  })
+
+  it("uses https protocol from AUTH_URL when x-forwarded-proto is missing", async () => {
+    process.env.AUTH_URL = "https://example.com"
+    nextAuth = NextAuth(config)
+    await nextAuth.signIn("nodemailer", options)
+    expect(mockRedirect).toHaveBeenCalledWith(
+      expect.stringContaining("https://example.com")
+    )
+  })
+
+  it("defaults to http in development when no AUTH_URL and no x-forwarded-proto", async () => {
+    process.env.NODE_ENV = "development"
+    delete process.env.AUTH_URL
+    nextAuth = NextAuth(config)
+    await nextAuth.signIn("nodemailer", options)
+    expect(mockRedirect).toHaveBeenCalledWith(
+      expect.stringMatching(/^http:\/\//)
+    )
+  })
+
+  it("defaults to https in production when no AUTH_URL and no x-forwarded-proto", async () => {
+    process.env.NODE_ENV = "production"
+    delete process.env.AUTH_URL
+    nextAuth = NextAuth(config)
+    await nextAuth.signIn("nodemailer", options)
+    expect(mockRedirect).toHaveBeenCalledWith(
+      expect.stringMatching(/^https:\/\//)
+    )
+  })
+})
