@@ -3,6 +3,7 @@ import { Auth, raw, skipCSRFCheck, createActionURL } from "@auth/core"
 import { headers as nextHeaders, cookies } from "next/headers"
 // @ts-expect-error Next.js does not yet correctly use the `package.json#exports` field
 import { redirect } from "next/navigation"
+import { getProtocol } from "./env.js"
 
 import type { NextAuthConfig } from "./index.js"
 import type { NextAuthResult, Session } from "../index.js"
@@ -25,8 +26,7 @@ export async function signIn(
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
   const signInURL = createActionURL(
     "signin",
-    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
-    headers.get("x-forwarded-proto"),
+    getProtocol(headers, process.env),
     headers,
     process.env,
     config
@@ -96,8 +96,7 @@ export async function signOut(
 
   const url = createActionURL(
     "signout",
-    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
-    headers.get("x-forwarded-proto"),
+    getProtocol(headers, process.env),
     headers,
     process.env,
     config
@@ -126,8 +125,7 @@ export async function update(
 
   const url = createActionURL(
     "session",
-    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
-    headers.get("x-forwarded-proto"),
+    getProtocol(headers, process.env),
     headers,
     process.env,
     config

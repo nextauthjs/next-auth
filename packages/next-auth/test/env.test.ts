@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { NextRequest } from "next/server.js"
 
-import { reqWithEnvURL, setEnvDefaults } from "../lib/env"
+import { getProtocol, reqWithEnvURL, setEnvDefaults } from "../lib/env"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 import type { NextAuthConfig } from "../lib/index.js"
 
@@ -162,6 +162,98 @@ describe("env", () => {
 
       expect(config.basePath).toBe("/api/auth")
       expect(coreSetEnvDefaults).toHaveBeenCalledWith(process.env, config, true)
+    })
+  })
+
+  describe("getProtocol", () => {
+    it("should return protocol from AUTH_URL when set", () => {
+      const headers = new Headers()
+      const env = { AUTH_URL: "http://localhost:3000" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should return https protocol from AUTH_URL when set", () => {
+      const headers = new Headers()
+      const env = { AUTH_URL: "https://example.com" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("https")
+    })
+
+    it("should prefer AUTH_URL over NEXTAUTH_URL", () => {
+      const headers = new Headers()
+      const env = {
+        AUTH_URL: "https://example.com",
+        NEXTAUTH_URL: "http://localhost:3000",
+      } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("https")
+    })
+
+    it("should fall back to NEXTAUTH_URL when AUTH_URL is not set", () => {
+      const headers = new Headers()
+      const env = { NEXTAUTH_URL: "http://localhost:3000" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should fall back to x-forwarded-proto header when no env URL", () => {
+      const headers = new Headers({ "x-forwarded-proto": "https" })
+      const env = {} as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("https")
+    })
+
+    it("should use first value from comma-separated x-forwarded-proto", () => {
+      const headers = new Headers({ "x-forwarded-proto": "http, https" })
+      const env = {} as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should trim whitespace from comma-separated x-forwarded-proto values", () => {
+      const headers = new Headers({ "x-forwarded-proto": "  http  ,  https  " })
+      const env = {} as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should default to http in development when no protocol source", () => {
+      const headers = new Headers()
+      const env = { NODE_ENV: "development" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should default to http in test when no protocol source", () => {
+      const headers = new Headers()
+      const env = { NODE_ENV: "test" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should default to https in production when no protocol source", () => {
+      const headers = new Headers()
+      const env = { NODE_ENV: "production" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("https")
+    })
+
+    it("should handle invalid AUTH_URL gracefully and fall back to header", () => {
+      const headers = new Headers({ "x-forwarded-proto": "http" })
+      const env = { AUTH_URL: "invalid-url" } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
+    })
+
+    it("should handle invalid AUTH_URL and missing header by using NODE_ENV", () => {
+      const headers = new Headers()
+      const env = {
+        AUTH_URL: "invalid-url",
+        NODE_ENV: "development",
+      } as NodeJS.ProcessEnv
+
+      expect(getProtocol(headers, env)).toBe("http")
     })
   })
 })

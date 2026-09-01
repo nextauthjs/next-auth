@@ -3,6 +3,31 @@ import { NextRequest } from "next/server"
 import type { NextAuthConfig } from "./index.js"
 import { setEnvDefaults as coreSetEnvDefaults } from "@auth/core"
 
+/**
+ * Safely derives the request protocol from available sources.
+ * Fallback order: AUTH_URL/NEXTAUTH_URL origin > x-forwarded-proto header > "http" in development only.
+ * Never returns null to avoid createActionURL defaulting to https incorrectly.
+ */
+export function getProtocol(headers: Headers, env: NodeJS.ProcessEnv): string {
+  const envUrl = env.AUTH_URL ?? env.NEXTAUTH_URL
+  if (envUrl) {
+    try {
+      return new URL(envUrl).protocol.replace(/:$/, "")
+    } catch {
+      // Invalid URL, fall through to header-based detection
+    }
+  }
+
+  const forwardedProto = headers.get("x-forwarded-proto")
+  if (forwardedProto) {
+    // Handle comma-separated values (first hop is the original protocol)
+    return forwardedProto.split(",")[0].trim()
+  }
+
+  // In development, default to http; in production, let createActionURL use https
+  return env.NODE_ENV !== "production" ? "http" : "https"
+}
+
 /** If `NEXTAUTH_URL` or `AUTH_URL` is defined, override the request's URL. */
 export function reqWithEnvURL(req: NextRequest): NextRequest {
   const url = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL
