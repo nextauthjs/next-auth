@@ -32,7 +32,19 @@ export default function parseProviders(params: {
     const { options: userOptions, ...defaults } = provider
 
     const id = (userOptions?.id ?? defaults.id) as string
-    // TODO: Support if properties have different types, e.g. authorization: string or object
+    // `authorization`/`token`/`userinfo` accept a string shorthand for just
+    // the endpoint URL. If a user only overrides part of that config (e.g.
+    // `authorization: { params: { scope } }`, without a new `url`), `merge`
+    // would otherwise see a string next to an object, discard the string
+    // default entirely, and lose the base URL. Promoting the string default
+    // to `{ url }` first lets `merge` combine them instead.
+    const defaultsAsRecord = defaults as Record<string, unknown>
+    for (const key of ["authorization", "token", "userinfo"] as const) {
+      const value = defaultsAsRecord[key]
+      if (typeof value === "string") {
+        defaultsAsRecord[key] = { url: value }
+      }
+    }
     const merged = merge(defaults, userOptions, {
       signinUrl: `${url}/signin/${id}`,
       callbackUrl: `${url}/callback/${id}`,
