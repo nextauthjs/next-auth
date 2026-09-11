@@ -186,40 +186,45 @@ export async function handleOAuth(
   const requireIdToken = isOIDCProvider(provider)
 
   if (provider[conformInternal]) {
-    switch (provider.id) {
-      case "microsoft-entra-id":
-      case "azure-ad": {
-        /**
-         * These providers return errors in the response body and
-         * need the authorization server metadata to be re-processed
-         * based on the `id_token`'s `tid` claim.
-         * @see: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#error-response-1
-         */
-        const responseJson = await codeGrantResponse.clone().json()
-        if (responseJson.error) {
-          const cause = {
-            providerId: provider.id,
-            ...responseJson,
-          }
-          throw new OAuthCallbackError(
-            `OAuth Provider returned an error: ${responseJson.error}`,
-            cause
-          )
+    /**
+     * Microsoft Entra ID / Azure AD return errors in the response body and
+     * need the authorization server metadata to be re-processed based on the
+     * `id_token`'s `tid` claim.
+     *
+     * Do not key this off `provider.id` alone. Users may override the default
+     * `"microsoft-entra-id"` / `"azure-ad"` ids (for example to a GraphQL-safe
+     * identifier), and these workarounds must still apply. Apple also sets
+     * `conformInternal` but uses a different issuer.
+     * @see: https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#error-response-1
+     */
+    const issuer = as.issuer ?? provider.issuer ?? ""
+    const isMicrosoftEntra =
+      provider.id === "microsoft-entra-id" ||
+      provider.id === "azure-ad" ||
+      issuer.includes("microsoftonline")
+
+    if (isMicrosoftEntra) {
+      const responseJson = await codeGrantResponse.clone().json()
+      if (responseJson.error) {
+        const cause = {
+          providerId: provider.id,
+          ...responseJson,
         }
-        const { tid } = decodeJwt(responseJson.id_token)
-        if (typeof tid === "string") {
-          const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
-          const tenantId = as.issuer?.match(tenantRe)?.[1] ?? "common"
-          const issuer = new URL(as.issuer.replace(tenantId, tid))
-          const discoveryResponse = await o.discoveryRequest(issuer, {
-            [o.customFetch]: provider[customFetch],
-          })
-          as = await o.processDiscoveryResponse(issuer, discoveryResponse)
-        }
-        break
+        throw new OAuthCallbackError(
+          `OAuth Provider returned an error: ${responseJson.error}`,
+          cause
+        )
       }
-      default:
-        break
+      const { tid } = decodeJwt(responseJson.id_token)
+      if (typeof tid === "string") {
+        const tenantRe = /microsoftonline\.com\/(\w+)\/v2\.0/
+        const tenantId = as.issuer?.match(tenantRe)?.[1] ?? "common"
+        const tenantIssuer = new URL(as.issuer.replace(tenantId, tid))
+        const discoveryResponse = await o.discoveryRequest(tenantIssuer, {
+          [o.customFetch]: provider[customFetch],
+        })
+        as = await o.processDiscoveryResponse(tenantIssuer, discoveryResponse)
+      }
     }
   }
   const processedCodeResponse = await o.processAuthorizationCodeResponse(

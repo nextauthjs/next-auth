@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import GitHub from "../../src/providers/github.js"
 import Credentials from "../../src/providers/credentials.js"
+import MicrosoftEntraID from "../../src/providers/microsoft-entra-id.js"
 
 import { logger, makeAuthRequest, testConfig } from "../utils.js"
 import { skipCSRFCheck } from "../../src/index.js"
@@ -303,5 +304,88 @@ describe("assert POST callback action", () => {
         `https://authjs.test/auth/signin?error=CredentialsSignin&code=custom`
       )
     })
+  })
+})
+
+describe("Microsoft Entra ID common-tenant callback hacks", () => {
+  // Token-body errors are handled in the same `conformInternal` gate as the
+  // common-tenant `tid` issuer rewrite. Asserting the error mapping is enough
+  // to prove a custom provider `id` still enters that block.
+  const entraErrorBody = {
+    error: "invalid_grant",
+    error_description: "AADSTS50148: The code_verifier does not match.",
+    error_codes: [50148],
+  }
+
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input instanceof Request ? input.url : input)
+        if (url.includes(".well-known/openid-configuration")) {
+          return Response.json({
+            token_endpoint:
+              "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+            authorization_endpoint:
+              "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+            userinfo_endpoint: "https://graph.microsoft.com/oidc/userinfo",
+            issuer: "https://login.microsoftonline.com/{tenantid}/v2.0",
+            jwks_uri:
+              "https://login.microsoftonline.com/common/discovery/v2.0/keys",
+          })
+        }
+        if (url.includes("/oauth2/v2.0/token")) {
+          return Response.json(entraErrorBody)
+        }
+        return new Response(`unexpected fetch: ${url}`, { status: 500 })
+      })
+    )
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  async function entraCallback(id?: string) {
+    return makeAuthRequest({
+      action: "callback",
+      path: `/${id ?? "microsoft-entra-id"}`,
+      query: { code: "test-code" },
+      config: {
+        providers: [
+          MicrosoftEntraID({
+            ...(id ? { id } : {}),
+            clientId: "client-id",
+            clientSecret: "client-secret",
+            issuer: "https://login.microsoftonline.com/common/v2.0",
+            checks: [],
+          }),
+        ],
+      },
+    })
+  }
+
+  it("surfaces token-endpoint errors for the default provider id", async () => {
+    const { response } = await entraCallback()
+    expect(response.status).toEqual(302)
+    expect(response.headers.get("location")).toEqual(
+      `https://authjs.test/auth/signin?error=OAuthCallbackError`
+    )
+  })
+
+  it("surfaces token-endpoint errors when the provider id is customized", async () => {
+    const { response } = await entraCallback("microsoft_entra_id")
+    expect(response.status).toEqual(302)
+    expect(response.headers.get("location")).toEqual(
+      `https://authjs.test/auth/signin?error=OAuthCallbackError`
+    )
+  })
+
+  it("surfaces token-endpoint errors for an arbitrary custom provider id", async () => {
+    const { response } = await entraCallback("custom-entra")
+    expect(response.status).toEqual(302)
+    expect(response.headers.get("location")).toEqual(
+      `https://authjs.test/auth/signin?error=OAuthCallbackError`
+    )
   })
 })
