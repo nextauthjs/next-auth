@@ -1,0 +1,276 @@
+import { Callout } from "nextra/components"
+
+# Cross-context authentication for embedded Next.js apps
+
+When a Next.js app is embedded in a frame on something like SharePoint or a Teams Tab, the host already has an identity provider session. The embedded app cannot reuse it. Inside someone else's page, your session cookie is a third-party cookie, and you cannot count on it: Safari blocks third-party cookies, Firefox partitions them, and Chrome leaves them to a user setting. A normal sign-in redirect cannot finish inside the frame either.
+
+This guide describes a pattern for that problem and builds it from Auth.js and Next.js primitives, about a hundred lines in total: a popup running in the top-level browser context does a silent auth against the host's existing identity provider session and hands the session back to the embedded app through a one-time-use server-side handle, never through the URL or `localStorage`.
+
+## How it works
+
+The embedded app opens a popup. The popup runs top-level (not inside the iframe), so it can use the host's existing identity provider session.
+
+1. The popup finishes auth and calls a bridge route. That route mints a one-time handle (a 256-bit random value) and stores the session cookie behind it.
+2. The popup posts the handle, not the session cookie, to its opener with `postMessage`. Both sides check the origin.
+3. The opener redeems the handle at a consume route. The consume route deletes the handle on first read and re-sets the session cookie as a partitioned (CHIPS) cookie, so it works inside the iframe.
+
+A few properties that matter:
+
+- The session cookie never goes in a URL or `localStorage`. Only the handle is posted across windows.
+- Handles are one-time: 256-bit CSPRNG values, deleted on first read, short TTL. A leaked or replayed handle does nothing.
+- PKCE is untouched. Auth.js does the OAuth exchange as usual; the bridge only moves the finished session cookie.
+- Only a same-origin `fetch` may redeem a handle. A navigation carrying a valid handle is refused (see the consume route below for why).
+
+This works with any Auth.js OAuth provider that uses the authorization code flow.
+
+## Restrict who may embed your app
+
+<Callout type="warning">
+  Before this pattern, a cross-site iframe of your app was mostly harmless: the
+  session cookie was blocked as a third-party cookie, so the embedder got an
+  unauthenticated page. Once the bridge is in place, any site that can frame
+  your app can get an authenticated instance of it. One click, no prompt, and
+  that click is easy to fake with an overlay.
+</Callout>
+
+Allowlist the hosts that may embed you:
+
+```ts filename="next.config.ts"
+import type { NextConfig } from "next"
+
+const HOST_ORIGIN = process.env.HOST_ORIGIN ?? "https://your-host.example"
+
+// 'self' covers the same-origin popup. The host origin is the legitimate
+// embed. A wildcard allows clickjacking from any site. frame-ancestors 'none'
+// (or X-Frame-Options: DENY) would also block the host and break this pattern.
+const nextConfig: NextConfig = {
+  headers: async () => [
+    {
+      source: "/:path*",
+      headers: [
+        {
+          key: "Content-Security-Policy",
+          value: `frame-ancestors 'self' ${HOST_ORIGIN}`,
+        },
+      ],
+    },
+  ],
+}
+
+export default nextConfig
+```
+
+Nothing below controls framing. Who can put your app in a frame is `Content-Security-Policy: frame-ancestors`, and only that.
+
+## The handle store
+
+A handle maps to the session cookie(s) it was minted for. It must be unguessable, single-use, and short-lived.
+
+```ts filename="lib/bridge-store.ts"
+import { randomBytes } from "node:crypto"
+
+export type Chunk = { name: string; value: string }
+
+const TTL_MS = 60_000
+const handles = new Map<string, { chunks: Chunk[]; expires: number }>()
+
+export function createHandle(chunks: Chunk[]): string {
+  const code = randomBytes(32).toString("hex") // 256 bits
+  handles.set(code, { chunks, expires: Date.now() + TTL_MS })
+  return code
+}
+
+// Delete on first read. A second consume of the same code returns null.
+export function consumeHandle(code: string): Chunk[] | null {
+  const entry = handles.get(code)
+  handles.delete(code)
+  if (!entry || entry.expires < Date.now()) return null
+  return entry.chunks
+}
+```
+
+<Callout>
+  A `Map` only works when the bridge and consume routes run in the same process.
+  On serverless (Vercel, Lambda) they usually do not, so back the store with
+  Redis instead: `SET code value EX 60` to create, `GETDEL code` to consume.
+  Keep the TTL at 60 seconds or less.
+</Callout>
+
+## Fetch Metadata gate
+
+Both routes below accept only a `fetch` issued by your own document. Browsers attach `Sec-Fetch-*` headers to every request, and page script cannot set or strip them, so this is a reliable way to tell "my app called this" from "the user navigated here" or "another site requested this".
+
+```ts filename="lib/same-origin-fetch.ts"
+export function isSameOriginFetch(request: Request): boolean {
+  return (
+    request.headers.get("Sec-Fetch-Site") === "same-origin" &&
+    request.headers.get("Sec-Fetch-Dest") === "empty"
+  )
+}
+```
+
+Every browser that supports `Partitioned` cookies also sends Fetch Metadata, so failing closed here costs nothing.
+
+This matters most on the consume route. A handle is a bearer secret: an attacker who mints one for their **own** session could, within the TTL, get a victim's browser to open `/auth/consume?code=...` as a plain link and log the victim in as the attacker. A navigation carries `Sec-Fetch-Dest: document`, so the gate refuses it before the store is touched. Note that checking the `Origin` header would not help here: a same-origin GET `fetch` does not send one.
+
+## The bridge route
+
+The popup calls this route while it is top-level and has a session. The route verifies the session with Auth.js, picks the session-token cookie(s) out of the request, and returns a handle. It never sets a cookie.
+
+```ts filename="app/auth/bridge/route.ts"
+import { auth } from "@/auth"
+import { createHandle, type Chunk } from "@/lib/bridge-store"
+import { isSameOriginFetch } from "@/lib/same-origin-fetch"
+
+// Auth.js chunks a large session cookie into name.0, name.1, ... Take the base
+// name and every chunk; leave csrf, pkce, state and callback-url cookies alone.
+const SESSION_COOKIE = /^(__Secure-)?authjs\.session-token(\.\d+)?$/
+
+export async function GET(request: Request): Promise<Response> {
+  if (!isSameOriginFetch(request)) return new Response(null, { status: 400 })
+
+  const session = await auth()
+  if (!session) return new Response(null, { status: 401 })
+
+  const chunks: Chunk[] = (request.headers.get("cookie") ?? "")
+    .split(";")
+    .map((pair) => pair.trim().split("="))
+    .filter(([name]) => SESSION_COOKIE.test(name ?? ""))
+    .map(([name, ...rest]) => ({ name: name!, value: rest.join("=") }))
+
+  if (chunks.length === 0) return new Response(null, { status: 401 })
+
+  return Response.json({ code: createHandle(chunks) })
+}
+```
+
+## The consume route
+
+The embedded app redeems the handle here. The route re-sets each stored cookie with the `Partitioned` attribute, which is what makes it readable inside the iframe.
+
+```ts filename="app/auth/consume/route.ts"
+import { consumeHandle } from "@/lib/bridge-store"
+import { isSameOriginFetch } from "@/lib/same-origin-fetch"
+
+export async function GET(request: Request): Promise<Response> {
+  // Same 400 for a navigation, a cross-site request, a missing code and an
+  // unknown code: no signal about which one it was.
+  if (!isSameOriginFetch(request)) return new Response(null, { status: 400 })
+
+  const code = new URL(request.url).searchParams.get("code")
+  const chunks = code ? consumeHandle(code) : null
+  if (!chunks) return new Response(null, { status: 400 })
+
+  const headers = new Headers()
+  for (const { name, value } of chunks) {
+    // One Set-Cookie header per chunk. Partitioned requires Secure and
+    // SameSite=None; HttpOnly keeps it away from script, as Auth.js does.
+    headers.append(
+      "Set-Cookie",
+      `${name}=${value}; Path=/; Secure; HttpOnly; SameSite=None; Partitioned`
+    )
+  }
+  return new Response(null, { status: 204, headers })
+}
+```
+
+The cookie name must be the one Auth.js reads back, so the `__Secure-` prefix is kept as-is. Auth.js only adds that prefix over HTTPS; on plain http in development the cookie is `authjs.session-token`, and `Partitioned` cookies need HTTPS anyway, so test this flow on `https://localhost` or a deployed preview.
+
+## The popup
+
+The popup page runs top-level, reads the session, posts the handle to its opener, and closes.
+
+A cross-origin redirect does not break this. `window.opener` survives the round trip to the identity provider and back, which is what makes the cold-start flow below possible. What does break it is `Cross-Origin-Opener-Policy: same-origin` on your app or on the provider's pages: that severs the opener reference and the handle has nowhere to go.
+
+```tsx filename="app/auth/popup/page.tsx"
+"use client"
+
+import { useEffect } from "react"
+import { signIn } from "next-auth/react"
+
+export default function PopupPage() {
+  useEffect(() => {
+    const opener = window.opener as Window | null
+    if (!opener) return
+
+    void (async () => {
+      const res = await fetch("/auth/bridge")
+
+      if (res.status === 401) {
+        // First-time users (cold start): no app session yet, but the host's SSO
+        // is live. Make ONE silent attempt against the same identity provider.
+        // ?silent=attempted guards against a loop; ?error is Auth.js routing an
+        // OAuth error (login_required = no host SSO) back here via pages.error.
+        const params = new URLSearchParams(window.location.search)
+        if (params.get("silent") !== "attempted" && !params.has("error")) {
+          await signIn(
+            "your-provider",
+            { redirectTo: "/auth/popup?silent=attempted" },
+            { prompt: "none" }
+          )
+        }
+        return
+      }
+
+      const { code } = (await res.json()) as { code: string }
+      // Target origin is your app's origin: the opener is your own app inside
+      // the iframe, not the host page.
+      opener.postMessage({ type: "auth-bridge", code }, window.location.origin)
+      window.close()
+    })()
+  }, [])
+
+  return <p>Completing sign-in…</p>
+}
+```
+
+If the silent attempt comes back with `login_required`, there is no host SSO to inherit. Set `pages.error` to `/auth/popup` so Auth.js lands back in the popup with `?error=...`, and render a "sign in on the host first" message when that parameter is present. Do not run an interactive login inside the popup.
+
+## The launcher
+
+The launcher lives on your sign-in UI and is shown when the app is framed (`window.self !== window.top`). It opens the popup, waits for the handle, redeems it, then reloads so the iframe picks up the new session.
+
+```tsx filename="components/sign-in-via-bridge.tsx"
+"use client"
+
+export async function signInViaBridge(): Promise<void> {
+  const appOrigin = window.location.origin
+  const popup = window.open(
+    "/auth/popup",
+    "auth-bridge",
+    "popup,width=500,height=650"
+  )
+  if (!popup) throw new Error("popup-blocked")
+
+  const code = await new Promise<string>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      window.removeEventListener("message", onMessage)
+      reject(new Error("timeout"))
+    }, 60_000)
+
+    function onMessage(event: MessageEvent) {
+      // Both checks: the origin AND the exact window that we opened.
+      if (event.origin !== appOrigin || event.source !== popup) return
+      if (event.data?.type !== "auth-bridge") return
+      clearTimeout(timer)
+      window.removeEventListener("message", onMessage)
+      resolve(event.data.code as string)
+    }
+    window.addEventListener("message", onMessage)
+  })
+
+  // credentials: "include" so the Partitioned Set-Cookie is committed under
+  // the host's top-level partition, where this iframe will read it.
+  await fetch(`/auth/consume?code=${encodeURIComponent(code)}`, {
+    credentials: "include",
+  })
+  window.location.reload()
+}
+```
+
+Because the popup must be opened from a click, call `signInViaBridge` from a button handler, not on mount.
+
+## Resources
+
+- [`next-auth-bridge`](https://github.com/azatdavliatshin/next-auth-bridge): a maintained implementation of this pattern with a test suite and a [threat model](https://github.com/azatdavliatshin/next-auth-bridge/blob/main/docs/threat-model.md), if you would rather install it than copy the code above.
+- [Live demo](https://nab-host.vercel.app/): sign in on the host, watch the embedded app sign itself in with no second prompt.

@@ -8,6 +8,7 @@ export default {
   "role-based-access-control": "Role-Based Access Control",
   "corporate-proxy": "Supporting Corporate Proxies",
   "edge-compatibility": "Edge Compatibility",
+  "cross-context-iframe-bridge": "Cross-Context Authentication (iframes)",
   "configuring-github": "Configuring GitHub for OAuth",
   "configuring-resend": "Configuring Resend for magic links",
   "configuring-oauth-providers": "Configuring OAuth providers",
