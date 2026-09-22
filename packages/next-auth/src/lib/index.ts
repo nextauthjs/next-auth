@@ -246,6 +246,18 @@ export function initAuth(
   }
 }
 
+/**
+ * Whether `pathname` points at one of NextAuth's own internal action routes
+ * (e.g. `/api/auth/signout`, `/api/auth/callback/*`), as opposed to an
+ * ordinary application page.
+ */
+function isAuthActionRequest(pathname: string, config: NextAuthConfig) {
+  const basePath = config.basePath || "/api/auth"
+  if (!pathname.startsWith(basePath)) return false
+  const [action] = pathname.slice(basePath.length).replace(/^\//, "").split("/")
+  return actions.has(action as AuthAction)
+}
+
 async function handleAuth(
   args: Parameters<NextMiddleware | AppRouteHandlerFn>,
   config: NextAuthConfig,
@@ -297,9 +309,18 @@ async function handleAuth(
 
   const finalResponse = new Response(response?.body, response)
 
-  // Preserve cookies from the session response
-  for (const cookie of sessionResponse.headers.getSetCookie())
-    finalResponse.headers.append("set-cookie", cookie)
+  // Preserve cookies from the session response, unless this request is
+  // itself hitting one of NextAuth's own action routes (e.g. `signout`,
+  // `callback`). Those routes manage the session cookie themselves as part
+  // of handling the action -- e.g. `signout` clears it -- so appending our
+  // own session-refresh cookie here on top of that would leave the response
+  // with two conflicting `Set-Cookie` headers for the same cookie name,
+  // which is undefined behavior per RFC 6265 4.1.1 and can cause sign-out
+  // to silently fail depending on the hosting runtime. See #12909.
+  if (!isAuthActionRequest(request.nextUrl.pathname, config)) {
+    for (const cookie of sessionResponse.headers.getSetCookie())
+      finalResponse.headers.append("set-cookie", cookie)
+  }
 
   return finalResponse
 }
