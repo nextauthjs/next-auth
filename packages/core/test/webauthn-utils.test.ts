@@ -28,6 +28,8 @@ import {
   verifyRegister,
   fromBase64,
   toBase64,
+  base64ToBase64URL,
+  base64URLToBase64,
   stringToTransports,
   transportsToString,
 } from "../src/lib/utils/webauthn-utils"
@@ -45,7 +47,10 @@ import {
   WebAuthnVerificationError,
 } from "../src/errors"
 import { randomString } from "../src/lib/utils/web"
-import { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/server/script/deps"
+import type {
+  CredentialDeviceType,
+  PublicKeyCredentialCreationOptionsJSON,
+} from "@simplewebauthn/server"
 import { Cookie } from "../src/lib/utils/cookie"
 import { randomInt } from "crypto"
 
@@ -88,7 +93,16 @@ function getMockOptions(
 function createAuthenticator(
   partial?: Partial<AdapterAuthenticator>
 ): AdapterAuthenticator {
-  const id = randomString(32)
+  // Realistic stored credential ID: standard base64 of raw bytes, including the
+  // "+", "/" and "=" characters that differ from the base64url SimpleWebAuthn uses.
+  const id = toBase64(
+    new Uint8Array([
+      0xfb,
+      0xff,
+      0xbf,
+      ...crypto.getRandomValues(new Uint8Array(14)),
+    ])
+  )
   return {
     userId: randomString(32),
     credentialID: id,
@@ -131,13 +145,16 @@ function getExpectedResponse(
  */
 function prepareVerifyTest(
   action: WebAuthnAction,
-  requestData?: Record<string, unknown>
+  requestData?: Record<string, unknown> & {
+    response?: { transports?: AuthenticatorTransport[] }
+  }
 ) {
   const options = getMockOptions()
-  const credentialID = toBase64(new Uint8Array([1, 2, 3, 4, 5]))
+  // Stored format is standard base64 ("+/+/AQI="); browsers send base64url ("-_-_AQI")
+  const credentialID = toBase64(new Uint8Array([0xfb, 0xff, 0xbf, 1, 2]))
   requestData ??= {
     key: "value",
-    id: credentialID,
+    id: base64ToBase64URL(credentialID),
     response: { transports: ["ble", "nfc"] },
   }
   const request = {
@@ -146,12 +163,12 @@ function prepareVerifyTest(
   } as unknown as RequestInternal
   const cookies = [{ name: "other", value: "value", options: {} }]
 
+  const responseTransports = requestData.response?.transports
   const authenticator = createAuthenticator({
     credentialID,
     providerAccountId: credentialID,
-    // @ts-expect-error
-    transports: requestData.response?.transports
-      ? transportsToString(requestData.response?.transports)
+    transports: responseTransports
+      ? transportsToString(responseTransports)
       : "usb,ble,nfc",
   })
   vi.mocked(options.adapter.getAuthenticator).mockResolvedValue(authenticator)
@@ -172,14 +189,19 @@ function prepareVerifyTest(
     vi.mocked(verifyRegistrationResponse).mockResolvedValue({
       verified: true,
       registrationInfo: {
-        counter: authenticator.counter,
-        credentialID: fromBase64(authenticator.credentialID),
-        credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
+        credential: {
+          // SimpleWebAuthn v13+ returns the credential ID as base64url
+          id: base64ToBase64URL(authenticator.credentialID),
+          publicKey: new Uint8Array(
+            fromBase64(authenticator.credentialPublicKey)
+          ),
+          counter: authenticator.counter,
+        },
         credentialBackedUp: authenticator.credentialBackedUp,
-        // @ts-expect-error
-        credentialDeviceType: authenticator.credentialDeviceType,
+        credentialDeviceType:
+          authenticator.credentialDeviceType as CredentialDeviceType,
       },
-    })
+    } as Awaited<ReturnType<typeof verifyRegistrationResponse>>)
   }
 
   const account = {
@@ -201,11 +223,11 @@ function prepareVerifyTest(
     ...defaultWebAuthnConfig.verifyAuthenticationOptions,
     expectedChallenge: challenge,
     response: requestData,
-    authenticator: {
-      ...authenticator,
-      credentialID: fromBase64(authenticator.credentialID),
+    credential: {
+      id: base64ToBase64URL(authenticator.credentialID),
+      publicKey: new Uint8Array(fromBase64(authenticator.credentialPublicKey)),
+      counter: authenticator.counter,
       transports: stringToTransports(authenticator.transports),
-      credentialPublicKey: fromBase64(authenticator.credentialPublicKey),
     },
     expectedOrigin: rp.origin,
     expectedRPID: rp.id,
@@ -291,6 +313,19 @@ describe("toBase64", () => {
   it("is stable", () => {
     const input = "AQIDBAU="
     expect(toBase64(fromBase64(input))).toEqual(input)
+  })
+})
+
+describe("credential ID encoding", () => {
+  const bytes = new Uint8Array([0xfb, 0xff, 0xbf, 1, 2])
+
+  it("converts stored base64 IDs to the base64url SimpleWebAuthn expects", () => {
+    expect(base64ToBase64URL(toBase64(bytes))).toBe("-_-_AQI")
+  })
+
+  it("converts SimpleWebAuthn base64url IDs back to the stored base64 format", () => {
+    expect(base64URLToBase64("-_-_AQI")).toBe(toBase64(bytes))
+    expect(toBase64(bytes)).toBe("+/+/AQI=")
   })
 })
 
@@ -539,19 +574,19 @@ describe("getRegistrationResponse", () => {
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: base64ToBase64URL(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
-    }
+    } as GenerateRegistrationOptionsOpts
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse(
       "register",
@@ -609,15 +644,15 @@ describe("getRegistrationResponse", () => {
     vi.mocked(generateRegistrationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateRegistrationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: base64ToBase64URL(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -627,7 +662,7 @@ describe("getRegistrationResponse", () => {
         requireResidentKey: true,
       },
       supportedAlgorithmIDs: [1, 2, 3],
-    }
+    } as GenerateRegistrationOptionsOpts
     const expectedResponse = getExpectedResponse("register", returnedOptions)
 
     expect(
@@ -661,7 +696,7 @@ describe("getRegistrationResponse", () => {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: user.name,
       excludeCredentials: undefined,
@@ -697,7 +732,7 @@ describe("getRegistrationResponse", () => {
       ...defaultWebAuthnConfig.registrationOptions,
       rpID: rp.id,
       rpName: rp.name,
-      userID: expect.any(String),
+      userID: expect.any(Uint8Array),
       userName: user.email,
       userDisplayName: undefined,
       excludeCredentials: undefined,
@@ -735,15 +770,15 @@ describe("getAuthenticationResponse", () => {
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
       allowCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: base64ToBase64URL(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
-    }
+    } as GenerateAuthenticationOptionsOpts
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse(
       "authenticate",
@@ -797,11 +832,11 @@ describe("getAuthenticationResponse", () => {
     vi.mocked(generateAuthenticationOptions).mockResolvedValue(returnedOptions)
 
     const rp = options.provider.getRelayingParty(options, {} as RequestInternal)
-    const expectedOptionsParams: GenerateAuthenticationOptionsOpts = {
+    const expectedOptionsParams = {
       ...defaultWebAuthnConfig.authenticationOptions,
       rpID: rp.id,
       allowCredentials: authenticators.map((a) => ({
-        id: fromBase64(a.credentialID),
+        id: base64ToBase64URL(a.credentialID),
         type: "public-key",
         transports: stringToTransports(a.transports),
       })),
@@ -810,7 +845,7 @@ describe("getAuthenticationResponse", () => {
       extensions: {
         appid: "test",
       },
-    }
+    } as GenerateAuthenticationOptionsOpts
     const cookies = [{ name: "other", value: "value", options: {} }]
     const expectedResponse = getExpectedResponse(
       "authenticate",
@@ -970,7 +1005,7 @@ describe("verifyAuthenticate", () => {
     await expect(() =>
       verifyAuthenticate(options, request, cookies)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[AuthError: WebAuthn authenticator not found in database: {"credentialID":"AQIDBAU="}. Read more at https://errors.authjs.dev#autherror]`
+      `[AuthError: WebAuthn authenticator not found in database: {"credentialID":"+/+/AQI="}. Read more at https://errors.authjs.dev#autherror]`
     )
 
     expect(options.adapter.getAuthenticator).toHaveBeenCalledWith(credentialID)
@@ -1042,7 +1077,7 @@ describe("verifyAuthenticate", () => {
     await expect(() =>
       verifyAuthenticate(options, request, cookies)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[AuthError: WebAuthn account not found in database: {"credentialID":"AQIDBAU=","providerAccountId":"AQIDBAU="}. Read more at https://errors.authjs.dev#autherror]`
+      `[AuthError: WebAuthn account not found in database: {"credentialID":"+/+/AQI=","providerAccountId":"+/+/AQI="}. Read more at https://errors.authjs.dev#autherror]`
     )
 
     expect(options.adapter.getAccount).toHaveBeenCalledWith(

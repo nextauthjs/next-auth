@@ -812,14 +812,11 @@ importers:
         version: 6.5.11(preact@10.24.3)
     devDependencies:
       '@simplewebauthn/browser':
-        specifier: 9.0.1
-        version: 9.0.1
+        specifier: ^14.0.0
+        version: 14.0.0
       '@simplewebauthn/server':
-        specifier: 9.0.3
-        version: 9.0.3(encoding@0.1.13)
-      '@simplewebauthn/types':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^14.0.2
+        version: 14.0.2
       '@types/node':
         specifier: 18.11.10
         version: 18.11.10
@@ -917,11 +914,11 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@simplewebauthn/browser':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^13.3.0 || ^14.0.0
+        version: 14.0.0
       '@simplewebauthn/server':
-        specifier: ^9.0.3
-        version: 9.0.3(encoding@0.1.13)
+        specifier: ^13.3.2 || ^14.0.2
+        version: 14.0.2
       nodemailer:
         specifier: 8.0.5
         version: 8.0.5
@@ -972,11 +969,11 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@simplewebauthn/browser':
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^13.3.0 || ^14.0.0
+        version: 14.0.0
       '@simplewebauthn/server':
-        specifier: ^9.0.2
-        version: 9.0.3(encoding@0.1.13)
+        specifier: ^13.3.2 || ^14.0.2
+        version: 14.0.2
     devDependencies:
       '@types/react':
         specifier: 18.0.37
@@ -3778,20 +3775,65 @@ packages:
   '@peculiar/asn1-android@2.8.0':
     resolution: {integrity: sha512-skLbS+IOGv1lUgDqtChr8xvtvEr3HMse/JGBaL2r1J1o/n7a8wqOrovMtlRq/UXLhxvmLaONP67hwtshgzwfzA==}
 
+  '@peculiar/asn1-asym-key@2.9.5':
+    resolution: {integrity: sha512-U3Q2bUWYNVpfk+oOhPl/+OSHxXaBTQBwMf93jJ7oPi/sbmcY5CnARdjGMwLoXT/ggWSryo5t7A7o3/Gfz0U2WA==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-cms@2.9.5':
+    resolution: {integrity: sha512-4Ivz0fsyFofe0bslNsYcGN9+iETdHX4v+BFwIPr+K/BAt61sHXECP63ff9FntU9zcfVQELJFdUG9so44OjUlBQ==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-csr@2.9.5':
+    resolution: {integrity: sha512-9dO6PcoJeI+1xJ4rG7eINMa6f9Ix/QdRs5UGZ0D7v/R3TzmsbVr5cqAgfYw4xgS9U54ouHYqEz0bIZBbM/UY1g==}
+    engines: {node: '>=14'}
+
   '@peculiar/asn1-ecc@2.8.0':
     resolution: {integrity: sha512-ohwlk+u9Rv2NOAY1c6MfHj45ATVF8R1DUN/WCgABiRtLi2ZftlZWZX7KvpAbU8v9xPcmoILfELeEABj/rn18AQ==}
+
+  '@peculiar/asn1-ecc@2.9.5':
+    resolution: {integrity: sha512-OD+HLlcV7wCL64w0rheX/C0J31DbJce0nf8ulv3UNftQ617JEZE3sQ4cMN6PotXWlJ1M5GQx90G3bywtdKOstw==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-pfx@2.9.5':
+    resolution: {integrity: sha512-btcH7lbcD4410qnjHvv7F0kEuMNKbX8CFAZSs9CDPWHKzT1byLPHYeR40AnUw9z4CzsijMY0daBFYUvVx75sdA==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-pkcs8@2.9.5':
+    resolution: {integrity: sha512-c7UghAGQdBfAHL9JdwcJkAc/lDJKNXfCdYXPXlf8BZdD/fVJjJnXKHxX4gyLhkFTvnGhME7caieSgc2ROtqYTQ==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-pkcs9@2.9.5':
+    resolution: {integrity: sha512-4R/zMgLSHbQIZRBwP1KzX6iuNHmW3xFWwu9TS9A00N60fmQqp9DkkqnQFyd0mAYMQTrQefuzQ/yP4U8sOLGUgQ==}
+    engines: {node: '>=14'}
 
   '@peculiar/asn1-rsa@2.8.0':
     resolution: {integrity: sha512-zHEUlCqB2mk7x2lxDwHHJy7hWZOPdGHVlsmITWKB5/PbQo61atbu9PJ/0r9dQNMwFzbKPXZ8uK8/91eUhRznSg==}
 
-  '@peculiar/asn1-schema@2.3.8':
-    resolution: {integrity: sha512-ULB1XqHKx1WBU/tTFIA+uARuRoBVZ4pNdOA878RDrRbBfBGcSzi5HBkdScC6ZbHn8z7L8gmKCgPC1LHRrP46tA==}
+  '@peculiar/asn1-rsa@2.9.5':
+    resolution: {integrity: sha512-kHwBLVMkm9ljlM521ovS7y4z4mr8xuHTdNyyoPlDvckBwFKSgs9HqKBryLBeqHqL2YpIgl+Vspl7kzNGG2phzA==}
+    engines: {node: '>=14'}
 
   '@peculiar/asn1-schema@2.8.0':
     resolution: {integrity: sha512-7YT0U/ze0tF2QOBbE15gKZwy5tvgGyLRiRHLzhlbOpf7BT032oBSd0haZqXn5W6l26WLlu3dyxzjM+2638/z2Q==}
 
+  '@peculiar/asn1-schema@2.9.5':
+    resolution: {integrity: sha512-Ez3wLKVjaxdsLcgeWN4OE31QkM7oBOgKuuBJxldRYAkfYw2C+8zJPcSd/SThnbhszsEOlAmoaS5kIIkN29fGKQ==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-x509-attr@2.9.5':
+    resolution: {integrity: sha512-PlbL1a74RZiry7puPCZ5hdk/puvivxYJPbjadr2i7DBjHCJFEKCfTRPKL3DILeZFtzJjn95J5EBtSc4/TB9/6Q==}
+    engines: {node: '>=14'}
+
+  '@peculiar/asn1-x509-post-quantum@2.9.5':
+    resolution: {integrity: sha512-CTznDkboSgwRpXSFhta+Pe5cQ12JtojdMrmOZTWYkBSvbW/1R5pflPIHkpSlaILIfGcAaxIVpXq880xCfJYzow==}
+    engines: {node: '>=14'}
+
   '@peculiar/asn1-x509@2.8.0':
     resolution: {integrity: sha512-N0CMuhWUzsWEVq6F1q9X6+VKUnWzSW+cSVg+aPaGGwDdbFoFWTYgin5MHwXgpWd6y9COMBxnfy/Qc+Xc7F0Zwg==}
+
+  '@peculiar/asn1-x509@2.9.5':
+    resolution: {integrity: sha512-NP3ecvN6zTDlwCvogIWL7MJN9AZNuskkIbnlhrlkB97Mn2EqirBUQ8GKzsOmdAL3pRvjGu1Uk/a4DNfiZrWxhw==}
+    engines: {node: '>=14'}
 
   '@peculiar/json-schema@1.1.12':
     resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
@@ -3803,6 +3845,10 @@ packages:
   '@peculiar/webcrypto@1.4.5':
     resolution: {integrity: sha512-oDk93QCDGdxFRM8382Zdminzs44dg3M2+E5Np+JWkpqLDyJC9DviMh8F8mEJkYuUcUOGA5jHO5AJJ10MFWdbZw==}
     engines: {node: '>=10.12.0'}
+
+  '@peculiar/x509@2.1.0':
+    resolution: {integrity: sha512-IYbg1R03CSQGWwl24kGyqrdVtixNSbRaDvBg1r5wyYjTP+VwPQkka1BzTgU5+vxiuwqg04OxdvdJ1xYYFIdUSA==}
+    engines: {node: '>=20.0.0'}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -4392,16 +4438,12 @@ packages:
   '@sideway/pinpoint@2.0.0':
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
 
-  '@simplewebauthn/browser@9.0.1':
-    resolution: {integrity: sha512-wD2WpbkaEP4170s13/HUxPcAV5y4ZXaKo1TfNklS5zDefPinIgXOpgz1kpEvobAsaLPa2KeH7AKKX/od1mrBJw==}
+  '@simplewebauthn/browser@14.0.0':
+    resolution: {integrity: sha512-1odWVqeEBTl7lJ9zMKLEsmTlnyrDO5iRcTvfMKKk1WThUnp/i8JJdffdj2icP+tty159s4PgwE3BiMoEW9NFow==}
 
-  '@simplewebauthn/server@9.0.3':
-    resolution: {integrity: sha512-FMZieoBosrVLFxCnxPFD9Enhd1U7D8nidVDT4MsHc6l4fdVcjoeHjDueeXCloO1k5O/fZg1fsSXXPKbY2XTzDA==}
-    engines: {node: '>=16.0.0'}
-
-  '@simplewebauthn/types@9.0.1':
-    resolution: {integrity: sha512-tGSRP1QvsAvsJmnOlRQyw/mvK9gnPtjEc5fg2+m8n+QUa+D7rvrKkOYyfpy42GTs90X3RDOnqJgfHt+qO67/+w==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+  '@simplewebauthn/server@14.0.2':
+    resolution: {integrity: sha512-g+m/xv9/8FRWsDY22CwsTYRzt3WwS9fJrR3P7eY3Ti01FXH5FQ36Xn55v6D+5tb6VajlqOj4hywP/Vxsb6a3Sg==}
+    engines: {node: '>=20.0.0'}
 
   '@smithy/abort-controller@2.1.1':
     resolution: {integrity: sha512-1+qdrUqLhaALYL0iOcN43EP6yAXXQ2wWZ6taf4S2pNGowmOc5gx+iMQv+E42JizNJjB0+gEadOXeV1Bf7JWL1Q==}
@@ -6324,10 +6366,6 @@ packages:
     resolution: {integrity: sha512-S2s3aOytiKdFRdulw2qPE51MzjzVOisppcVv7jVFR+Kw0kxwvFrDcYA0h7Ndqbmj0HkMIXYWaoj7fli8kgx1eg==}
     engines: {node: '>=12.0.0'}
 
-  asn1js@3.0.5:
-    resolution: {integrity: sha512-FVnvrKJwpt9LP2lAMl8qZswRNm3T4q9CON+bxldk2iwk3FFpuwhx2FfinyitizWHsVYyaY+y5JzDR0rCMV5yTQ==}
-    engines: {node: '>=12.0.0'}
-
   assert-never@1.4.0:
     resolution: {integrity: sha512-5oJg84os6NMQNl27T9LnZkvvqzvAnHu03ShCnoj6bsJwS7L8AO4lf+C/XjK/nvzEqQB744moC6V128RucQd1jA==}
 
@@ -7116,9 +7154,6 @@ packages:
 
   cross-fetch@3.1.8:
     resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
-
-  cross-fetch@4.1.0:
-    resolution: {integrity: sha512-uKm5PU+MHTootlWEY+mZ4vvXoCn4fLQxT9dSc1sXVMSFkINTJVN8cAQROpwcKm8bJ/c7rgZVIBWzH5T78sNZZw==}
 
   cross-inspect@1.0.0:
     resolution: {integrity: sha512-4PFfn4b5ZN6FMNGSZlyb7wUhuN8wvj8t/VQHZdM4JsDcruGJ8L2kf9zao98QIrBPFCpdk27qst/AGTl7pL3ypQ==}
@@ -11586,15 +11621,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  pvtsutils@1.3.5:
-    resolution: {integrity: sha512-ARvb14YB9Nm2Xi6nBq1ZX6dAM0FsJnuk+31aUp4TrcZEdKUlSqOqsxJHUPJDNE3qiIp+iUPEIeR6Je/tgV7zsA==}
-
   pvtsutils@1.3.6:
     resolution: {integrity: sha512-PLgQXQ6H2FWCaeRak8vvk1GW462lMxB5s3Jm673N82zI4vqtVUPuZdffdZbPDFRoU8kAhItWFtPCWiPpp4/EDg==}
-
-  pvutils@1.1.3:
-    resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
-    engines: {node: '>=6.0.0'}
 
   pvutils@1.1.5:
     resolution: {integrity: sha512-KTqnxsgGiQ6ZAzZCVlJH5eOjSnvlyEgx1m8bkRJfOhmGRqfo5KLvmAlACQkrjEtOQ4B7wF9TdSLIs9O90MX9xA==}
@@ -13049,6 +13077,10 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  tsyringe@4.10.0:
+    resolution: {integrity: sha512-axr3IdNuVIxnaK5XGEUFTu3YmAQ6lllgrvqfEoR16g/HGnYY/6We4oWENtAnzK6/LpJ2ur9PAb80RBt7/U4ugw==}
+    engines: {node: '>= 6.0.0'}
+
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
@@ -14272,7 +14304,7 @@ snapshots:
       response-iterator: 0.2.6
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
-      tslib: 2.7.0
+      tslib: 2.8.1
       zen-observable-ts: 1.2.5
     optionalDependencies:
       graphql-ws: 5.14.3(graphql@16.8.1)
@@ -14620,7 +14652,7 @@ snapshots:
       '@smithy/util-retry': 2.1.1
       '@smithy/util-utf8': 2.1.1
       fast-xml-parser: 4.5.5
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -14631,7 +14663,7 @@ snapshots:
       '@smithy/signature-v4': 2.1.1
       '@smithy/smithy-client': 2.3.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-cognito-identity@3.499.0':
     dependencies:
@@ -14691,7 +14723,7 @@ snapshots:
       '@smithy/property-provider': 2.1.1
       '@smithy/shared-ini-file-loader': 2.3.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -14764,27 +14796,27 @@ snapshots:
       '@smithy/node-config-provider': 2.2.1
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-host-header@3.496.0':
     dependencies:
       '@aws-sdk/types': 3.496.0
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-logger@3.496.0':
     dependencies:
       '@aws-sdk/types': 3.496.0
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-recursion-detection@3.496.0':
     dependencies:
       '@aws-sdk/types': 3.496.0
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-signing@3.496.0':
     dependencies:
@@ -14803,7 +14835,7 @@ snapshots:
       '@aws-sdk/util-endpoints': 3.496.0
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/region-config-resolver@3.496.0':
     dependencies:
@@ -14812,7 +14844,7 @@ snapshots:
       '@smithy/types': 2.9.1
       '@smithy/util-config-provider': 2.2.1
       '@smithy/util-middleware': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/token-providers@3.496.0':
     dependencies:
@@ -14859,7 +14891,7 @@ snapshots:
   '@aws-sdk/types@3.496.0':
     dependencies:
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/util-dynamodb@3.499.0(@aws-sdk/client-dynamodb@3.499.0)':
     dependencies:
@@ -14871,7 +14903,7 @@ snapshots:
       '@aws-sdk/types': 3.496.0
       '@smithy/types': 2.9.1
       '@smithy/util-endpoints': 1.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/util-locate-window@3.495.0':
     dependencies:
@@ -14882,14 +14914,14 @@ snapshots:
       '@aws-sdk/types': 3.496.0
       '@smithy/types': 2.9.1
       bowser: 2.11.0
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/util-user-agent-node@3.496.0':
     dependencies:
       '@aws-sdk/types': 3.496.0
       '@smithy/node-config-provider': 2.2.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@aws-sdk/util-utf8-browser@3.259.0':
     dependencies:
@@ -14903,7 +14935,7 @@ snapshots:
     dependencies:
       '@azure/abort-controller': 1.1.0
       '@azure/core-util': 1.6.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@azure/core-client@1.7.3':
     dependencies:
@@ -14913,7 +14945,7 @@ snapshots:
       '@azure/core-tracing': 1.0.1
       '@azure/core-util': 1.6.1
       '@azure/logger': 1.0.4
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -14934,7 +14966,7 @@ snapshots:
 
   '@azure/core-paging@1.5.0':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@azure/core-rest-pipeline@1.13.0':
     dependencies:
@@ -14945,7 +14977,7 @@ snapshots:
       '@azure/logger': 1.0.4
       http-proxy-agent: 5.0.0
       https-proxy-agent: 5.0.1
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -14956,7 +14988,7 @@ snapshots:
 
   '@azure/core-tracing@1.0.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@azure/core-util@1.6.1':
     dependencies:
@@ -14966,7 +14998,7 @@ snapshots:
   '@azure/core-xml@1.3.4':
     dependencies:
       fast-xml-parser: 4.5.5
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@azure/data-tables@13.2.2':
     dependencies:
@@ -15024,7 +15056,7 @@ snapshots:
 
   '@azure/logger@1.0.4':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@azure/ms-rest-azure-env@2.0.0': {}
 
@@ -16516,7 +16548,7 @@ snapshots:
 
   '@formatjs/intl-localematcher@0.5.5':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@gar/promisify@1.1.3':
     optional: true
@@ -16744,7 +16776,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.8.1
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
 
@@ -16762,7 +16794,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       globby: 11.1.0
       graphql: 16.8.1
-      tslib: 2.7.0
+      tslib: 2.8.1
       unixify: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -16837,7 +16869,7 @@ snapshots:
       graphql: 16.8.1
       is-glob: 4.0.3
       micromatch: 4.0.8
-      tslib: 2.7.0
+      tslib: 2.8.1
       unixify: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -16850,7 +16882,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.8.1
-      tslib: 2.7.0
+      tslib: 2.8.1
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
@@ -16863,7 +16895,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       globby: 11.1.0
       graphql: 16.8.1
-      tslib: 2.7.0
+      tslib: 2.8.1
       unixify: 1.0.0
 
   '@graphql-tools/graphql-tag-pluck@8.2.0(graphql@16.8.1)':
@@ -16891,7 +16923,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       globby: 11.1.0
       graphql: 16.8.1
-      tslib: 2.7.0
+      tslib: 2.8.1
       unixify: 1.0.0
 
   '@graphql-tools/load@8.0.1(graphql@16.8.1)':
@@ -16900,7 +16932,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.8.1)
       graphql: 16.8.1
       p-limit: 3.1.0
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@graphql-tools/merge@9.0.1(graphql@16.8.1)':
     dependencies:
@@ -16932,7 +16964,7 @@ snapshots:
       json-stable-stringify: 1.1.1
       lodash: 4.18.0
       scuid: 1.1.0
-      tslib: 2.7.0
+      tslib: 2.8.1
       yaml-ast-parser: 0.0.43
     transitivePeerDependencies:
       - '@types/node'
@@ -16972,7 +17004,7 @@ snapshots:
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.8.1
       isomorphic-ws: 5.0.0(ws@8.20.1)
-      tslib: 2.7.0
+      tslib: 2.8.1
       value-or-promise: 1.0.12
       ws: 8.20.1
     transitivePeerDependencies:
@@ -16987,7 +17019,7 @@ snapshots:
       cross-inspect: 1.0.0
       dset: 3.1.4
       graphql: 16.8.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@graphql-tools/wrap@10.0.1(graphql@16.8.1)':
     dependencies:
@@ -17852,7 +17884,7 @@ snapshots:
       supports-color: 8.1.1
       supports-hyperlinks: 2.3.0
       ts-node: 10.9.2(@swc/core@1.3.106)(@types/node@22.18.8)(typescript@5.9.3)
-      tslib: 2.7.0
+      tslib: 2.8.1
       widest-line: 3.1.0
       wordwrap: 1.0.0
       wrap-ansi: 7.0.0
@@ -17892,7 +17924,7 @@ snapshots:
       load-json-file: 5.3.0
       npm-run-path: 4.0.1
       semver: 7.7.1
-      tslib: 2.7.0
+      tslib: 2.8.1
       yarn: 1.22.21
     transitivePeerDependencies:
       - '@swc/core'
@@ -18147,10 +18179,67 @@ snapshots:
       asn1js: 3.0.10
       tslib: 2.8.1
 
+  '@peculiar/asn1-asym-key@2.9.5':
+    dependencies:
+      '@peculiar/asn1-pkcs8': 2.9.5
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-cms@2.9.5':
+    dependencies:
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      '@peculiar/asn1-x509-attr': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-csr@2.9.5':
+    dependencies:
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
   '@peculiar/asn1-ecc@2.8.0':
     dependencies:
       '@peculiar/asn1-schema': 2.8.0
       '@peculiar/asn1-x509': 2.8.0
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-ecc@2.9.5':
+    dependencies:
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-pfx@2.9.5':
+    dependencies:
+      '@peculiar/asn1-cms': 2.9.5
+      '@peculiar/asn1-pkcs8': 2.9.5
+      '@peculiar/asn1-rsa': 2.9.5
+      '@peculiar/asn1-schema': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-pkcs8@2.9.5':
+    dependencies:
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-pkcs9@2.9.5':
+    dependencies:
+      '@peculiar/asn1-cms': 2.9.5
+      '@peculiar/asn1-pfx': 2.9.5
+      '@peculiar/asn1-pkcs8': 2.9.5
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      '@peculiar/asn1-x509-attr': 2.9.5
       asn1js: 3.0.10
       tslib: 2.8.1
 
@@ -18161,11 +18250,12 @@ snapshots:
       asn1js: 3.0.10
       tslib: 2.8.1
 
-  '@peculiar/asn1-schema@2.3.8':
+  '@peculiar/asn1-rsa@2.9.5':
     dependencies:
-      asn1js: 3.0.5
-      pvtsutils: 1.3.5
-      tslib: 2.7.0
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
 
   '@peculiar/asn1-schema@2.8.0':
     dependencies:
@@ -18173,9 +18263,37 @@ snapshots:
       asn1js: 3.0.10
       tslib: 2.8.1
 
+  '@peculiar/asn1-schema@2.9.5':
+    dependencies:
+      '@peculiar/utils': 2.0.3
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-x509-attr@2.9.5':
+    dependencies:
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-x509-post-quantum@2.9.5':
+    dependencies:
+      '@peculiar/asn1-asym-key': 2.9.5
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
   '@peculiar/asn1-x509@2.8.0':
     dependencies:
       '@peculiar/asn1-schema': 2.8.0
+      '@peculiar/utils': 2.0.3
+      asn1js: 3.0.10
+      tslib: 2.8.1
+
+  '@peculiar/asn1-x509@2.9.5':
+    dependencies:
+      '@peculiar/asn1-schema': 2.9.5
       '@peculiar/utils': 2.0.3
       asn1js: 3.0.10
       tslib: 2.8.1
@@ -18190,11 +18308,25 @@ snapshots:
 
   '@peculiar/webcrypto@1.4.5':
     dependencies:
-      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/asn1-schema': 2.8.0
       '@peculiar/json-schema': 1.1.12
-      pvtsutils: 1.3.5
+      pvtsutils: 1.3.6
       tslib: 2.8.1
       webcrypto-core: 1.7.8
+
+  '@peculiar/x509@2.1.0':
+    dependencies:
+      '@peculiar/asn1-cms': 2.9.5
+      '@peculiar/asn1-csr': 2.9.5
+      '@peculiar/asn1-ecc': 2.9.5
+      '@peculiar/asn1-pkcs9': 2.9.5
+      '@peculiar/asn1-rsa': 2.9.5
+      '@peculiar/asn1-schema': 2.9.5
+      '@peculiar/asn1-x509': 2.9.5
+      '@peculiar/asn1-x509-post-quantum': 2.9.5
+      pvtsutils: 1.3.6
+      tslib: 2.8.1
+      tsyringe: 4.10.0
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -18763,11 +18895,9 @@ snapshots:
 
   '@sideway/pinpoint@2.0.0': {}
 
-  '@simplewebauthn/browser@9.0.1':
-    dependencies:
-      '@simplewebauthn/types': 9.0.1
+  '@simplewebauthn/browser@14.0.0': {}
 
-  '@simplewebauthn/server@9.0.3(encoding@0.1.13)':
+  '@simplewebauthn/server@14.0.2':
     dependencies:
       '@hexagon/base64': 1.1.28
       '@levischuck/tiny-cbor': 0.2.11
@@ -18776,12 +18906,9 @@ snapshots:
       '@peculiar/asn1-rsa': 2.8.0
       '@peculiar/asn1-schema': 2.8.0
       '@peculiar/asn1-x509': 2.8.0
-      '@simplewebauthn/types': 9.0.1
-      cross-fetch: 4.1.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
-
-  '@simplewebauthn/types@9.0.1': {}
+      '@peculiar/asn1-x509-post-quantum': 2.9.5
+      '@peculiar/x509': 2.1.0
+      reflect-metadata: 0.2.2
 
   '@smithy/abort-controller@2.1.1':
     dependencies:
@@ -18800,7 +18927,7 @@ snapshots:
       '@smithy/types': 2.9.1
       '@smithy/util-config-provider': 2.2.1
       '@smithy/util-middleware': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/config-resolver@2.2.0':
     dependencies:
@@ -18820,7 +18947,7 @@ snapshots:
       '@smithy/smithy-client': 2.3.1
       '@smithy/types': 2.9.1
       '@smithy/util-middleware': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/core@1.4.2':
     dependencies:
@@ -18864,7 +18991,7 @@ snapshots:
       '@smithy/querystring-builder': 2.1.1
       '@smithy/types': 2.9.1
       '@smithy/util-base64': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/fetch-http-handler@2.5.0':
     dependencies:
@@ -18880,7 +19007,7 @@ snapshots:
       '@smithy/types': 2.9.1
       '@smithy/util-buffer-from': 2.1.1
       '@smithy/util-utf8': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/hash-node@2.2.0':
     dependencies:
@@ -18893,7 +19020,7 @@ snapshots:
   '@smithy/invalid-dependency@2.1.1':
     dependencies:
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/invalid-dependency@2.2.0':
     dependencies:
@@ -18914,7 +19041,7 @@ snapshots:
     dependencies:
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/middleware-content-length@2.2.0':
     dependencies:
@@ -18931,7 +19058,7 @@ snapshots:
       '@smithy/types': 2.9.1
       '@smithy/url-parser': 2.1.1
       '@smithy/util-middleware': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/middleware-endpoint@2.5.1':
     dependencies:
@@ -18953,7 +19080,7 @@ snapshots:
       '@smithy/types': 2.9.1
       '@smithy/util-middleware': 2.1.1
       '@smithy/util-retry': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
       uuid: 8.3.2
 
   '@smithy/middleware-retry@2.3.1':
@@ -18972,7 +19099,7 @@ snapshots:
   '@smithy/middleware-serde@2.1.1':
     dependencies:
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/middleware-serde@2.3.0':
     dependencies:
@@ -18983,7 +19110,7 @@ snapshots:
   '@smithy/middleware-stack@2.1.1':
     dependencies:
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/middleware-stack@2.2.0':
     dependencies:
@@ -18996,7 +19123,7 @@ snapshots:
       '@smithy/property-provider': 2.1.1
       '@smithy/shared-ini-file-loader': 2.3.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/node-config-provider@2.3.0':
     dependencies:
@@ -19012,7 +19139,7 @@ snapshots:
       '@smithy/protocol-http': 3.1.1
       '@smithy/querystring-builder': 2.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/node-http-handler@2.5.0':
     dependencies:
@@ -19037,7 +19164,7 @@ snapshots:
   '@smithy/protocol-http@3.1.1':
     dependencies:
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/protocol-http@3.3.0':
     dependencies:
@@ -19118,7 +19245,7 @@ snapshots:
       '@smithy/protocol-http': 3.1.1
       '@smithy/types': 2.9.1
       '@smithy/util-stream': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/smithy-client@2.5.1':
     dependencies:
@@ -19137,13 +19264,13 @@ snapshots:
 
   '@smithy/types@2.9.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/url-parser@2.1.1':
     dependencies:
       '@smithy/querystring-parser': 2.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/url-parser@2.2.0':
     dependencies:
@@ -19155,7 +19282,7 @@ snapshots:
   '@smithy/util-base64@2.1.1':
     dependencies:
       '@smithy/util-buffer-from': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-base64@2.3.0':
     dependencies:
@@ -19166,7 +19293,7 @@ snapshots:
 
   '@smithy/util-body-length-browser@2.1.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-body-length-browser@2.2.0':
     dependencies:
@@ -19175,7 +19302,7 @@ snapshots:
 
   '@smithy/util-body-length-node@2.2.1':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-body-length-node@2.3.0':
     dependencies:
@@ -19208,7 +19335,7 @@ snapshots:
       '@smithy/smithy-client': 2.3.1
       '@smithy/types': 2.9.1
       bowser: 2.11.0
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-defaults-mode-browser@2.2.1':
     dependencies:
@@ -19227,7 +19354,7 @@ snapshots:
       '@smithy/property-provider': 2.1.1
       '@smithy/smithy-client': 2.3.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-defaults-mode-node@2.3.1':
     dependencies:
@@ -19244,7 +19371,7 @@ snapshots:
     dependencies:
       '@smithy/node-config-provider': 2.2.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-endpoints@1.2.0':
     dependencies:
@@ -19265,7 +19392,7 @@ snapshots:
   '@smithy/util-middleware@2.1.1':
     dependencies:
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-middleware@2.2.0':
     dependencies:
@@ -19277,7 +19404,7 @@ snapshots:
     dependencies:
       '@smithy/service-error-classification': 2.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-retry@2.2.0':
     dependencies:
@@ -19321,7 +19448,7 @@ snapshots:
   '@smithy/util-utf8@2.1.1':
     dependencies:
       '@smithy/util-buffer-from': 2.1.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@smithy/util-utf8@2.3.0':
     dependencies:
@@ -19333,7 +19460,7 @@ snapshots:
     dependencies:
       '@smithy/abort-controller': 2.1.1
       '@smithy/types': 2.9.1
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@solidjs/meta@0.28.7(solid-js@1.9.4)':
     dependencies:
@@ -21773,12 +21900,6 @@ snapshots:
       pvutils: 1.1.5
       tslib: 2.8.1
 
-  asn1js@3.0.5:
-    dependencies:
-      pvtsutils: 1.3.5
-      pvutils: 1.1.3
-      tslib: 2.8.1
-
   assert-never@1.4.0: {}
 
   assertion-error@2.0.1: {}
@@ -22658,12 +22779,6 @@ snapshots:
   create-require@1.1.1: {}
 
   cross-fetch@3.1.8(encoding@0.1.13):
-    dependencies:
-      node-fetch: 2.7.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
-
-  cross-fetch@4.1.0(encoding@0.1.13):
     dependencies:
       node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
@@ -24496,7 +24611,7 @@ snapshots:
       jiti: 1.21.0
       minimatch: 4.2.5
       string-env-interpolation: 1.0.1
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -28162,15 +28277,9 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  pvtsutils@1.3.5:
-    dependencies:
-      tslib: 2.8.1
-
   pvtsutils@1.3.6:
     dependencies:
       tslib: 2.8.1
-
-  pvutils@1.1.3: {}
 
   pvutils@1.1.5: {}
 
@@ -30000,6 +30109,10 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
+  tsyringe@4.10.0:
+    dependencies:
+      tslib: 1.14.1
+
   tunnel-agent@0.6.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -30741,10 +30854,10 @@ snapshots:
 
   webcrypto-core@1.7.8:
     dependencies:
-      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/asn1-schema': 2.8.0
       '@peculiar/json-schema': 1.1.12
-      asn1js: 3.0.5
-      pvtsutils: 1.3.5
+      asn1js: 3.0.10
+      pvtsutils: 1.3.6
       tslib: 2.8.1
 
   webidl-conversions@3.0.1: {}

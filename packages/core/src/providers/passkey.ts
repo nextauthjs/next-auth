@@ -19,11 +19,16 @@ import WebAuthn, {
  *
  * ### Setup
  *
- * Install the required peer dependency.
+ * Install the required peer dependencies (SimpleWebAuthn v13.3+ or v14).
  *
  * ```bash npm2yarn
- * npm install @simplewebauthn/browser@9.0.1
+ * npm install @simplewebauthn/browser@^14.0.0 @simplewebauthn/server@^14.0.2
  * ```
+ *
+ * Both packages are optional peer dependencies; the server package is used for
+ * generating and verifying options, the browser package for the sign-in page script.
+ * As of v13, types are exported from the browser and server packages (no separate
+ * `@simplewebauthn/types` package). SimpleWebAuthn v14 requires Node.js 22+; on Node.js 20 use `@simplewebauthn/server@^13.3.2` and `@simplewebauthn/browser@^13.3.0` instead.
  *
  * #### Configuration
  * ```ts
@@ -46,8 +51,15 @@ import WebAuthn, {
  * ### Notes
  *
  * This provider is an extension of the WebAuthn provider that defines some default values
- * associated with Passkey support. You may override these, but be aware that authenticators
- * may not recognize your credentials as Passkey credentials if you do.
+ * associated with Passkey support (e.g. resident key, user verification). You may override
+ * these, but be aware that authenticators may not recognize your credentials as Passkey
+ * credentials if you do.
+ *
+ * **SimpleWebAuthn v13+:** Auth.js uses the v13+ API: credential IDs are exchanged with
+ * SimpleWebAuthn as base64url strings (they are still stored in the `Authenticator` table as
+ * standard base64, so existing records keep working without a migration); `verifyAuthenticationResponse` expects a `credential` (id, publicKey, counter);
+ * `verifyRegistrationResponse` returns `registrationInfo.credential` with the same shape;
+ * and the browser helpers use a single options object (`optionsJSON`, `useBrowserAutofill`).
  *
  * :::tip
  *

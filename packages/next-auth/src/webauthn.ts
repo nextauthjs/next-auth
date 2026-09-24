@@ -41,10 +41,14 @@ async function webAuthnOptions(
   const optionsData: WebAuthnOptionsResponseBody = await optionsResp.json()
 
   if (optionsData.action === "authenticate") {
-    const webAuthnResponse = await startAuthentication(optionsData.options)
+    const webAuthnResponse = await startAuthentication({
+      optionsJSON: optionsData.options,
+    })
     return { data: webAuthnResponse, action: "authenticate" }
   } else {
-    const webAuthnResponse = await startRegistration(optionsData.options)
+    const webAuthnResponse = await startRegistration({
+      optionsJSON: optionsData.options,
+    })
     return { data: webAuthnResponse, action: "register" }
   }
 }
