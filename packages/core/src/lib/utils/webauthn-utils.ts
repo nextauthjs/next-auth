@@ -375,7 +375,7 @@ export async function verifyRegister(
 
   // Build a new account
   const account = {
-    providerAccountId: credential.id,
+    providerAccountId: base64URLToBase64(credential.id),
     provider: options.provider.id,
     type: provider.type,
   }
@@ -384,7 +384,7 @@ export async function verifyRegister(
   const authenticator = {
     providerAccountId: account.providerAccountId,
     counter: credential.counter,
-    credentialID: credential.id,
+    credentialID: base64URLToBase64(credential.id),
     credentialPublicKey: toBase64(credential.publicKey),
     credentialBackedUp,
     credentialDeviceType,
@@ -430,7 +430,7 @@ async function getAuthenticationOptions(
     ...provider.authenticationOptions,
     rpID: relayingParty.id,
     allowCredentials: authenticators?.map((a) => ({
-      id: a.credentialID,
+      id: base64ToBase64URL(a.credentialID),
       type: "public-key",
       transports: stringToTransports(a.transports),
     })),
@@ -474,7 +474,7 @@ async function getRegistrationOptions(
     rpID: relayingParty.id,
     rpName: relayingParty.name,
     excludeCredentials: authenticators?.map((a) => ({
-      id: a.credentialID,
+      id: base64ToBase64URL(a.credentialID),
       type: "public-key",
       transports: stringToTransports(a.transports),
     })),
@@ -502,7 +502,7 @@ function adapterAuthenticatorToWebAuthnCredential(
 ): WebAuthnCredential {
   const publicKeyBytes = fromBase64(authenticator.credentialPublicKey)
   return {
-    id: authenticator.credentialID,
+    id: base64ToBase64URL(authenticator.credentialID),
     publicKey: new Uint8Array(publicKeyBytes),
     counter: authenticator.counter,
     transports: stringToTransports(authenticator.transports),
@@ -515,6 +515,19 @@ export function fromBase64(base64: string): Uint8Array {
 
 export function toBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("base64")
+}
+
+/**
+ * Credential IDs are persisted as standard base64 (the format adapters already hold),
+ * while SimpleWebAuthn v13+ exchanges them as base64url. Convert only at that boundary
+ * so existing authenticator rows keep working without a data migration.
+ */
+export function base64ToBase64URL(base64: string): string {
+  return Buffer.from(base64, "base64").toString("base64url")
+}
+
+export function base64URLToBase64(base64URL: string): string {
+  return Buffer.from(base64URL, "base64url").toString("base64")
 }
 
 export function transportsToString(
