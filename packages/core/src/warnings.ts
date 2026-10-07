@@ -11,6 +11,9 @@
  * - `env-url-basepath-mismatch`: `AUTH_URL` (or `NEXTAUTH_URL`) and `authConfig.basePath` are both declared, but they don't match. This is a configuration mistake.
  *   `@auth/core` will use `basePath` to construct the full URL to the corresponding action (/signin, /signout, etc.) in this case.
  * - `experimental-webauthn`: Experimental WebAuthn feature is enabled.
+ * - `oauth-issuer-not-configured`: The authorization server returned an `iss` (issuer) response parameter,
+ *   as described in [RFC 9207](https://www.rfc-editor.org/rfc/rfc9207.html), but the provider has no `issuer`
+ *   configured to validate it against, so the parameter was ignored. Set `issuer` on the provider to have it checked.
  *
  */
 export type WarningCode =
@@ -19,3 +22,4 @@ export type WarningCode =
   | "env-url-basepath-redundant"
   | "env-url-basepath-mismatch"
   | "experimental-webauthn"
+  | "oauth-issuer-not-configured"

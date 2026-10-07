@@ -129,12 +129,26 @@ export async function handleOAuth(
 
   const state = await checks.state.use(cookies, resCookies, options)
 
+  const authResponseParams = new URLSearchParams(params)
+
+  // RFC 9207 lets an authorization server identify itself with an `iss`
+  // response parameter, and `validateAuthResponse` rejects it when it does not
+  // match `as.issuer`. For a provider configured without an `issuer` that
+  // comparison is against the placeholder above, so the moment the server
+  // starts sending `iss` every sign-in fails on a value we never knew to
+  // expect. Skip the check there rather than fail closed against a value we
+  // made up ourselves.
+  if (!provider.issuer && authResponseParams.has("iss")) {
+    logger.warn("oauth-issuer-not-configured")
+    authResponseParams.delete("iss")
+  }
+
   let codeGrantParams: URLSearchParams
   try {
     codeGrantParams = o.validateAuthResponse(
       as,
       client,
-      new URLSearchParams(params),
+      authResponseParams,
       provider.checks.includes("state") ? state : o.skipStateCheck
     )
   } catch (err) {
