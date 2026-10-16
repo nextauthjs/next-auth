@@ -167,7 +167,11 @@ export default function GitHub(
 
           if (res.ok) {
             const emails: GitHubEmail[] = await res.json()
-            profile.email = (emails.find((e) => e.primary) ?? emails[0]).email
+            const primary = emails.find((e) => e.primary) ?? emails[0]
+            // `/user/emails` can return 200 with an empty array (e.g. bot,
+            // service, or org-restricted accounts) — leave the email unset
+            // instead of throwing on `undefined.email`.
+            if (primary) profile.email = primary.email
           }
         }
 
