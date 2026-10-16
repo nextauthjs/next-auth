@@ -153,6 +153,7 @@ export { default } from "next-auth/middleware"
 ```
 
 That's it! Your application is now secured. 🎉
+Every page will be protected except the sign-in page, the authentication path, the authentication error page and some public paths (`/_next` and `/favicon.ico`).
 
 If you only want to secure certain pages, export a `config` object with a `matcher`:
 
@@ -164,7 +165,7 @@ export const config = { matcher: ["/dashboard"] }
 
 Now you will still be able to visit every page, but only `/dashboard` will require authentication.
 
-If a user is not logged in, the default behavior is to redirect them to the sign-in page.
+If a user is not logged in, the default behavior is to redirect them to the sign-in page, with a `callbackUrl` query param to redirect the user back after a successful login.
 
 ---
 
