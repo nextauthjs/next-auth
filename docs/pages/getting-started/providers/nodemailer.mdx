@@ -178,6 +178,13 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   </Tabs.Tab>
 </Tabs>
 
+For example, with [Mailtrap Email API/SMTP](https://docs.mailtrap.io/email-api-smtp/setup/smtp-integration), use the host `live.smtp.mailtrap.io` on port `587`, the username `api`, and your API token as the password. Mailtrap only sends from a [verified sending domain](https://docs.mailtrap.io/email-api-smtp/setup/sending-domain), so `EMAIL_FROM` must use that domain.
+
+```bash filename=".env"
+EMAIL_SERVER=smtp://api:your-api-token@live.smtp.mailtrap.io:587
+EMAIL_FROM=noreply@your-verified-domain.com
+```
+
 4. Do not forget to setup one of the database [adapters](https://authjs.dev/reference/core/adapters) for storing the Email verification token.
 
 5. You can now start the sign process with an email address at `/api/auth/signin`.
