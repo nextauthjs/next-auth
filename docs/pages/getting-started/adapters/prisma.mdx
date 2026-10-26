@@ -48,15 +48,25 @@ Then manually configure your `DATABASE_URL` in the `.env` file.
 To improve performance using `Prisma ORM`, we can set up the Prisma instance to ensure only one instance is created throughout the project and then import it from any file as needed. This approach avoids recreating instances of PrismaClient every time it is used. Finally, we can import the Prisma instance from the `auth.ts` file configuration.
 
 ```ts filename="prisma.ts"
-import { PrismaClient } from "../src/generated/client"
-import { withAccelerate } from "@prisma/extension-accelerate"
+import { PrismaClient } from "@/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+const globalForPrisma = globalThis as unknown as {
+    prisma: PrismaClient | undefined;
+};
 
-export const prisma =
-  globalForPrisma.prisma || new PrismaClient().$extends(withAccelerate())
+function createPrismaClient() {
+    const connectionString = process.env.DATABASE_URL!;
+    const pool = new Pool({ connectionString });
+    const adapter = new PrismaPg(pool);
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+    return new PrismaClient({ adapter });
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 ```
 
 <Callout type="info">
