@@ -15,6 +15,7 @@ describe("merge function", () => {
 
   it("should override arrays", () => {
     expect(merge({ a: [1, 2] }, { a: [3, 4] })).toEqual({ a: [3, 4] })
+    expect(merge({ a: [1, 2, 3] }, { a: [4] })).toEqual({ a: [4] })
   })
 
   it("should handle nested objects", () => {

@@ -13,7 +13,11 @@ export function merge<T extends Record<string, unknown>>(
   if (isObject(target) && isObject(source)) {
     for (const key in source) {
       if (isObject(source[key])) {
-        if (!isObject(target[key]))
+        if (
+          !isObject(target[key]) ||
+          Array.isArray(target[key]) ||
+          Array.isArray(source[key])
+        )
           (target as Record<string, unknown>)[key] = Array.isArray(source[key])
             ? []
             : {}
