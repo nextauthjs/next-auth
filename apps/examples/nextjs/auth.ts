@@ -33,6 +33,7 @@ import Twitter from "next-auth/providers/twitter"
 import Vipps from "next-auth/providers/vipps"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
+import { MockGitHub } from "@mockatoo/connect-authjs"
 import { createStorage } from "unstorage"
 import memoryDriver from "unstorage/drivers/memory"
 import vercelKVDriver from "unstorage/drivers/vercel-kv"
@@ -74,7 +75,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Discord,
     Dropbox,
     Facebook,
-    GitHub,
+    // In development and tests, GitHub sign-in uses Mockatoo's mock of GitHub,
+    // so no GitHub OAuth app is needed. Production uses GitHub.
+    process.env.NODE_ENV === "production" ? GitHub : MockGitHub(),
     GitLab,
     Google,
     Hubspot,

@@ -81,6 +81,10 @@ A list of configured providers and their callback URLs is available from the end
 
 1. You can also choose to specify an SMTP server for passwordless sign in via email.
 
+#### Sign in with GitHub without an OAuth app
+
+Outside production, the GitHub button signs in through [Mockatoo](https://mockatoo.globalunderdog.com), a hosted mock of GitHub's OAuth (see `auth.ts`). You don't need a GitHub OAuth app or `AUTH_GITHUB_ID` to try sign-in locally: sign up for a free Mockatoo account and sign in with its email and password. Production (`NODE_ENV=production`) still uses GitHub.
+
 ### 4. Start the application
 
 To run your site locally, use:
@@ -96,7 +100,16 @@ pnpm run build
 pnpm run start
 ```
 
-### 5. Preparing for Production
+### 5. Run the sign-in test
+
+The Playwright test in `tests/` starts `pnpm dev` and signs in with GitHub through Mockatoo. Add your Mockatoo account to `.env.local` as `MOCKATOO_TEST_EMAIL` and `MOCKATOO_TEST_PASSWORD` (without them, the full sign-in test is skipped), then run:
+
+```
+pnpm exec playwright install chromium
+pnpm run test:e2e
+```
+
+### 6. Preparing for Production
 
 Follow the [Deployment documentation](https://authjs.dev/getting-started/deployment)
 
