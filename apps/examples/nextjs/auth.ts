@@ -52,18 +52,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
+  // Providers that need an issuer URL are added only when it is set, so the
+  // example runs without configuring every provider.
   providers: [
     Apple,
     // Atlassian,
-    Auth0,
-    AzureB2C,
+    ...(process.env.AUTH_AUTH0_ISSUER ? [Auth0] : []),
+    ...(process.env.AUTH_AZURE_AD_B2C_ISSUER ? [AzureB2C] : []),
     BankIDNorway,
-    BoxyHQSAML({
-      clientId: "dummy",
-      clientSecret: "dummy",
-      issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
-    }),
-    Cognito,
+    ...(process.env.AUTH_BOXYHQ_SAML_ISSUER
+      ? [
+          BoxyHQSAML({
+            clientId: "dummy",
+            clientSecret: "dummy",
+            issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
+          }),
+        ]
+      : []),
+    ...(process.env.AUTH_COGNITO_ISSUER ? [Cognito] : []),
     Coinbase,
     Discord,
     Dropbox,
@@ -72,11 +78,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitLab,
     Google,
     Hubspot,
-    Keycloak({ name: "Keycloak (bob/bob)" }),
+    ...(process.env.AUTH_KEYCLOAK_ISSUER
+      ? [Keycloak({ name: "Keycloak (bob/bob)" })]
+      : []),
     LinkedIn,
     MicrosoftEntraId,
     Netlify,
-    Okta,
+    ...(process.env.AUTH_OKTA_ISSUER ? [Okta] : []),
     Passkey({
       formFields: {
         email: {
@@ -86,7 +94,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
       },
     }),
-    Passage,
+    ...(process.env.AUTH_PASSAGE_ISSUER ? [Passage] : []),
     Pinterest,
     Reddit,
     Salesforce,
