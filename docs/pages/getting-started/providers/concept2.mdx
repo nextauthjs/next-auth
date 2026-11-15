@@ -1,0 +1,103 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/concept2.svg" height="64" width="64" />
+
+# Concept2 Provider
+
+## Resources
+
+- [Concept2 OAuth documentation](https://log.concept2.com/developers/documentation/)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/concept2.ts)
+
+## Setup
+
+### Callback URL
+
+<Code>
+  <Code.Next>
+
+```bash
+https://example.com/api/auth/callback/concept2
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```bash
+https://example.com/auth/callback/concept2
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```bash
+https://example.com/auth/callback/concept2
+```
+
+  </Code.Svelte>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_CONCEPT2_ID
+AUTH_CONCEPT2_SECRET
+```
+
+### Configuration
+
+<Code>
+  <Code.Next>
+
+```ts filename="/auth.ts"
+import NextAuth from "next-auth"
+import Concept2 from "next-auth/providers/concept2"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [Concept2],
+})
+```
+
+  </Code.Next>
+  <Code.Qwik>
+
+```ts filename="/src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Concept2 from "@auth/qwik/providers/concept2"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [Concept2],
+  })
+)
+```
+
+  </Code.Qwik>
+  <Code.Svelte>
+
+```ts filename="/src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Concept2 from "@auth/sveltekit/providers/concept2"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [Concept2],
+})
+```
+
+  </Code.Svelte>
+  <Code.Express>
+
+```ts filename="/src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Concept2 from "@auth/express/providers/concept2"
+
+app.use("/auth/*", ExpressAuth({ providers: [Concept2] }))
+```
+
+  </Code.Express>
+</Code>
+
+## Notes
+
+The Concept2 provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/concept2.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider).
