@@ -33,6 +33,7 @@ import Twitter from "next-auth/providers/twitter"
 import Vipps from "next-auth/providers/vipps"
 import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
+import { MockGitHub } from "@mockatoo/connect-authjs"
 import { createStorage } from "unstorage"
 import memoryDriver from "unstorage/drivers/memory"
 import vercelKVDriver from "unstorage/drivers/vercel-kv"
@@ -52,31 +53,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
+  // Providers that need an issuer URL are added only when it is set, so the
+  // example runs without configuring every provider.
   providers: [
     Apple,
     // Atlassian,
-    Auth0,
-    AzureB2C,
+    ...(process.env.AUTH_AUTH0_ISSUER ? [Auth0] : []),
+    ...(process.env.AUTH_AZURE_AD_B2C_ISSUER ? [AzureB2C] : []),
     BankIDNorway,
-    BoxyHQSAML({
-      clientId: "dummy",
-      clientSecret: "dummy",
-      issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
-    }),
-    Cognito,
+    ...(process.env.AUTH_BOXYHQ_SAML_ISSUER
+      ? [
+          BoxyHQSAML({
+            clientId: "dummy",
+            clientSecret: "dummy",
+            issuer: process.env.AUTH_BOXYHQ_SAML_ISSUER,
+          }),
+        ]
+      : []),
+    ...(process.env.AUTH_COGNITO_ISSUER ? [Cognito] : []),
     Coinbase,
     Discord,
     Dropbox,
     Facebook,
-    GitHub,
+    // In development and tests, GitHub sign-in uses Mockatoo's mock of GitHub,
+    // so no GitHub OAuth app is needed. Production uses GitHub.
+    process.env.NODE_ENV === "production" ? GitHub : MockGitHub(),
     GitLab,
     Google,
     Hubspot,
-    Keycloak({ name: "Keycloak (bob/bob)" }),
+    ...(process.env.AUTH_KEYCLOAK_ISSUER
+      ? [Keycloak({ name: "Keycloak (bob/bob)" })]
+      : []),
     LinkedIn,
     MicrosoftEntraId,
     Netlify,
-    Okta,
+    ...(process.env.AUTH_OKTA_ISSUER ? [Okta] : []),
     Passkey({
       formFields: {
         email: {
@@ -86,7 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
       },
     }),
-    Passage,
+    ...(process.env.AUTH_PASSAGE_ISSUER ? [Passage] : []),
     Pinterest,
     Reddit,
     Salesforce,

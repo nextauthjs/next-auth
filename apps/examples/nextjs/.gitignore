@@ -18,3 +18,7 @@ next-env.d.ts
 .next
 .vercel
 .env*.local
+
+# Playwright
+/test-results/
+/playwright-report/

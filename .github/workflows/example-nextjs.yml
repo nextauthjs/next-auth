@@ -1,0 +1,45 @@
+name: Example (Next.js)
+
+on:
+  push:
+    paths:
+      - "apps/examples/nextjs/**"
+      - ".github/workflows/example-nextjs.yml"
+  pull_request:
+    paths:
+      - "apps/examples/nextjs/**"
+      - ".github/workflows/example-nextjs.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Build and sign-in test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/examples/nextjs
+    env:
+      AUTH_SECRET: test-only-secret-not-used-in-production
+      MOCKATOO_TEST_EMAIL: ${{ secrets.MOCKATOO_TEST_EMAIL }}
+      MOCKATOO_TEST_PASSWORD: ${{ secrets.MOCKATOO_TEST_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Install dependencies
+        run: pnpm install --ignore-workspace --no-frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Install Playwright
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Note the skipped sign-in test
+        if: env.MOCKATOO_TEST_EMAIL == ''
+        run: echo "::notice::MOCKATOO_TEST_EMAIL and MOCKATOO_TEST_PASSWORD are not set, so the full sign-in test is skipped."
+      - name: Sign-in test
+        run: pnpm test:e2e
