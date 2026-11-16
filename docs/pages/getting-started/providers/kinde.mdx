@@ -1,0 +1,108 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/kinde.svg" height="64" width="64" />
+
+# Kinde Provider
+
+## Resources
+
+- [Kinde docs](https://docs.kinde.com/)
+- [Learn more about OAuth](https://authjs.dev/concepts/oauth)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/kinde.ts)
+
+## Setup
+
+### Callback URL
+
+```
+https://example.com/api/auth/callback/kinde
+```
+
+### Environment Variables
+
+```
+AUTH_KINDE_ID
+AUTH_KINDE_SECRET
+AUTH_KINDE_ISSUER
+```
+
+### Configuration
+
+> **Note:** `issuer` is required — the provider has no default. It is your Kinde domain, e.g. `https://<your_subdomain>.kinde.com`. Set it as `AUTH_KINDE_ISSUER`.
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import Kinde from "next-auth/providers/kinde"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Kinde({
+      issuer: process.env.AUTH_KINDE_ISSUER,
+    }),
+  ],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="./src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import Kinde from "@auth/qwik/providers/kinde"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [
+      Kinde({
+        issuer: import.meta.env.AUTH_KINDE_ISSUER,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import Kinde from "@auth/sveltekit/providers/kinde"
+import { AUTH_KINDE_ISSUER } from "$env/static/private"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [
+    Kinde({
+      issuer: AUTH_KINDE_ISSUER,
+    }),
+  ],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import Kinde from "@auth/express/providers/kinde"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [
+      Kinde({
+        issuer: process.env.AUTH_KINDE_ISSUER,
+      }),
+    ],
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+## Notes
+
+The Kinde provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/kinde.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider).
