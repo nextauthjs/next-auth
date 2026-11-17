@@ -1,0 +1,132 @@
+import { Code } from "@/components/Code"
+
+<img align="right" src="/img/providers/huggingface.svg" height="64" width="64" />
+
+# Hugging Face Provider
+
+## Resources
+
+- [Hugging Face OAuth documentation](https://huggingface.co/docs/hub/en/oauth#creating-an-oauth-app)
+- [Create an OAuth application](https://huggingface.co/settings/applications/new)
+- [Source code](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/huggingface.ts)
+
+## Setup
+
+### Callback URL
+
+<Code>
+<Code.Next>
+
+```bash
+https://example.com/api/auth/callback/huggingface
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```bash
+https://example.com/auth/callback/huggingface
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```bash
+https://example.com/auth/callback/huggingface
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```bash
+https://example.com/auth/callback/huggingface
+```
+
+</Code.Express>
+</Code>
+
+### Environment Variables
+
+```
+AUTH_HUGGINGFACE_ID
+AUTH_HUGGINGFACE_SECRET
+```
+
+### Configuration
+
+<Code>
+<Code.Next>
+
+```ts filename="./auth.ts"
+import NextAuth from "next-auth"
+import HuggingFace from "next-auth/providers/huggingface"
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [HuggingFace],
+})
+```
+
+</Code.Next>
+<Code.Qwik>
+
+```ts filename="./src/routes/plugin@auth.ts"
+import { QwikAuth$ } from "@auth/qwik"
+import HuggingFace from "@auth/qwik/providers/huggingface"
+
+export const { onRequest, useSession, useSignIn, useSignOut } = QwikAuth$(
+  () => ({
+    providers: [HuggingFace],
+  })
+)
+```
+
+</Code.Qwik>
+<Code.Svelte>
+
+```ts filename="./src/auth.ts"
+import { SvelteKitAuth } from "@auth/sveltekit"
+import HuggingFace from "@auth/sveltekit/providers/huggingface"
+
+export const { handle, signIn, signOut } = SvelteKitAuth({
+  providers: [HuggingFace],
+})
+```
+
+</Code.Svelte>
+<Code.Express>
+
+```ts filename="./src/app.ts"
+import { ExpressAuth } from "@auth/express"
+import HuggingFace from "@auth/express/providers/huggingface"
+
+app.use(
+  "/auth/*",
+  ExpressAuth({
+    providers: [HuggingFace],
+  })
+)
+```
+
+</Code.Express>
+</Code>
+
+## Scopes
+
+The following scopes are available for Hugging Face:
+
+- `openid`: Grants access to the user's OpenID Connect profile.
+- `profile`: Grants access to the user's profile information.
+- `email`: Grants access to the user's email address.
+- `read-repos`: Grants read access to the user's repositories.
+- `write-repos`: Grants write access to the user's repositories.
+- `manage-repos`: Can create/delete repositories on behalf of the user.
+- `write-discussions`: Can post on the user's behalf.
+- `read-billing`: Know if the user has a payment method set up.
+- `inference-api`: Can make calls to Inference providers on behalf of the user.
+- `webhooks`: Can manage webhooks on behalf of the user.
+
+> **Note:** By default, the `profile` and `email` scopes are enabled in Auth.js. You need to enable the `email` scope in your OAuth app settings on Hugging Face to avoid scope errors.
+
+## Notes
+
+The Hugging Face provider comes with a [default configuration](https://github.com/nextauthjs/next-auth/blob/main/packages/core/src/providers/huggingface.ts). To override the defaults for your use case, check out [customizing a built-in OAuth provider](https://authjs.dev/guides/providers/custom-provider).
