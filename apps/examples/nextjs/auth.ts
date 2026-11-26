@@ -35,15 +35,14 @@ import WorkOS from "next-auth/providers/workos"
 import Zoom from "next-auth/providers/zoom"
 import { createStorage } from "unstorage"
 import memoryDriver from "unstorage/drivers/memory"
-import vercelKVDriver from "unstorage/drivers/vercel-kv"
+import upstashDriver from "unstorage/drivers/upstash"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 
 const storage = createStorage({
   driver: process.env.VERCEL
-    ? vercelKVDriver({
+    ? upstashDriver({
         url: process.env.AUTH_KV_REST_API_URL,
         token: process.env.AUTH_KV_REST_API_TOKEN,
-        env: false,
       })
     : memoryDriver(),
 })

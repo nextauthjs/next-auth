@@ -369,12 +369,12 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.2.18)(@types/react@18.2.78)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@upstash/redis':
+        specifier: ^1.41.1
+        version: 1.41.1
       '@vercel/analytics':
         specifier: ^1.3.1
         version: 1.3.1(next@15.5.18(@playwright/test@1.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)
-      '@vercel/kv':
-        specifier: ^1.0.1
-        version: 1.0.1
       algoliasearch:
         specifier: ^4.24.0
         version: 4.24.0
@@ -5567,6 +5567,9 @@ packages:
 
   '@upstash/redis@1.28.2':
     resolution: {integrity: sha512-e4HmmCji6kE6UnriU92sAVGLQcRYAB4fXSPXls08cjW7zdE/wFaDfhAGi1/T4/wUN50bAy/lpHwW4bMkI2EAcw==}
+
+  '@upstash/redis@1.41.1':
+    resolution: {integrity: sha512-HT5ixMRbylOM058GETYbh1DKV0Q5qL5bRf7YpOzpp3VR2YZNoYqsWznPvFWNFQEBTPcGANWoCDvA1+M2f6ub4w==}
 
   '@vercel/analytics@1.3.1':
     resolution: {integrity: sha512-xhSlYgAuJ6Q4WQGkzYTLmXwhYl39sWjoMA3nHxfkvG+WdBT25c563a7QhwwKivEOZtPJXifYHR1m2ihoisbWyA==}
@@ -20409,6 +20412,10 @@ snapshots:
   '@upstash/redis@1.28.2':
     dependencies:
       crypto-js: 4.2.0
+
+  '@upstash/redis@1.41.1':
+    dependencies:
+      uncrypto: 0.1.3
 
   '@vercel/analytics@1.3.1(next@15.5.18(@playwright/test@1.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.70.0))(react@18.3.1)':
     dependencies:

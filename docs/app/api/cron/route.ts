@@ -1,4 +1,4 @@
-import { createClient } from "@vercel/kv"
+import { Redis } from "@upstash/redis"
 import { NextResponse, NextRequest } from "next/server"
 
 export async function GET(req: NextRequest) {
@@ -10,8 +10,8 @@ export async function GET(req: NextRequest) {
     })
   }
 
-  // Get Vercel KV client
-  const webAuthnKV = createClient({
+  // Get Upstash Redis client
+  const webAuthnKV = new Redis({
     url: process.env.KV_REST_API_URL!,
     token: process.env.KV_REST_API_TOKEN!,
   })
