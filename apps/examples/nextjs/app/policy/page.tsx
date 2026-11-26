@@ -22,7 +22,7 @@ export default function PolicyPage() {
         <p>
           Data provided to this site is exclusively used to support signing in
           and is not passed to any third party services, other than via SMTP or
-          OAuth for the purposes of authentication. And Vercel KV / Upstash for
+          OAuth for the purposes of authentication. And Upstash Redis for
           hosting the Key Value store. This data is deleted every 2 hours via
           cron job.
         </p>
